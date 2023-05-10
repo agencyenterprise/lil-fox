@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Lil Fox</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <style type="text/css">
+      @font-face {
+        font-family: "m5x7";
+        src: 
+            url("assets/fonts/m5x7.ttf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
+
+      .frame, button { cursor:pointer;  }
+
+      /* site design based on https://codepen.io/sooooooo/pen/mZdpwK */
+      body {
+        background: #4955c3;
+        background: linear-gradient(to bottom, #fed5fb 0%, #4955c3 100%);
+        height:100vh; 
+        margin:0; 
+        font-family:'m5x7',sans-serif; 
+        font-size:24px; 
+        text-rendering: geometricPrecision;
+      }
+
+      .frame {
+        text-align: center;
+        display: flex;
+        width: 814px;
+        border-top: 2px solid white;
+        border-bottom: 2px solid #9f1bf5;
+        border-left: 2px solid white;
+        border-right: 2px solid #9f1bf5;
+        background-color: #6effeb;
+        position: absolute;
+        top:50%;
+        left:50%; 
+        margin-top:-334px; 
+        margin-left:-407px; 
+        justify-content: center;
+        flex-direction: column;
+        box-shadow: 10px 10px rgba(90, 90, 90, 0.9);
+      }
+      .frame .header {
+        display: flex;
+        margin: 4px;
+        margin-bottom: 0;
+        box-sizing: border-box;
+        width: 804px;
+        height: 2em;
+        margin-top: 4px;
+        padding: 4px;
+        background: #fed5fb;
+        border: 2px solid #9f1bf5;
+      }
+      .frame .header h1 {
+        font-size:inherit;
+        margin-right: auto;
+        margin-top: auto;
+        margin-bottom: auto;
+        padding-left:8px; 
+      }
+      .frame .header button {
+        align-self: flex-end;
+        flex: 0 1 auto;
+        margin: auto 2px;
+        padding: 0 2px;
+        background: none;
+        border: #9f1bf5 2px solid;
+        width: 2em;
+        height: 2em;
+        color: #9f1bf5;
+        line-height: 1em;
+        position: relative;
+      }
+      .frame .header button:before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-left: white solid 2px;
+        border-top: white solid 2px;
+        top: -2px;
+        left: -2px;
+        z-index: 2;
+      }
+      .frame .body {
+        box-sizing: border-box;
+        flex: 1;
+        width: 804px;
+        margin: 4px;
+        background: #fed5fb;
+        border: 2px solid #9f1bf5;
+      }
+      #game {
+        width: 800px;
+        height: 600px;
+        float: left;
+      }
+    </style>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+</head>
+<body>
+
+    <div class="frame">
+      <div class= "header">
+        <h1>Fox.exe</h1>
+        <button class="close">X</button>
+      </div>
+      <div class= "body">
+        <div id="game"></div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+
+class Play extends Phaser.Scene {
+
+  constructor ()
+  {
+    super();
+  }
+
+  preload ()
+  {
+    this.load.spritesheet('idle', 'assets/animations/lilfox_idle_strip8.png', { frameWidth: 32, frameHeight: 32 });
+  }
+
+  create ()
+  {
+    const idleAnimation = this.anims.create({
+        key: 'idle',
+        frames: this.anims.generateFrameNumbers('idle'),
+        frameRate: 10
+    });
+
+    const sprite = this.add.sprite(50, 300, 'idle').setScale(4);
+
+    sprite.play({ key: 'idle', repeat: -1 });
+  }
+  
+}
+
+const config = {
+    type: Phaser.AUTO,
+    parent: 'game',
+    width: 800,
+    height: 600,
+    pixelArt: true,
+    backgroundColor: 'rgba(255,255,255,1)',
+    scene: Play
+};
+
+const game = new Phaser.Game(config);
+
+    </script>
+
+</body>
+</html>
