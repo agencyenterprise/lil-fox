@@ -3,15 +3,9 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Lil Fox</title>
+    <link rel="icon" type="image/svg" href="fox.svg"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <style type="text/css">
-      @font-face {
-        font-family: "m5x7";
-        src: 
-            url("assets/fonts/m5x7.ttf") format("truetype");
-        font-weight: normal;
-        font-style: normal;
-      }
 
       .frame, button { cursor:pointer;  }
 
@@ -21,8 +15,8 @@
         background: linear-gradient(to bottom, #fed5fb 0%, #4955c3 100%);
         height:100vh; 
         margin:0; 
-        font-family:'m5x7',sans-serif; 
-        font-size:24px; 
+        font-family:sans-serif; 
+        font-size:12px; 
       }
 
       .frame {
@@ -49,14 +43,14 @@
         margin-bottom: 0;
         box-sizing: border-box;
         width: 804px;
-        height: 2em;
+        height: 48px;
         margin-top: 4px;
         padding: 4px;
         background: #fed5fb;
         border: 2px solid #9f1bf5;
       }
       .frame .header h1 {
-        font-size:inherit;
+        font-size:24px;
         margin-right: auto;
         margin-top: auto;
         margin-bottom: auto;
@@ -69,10 +63,10 @@
         padding: 0 2px;
         background: none;
         border: #9f1bf5 2px solid;
-        width: 2em;
-        height: 2em;
+        width: 24px;
+        height: 24px;
         color: #9f1bf5;
-        line-height: 1em;
+        line-height: 1.0;
         position: relative;
       }
       .frame .header button:before {
@@ -99,15 +93,50 @@
         height: 600px;
         float: left;
       }
+
+      @keyframes scale-up {
+        from {
+          transform: scale(0.01);
+        }
+        to {
+          transform: scale(1);
+        }
+      }
+
+      .open { 
+        visibility:visible !important;
+        animation:scale-up 0.4s forwards ease-in-out;
+      }
+
+      #icon { 
+        position:absolute;
+        top:50%;
+        left:50%;
+        margin-top:-30px;
+        margin-left:-24px;
+        text-align:center;
+        text-shadow: #fff 0 0 2px;
+      }
+
+      /* start out closed */
+      .frame { 
+        visibility: hidden;
+        transform: scale(0.01); 
+      }
     </style>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
 </head>
 <body>
 
-    <div class="frame">
+  <div id="icon">
+    <img src="fox.png" width="48" height="48" alt="fox icon">
+    <div>Fox.exe</div>
+  </div>
+
+    <div id="main" class="frame">
       <div class= "header">
-        <h1>Fox.exe</h1>
-        <button class="close">X</button>
+        <h1 id="title">Fox.exe</h1>
+        <button id="close" class="close">X</button>
       </div>
       <div class= "body">
         <div id="game"></div>
@@ -115,6 +144,8 @@
     </div>
 
     <script type="text/javascript">
+
+var game, inter, textName, textHealth, textHunger, textHappiness, textAge; 
 
 class Play extends Phaser.Scene {
 
@@ -125,11 +156,42 @@ class Play extends Phaser.Scene {
 
   preload ()
   {
+    this.load.spritesheet('icons', 'assets/sprites/icons.png', { frameWidth: 16, frameHeight: 16 }); 
     this.load.spritesheet('idle', 'assets/animations/lilfox_idle_strip8.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.bitmapFont('pixelfont', 'assets/fonts/minogram_6x10.png', 'assets/fonts/minogram_6x10.xml');
   }
 
   create ()
   {
+    const bgColor = 0x9f1bf5; 
+    const fgColor = 0xfed5fb; 
+
+    var graphics = this.add.graphics(); 
+    // Set the fill color to e4761b
+    graphics.fillStyle(bgColor, 1);
+    // Draw a rectangle at position 0,0 with a width of 800 and a height of 60
+    graphics.fillRect(0, 0, 800, 60);
+
+    graphics.fillStyle(fgColor, 1);
+    graphics.fillRoundedRect(12, 12, 300, 36, 10);
+    textName = this.add.bitmapText(25, 21, 'pixelfont', 'Fox', 20);
+
+    graphics.fillRoundedRect(336, 12, 88, 36, 10);
+    this.add.image(342, 15, 'icons', 0).setOrigin(0,0).setScale(2); 
+    textHealth = this.add.bitmapText(416, 21, 'pixelfont', '100', 20).setOrigin(1,0); 
+
+    graphics.fillRoundedRect(448, 12, 88, 36, 10);
+    this.add.image(454, 15, 'icons', 1).setOrigin(0,0).setScale(2); 
+    textHunger = this.add.bitmapText(528, 21, 'pixelfont', '100', 20).setOrigin(1,0); 
+
+    graphics.fillRoundedRect(560, 12, 88, 36, 10);
+    this.add.image(566, 15, 'icons', 2).setOrigin(0,0).setScale(2); 
+    textHappiness = this.add.bitmapText(640, 21, 'pixelfont', '100', 20).setOrigin(1,0); 
+
+    graphics.fillRoundedRect(672, 12, 88, 36, 10);
+    this.add.image(678, 14, 'icons', 3).setOrigin(0,0).setScale(2); 
+    textAge = this.add.bitmapText(752, 21, 'pixelfont', '0', 20).setOrigin(1,0); 
+
     const idleAnimation = this.anims.create({
         key: 'idle',
         frames: this.anims.generateFrameNumbers('idle'),
@@ -139,6 +201,11 @@ class Play extends Phaser.Scene {
     const sprite = this.add.sprite(50, 300, 'idle').setScale(4);
 
     sprite.play({ key: 'idle', repeat: -1 });
+
+  }
+
+  update() { 
+    
   }
   
 }
@@ -153,7 +220,93 @@ const config = {
     scene: Play
 };
 
-const game = new Phaser.Game(config);
+const snapId = 'local:http://localhost:8080'; 
+
+const isFlask = async () => {
+  const provider = window.ethereum;
+
+  try {
+    const clientVersion = await provider?.request({
+      method: 'web3_clientVersion',
+    });
+
+    const isFlaskDetected = (clientVersion)?.includes('flask');
+
+    return provider && isFlaskDetected;
+  } catch {
+    return false;
+  }
+}; 
+
+const getSnap = async () => {
+  try {
+    const snaps = await window.ethereum.request({
+      method: 'wallet_getSnaps',
+    }); 
+
+    return Object.values(snaps).find(
+      (snap) =>
+        snap.id === snapId
+    );
+  } catch (e) {
+    console.log('Failed to obtain installed snap', e);
+    return undefined;
+  }
+};
+
+const connectSnap = async (event) => {
+  event.preventDefault();
+  const provider = window.ethereum; 
+  try { 
+    await provider?.request({
+      method: 'wallet_requestSnaps', 
+      params: 
+        {
+          [snapId]: { }
+        },
+    });
+    const installedSnap = await getSnap();
+
+    if(installedSnap) { 
+      document.getElementById('main').className = "frame open"; 
+      game = new Phaser.Game(config); 
+      run(); 
+      inter = setInterval(run, 500); 
+    }
+  } catch { }
+  return false; 
+}; 
+
+const closeGame = async (event) => { 
+  event.preventDefault(); 
+  clearInterval(inter); 
+  game.destroy(true, false); 
+  document.getElementById('main').className = 'frame'; 
+}; 
+
+const run = function() { 
+  ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: { 
+      snapId: snapId, 
+      request: { 
+        method: 'update', 
+      }
+    } 
+  }).then(function (fox) { 
+    const age = parseInt(parseInt(fox.age) / (1000*3600*24)); 
+    textName.text = fox.name; 
+    textHealth.text = ''+parseInt(Math.ceil(fox.health)); 
+    textHunger.text = ''+parseInt(Math.ceil(fox.hunger)); 
+    textHappiness.text = ''+parseInt(Math.ceil(fox.happiness)); 
+    textAge.text = ''+parseInt(age); 
+  }); 
+}; 
+
+window.onload = async (event) => {
+  document.getElementById('icon').addEventListener('dblclick',connectSnap); 
+  document.getElementById('close').addEventListener('click',closeGame); 
+}; 
 
     </script>
 
