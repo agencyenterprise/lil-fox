@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <style type="text/css">
 
-      .frame, button { cursor:pointer;  }
+      #icon, button { cursor:pointer;  }
 
       /* site design based on https://codepen.io/sooooooo/pen/mZdpwK */
       body {
@@ -145,7 +145,17 @@
 
     <script type="text/javascript">
 
-var game, inter, textName, textHealth, textHunger, textHappiness, textAge; 
+var game, inter, foxSprite, textName, textHealth, textHunger, textHappiness, textAge; 
+var xFoxScale = yFoxScale = 4; 
+
+class Button {
+  constructor(x, y, label, scene, callback) {
+    const button = scene.add.bitmapText(x, y, 'pixelfont', label, 20)
+        .setOrigin(0.5)
+        .setInteractive({ useHandCursor: true })
+        .on('pointerdown', () => callback()); 
+  }
+}
 
 class Play extends Phaser.Scene {
 
@@ -158,6 +168,11 @@ class Play extends Phaser.Scene {
   {
     this.load.spritesheet('icons', 'assets/sprites/icons.png', { frameWidth: 16, frameHeight: 16 }); 
     this.load.spritesheet('idle', 'assets/animations/lilfox_idle_strip8.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('crouch', 'assets/animations/lilfox_crouch_strip8.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('sit', 'assets/animations/lilfox_sit_strip8.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('sneak', 'assets/animations/lilfox_sneak_strip4.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('food', 'assets/sprites/food.png', { frameWidth: 16, frameHeight: 16 }); 
+    this.load.spritesheet('flora', 'assets/sprites/flora.png', { frameWidth: 16, frameHeight: 16 }); 
     this.load.bitmapFont('pixelfont', 'assets/fonts/minogram_6x10.png', 'assets/fonts/minogram_6x10.xml');
   }
 
@@ -172,6 +187,18 @@ class Play extends Phaser.Scene {
     // Draw a rectangle at position 0,0 with a width of 800 and a height of 60
     graphics.fillRect(0, 0, 800, 60);
 
+    for (var i = 0; i < 40; i++) {
+      var shouldBother = Phaser.Math.RND.between(0, 1); 
+      if(shouldBother) { 
+        var spriteIndex = Phaser.Math.RND.between(0, 5); 
+        var col = i % 8; 
+        var row = Math.floor(i / 8); 
+        var x = 64 + col * 96 + Phaser.Math.RND.between(-36, 36); 
+        var y = 120 + row * 88 + Phaser.Math.RND.between(-24, 24); 
+        this.add.image(x, y, 'flora', spriteIndex).setScale(2);
+      }
+    }
+
     graphics.fillStyle(fgColor, 1);
     graphics.fillRoundedRect(12, 12, 300, 36, 10);
     textName = this.add.bitmapText(25, 21, 'pixelfont', 'Fox', 20);
@@ -185,22 +212,135 @@ class Play extends Phaser.Scene {
     textHunger = this.add.bitmapText(528, 21, 'pixelfont', '100', 20).setOrigin(1,0); 
 
     graphics.fillRoundedRect(560, 12, 88, 36, 10);
-    this.add.image(566, 15, 'icons', 2).setOrigin(0,0).setScale(2); 
+    this.add.image(566, 14, 'icons', 2).setOrigin(0,0).setScale(2); 
     textHappiness = this.add.bitmapText(640, 21, 'pixelfont', '100', 20).setOrigin(1,0); 
 
     graphics.fillRoundedRect(672, 12, 88, 36, 10);
     this.add.image(678, 14, 'icons', 3).setOrigin(0,0).setScale(2); 
     textAge = this.add.bitmapText(752, 21, 'pixelfont', '0', 20).setOrigin(1,0); 
 
+    graphics.fillStyle(bgColor, 1); 
+    graphics.fillRect(0, 540, 800, 60); 
+
     const idleAnimation = this.anims.create({
         key: 'idle',
         frames: this.anims.generateFrameNumbers('idle'),
-        frameRate: 10
+        frameRate: 8
+    });
+    const crouchAnimation = this.anims.create({
+        key: 'crouch',
+        frames: this.anims.generateFrameNumbers('crouch'),
+        frameRate: 8
+    });
+    const sitAnimation = this.anims.create({
+        key: 'sit',
+        frames: this.anims.generateFrameNumbers('sit'),
+        frameRate: 8
+    });
+    const sneakAnimation = this.anims.create({
+        key: 'sneak',
+        frames: this.anims.generateFrameNumbers('sneak'),
+        frameRate: 8
     });
 
-    const sprite = this.add.sprite(50, 300, 'idle').setScale(4);
+    const foodAnimation = this.anims.create({ 
+      key: 'food', 
+      frames: this.anims.generateFrameNumbers('food'), 
+      frameRate: 2
+    }); 
 
-    sprite.play({ key: 'idle', repeat: -1 });
+
+    foxSprite = this.add.sprite(Phaser.Math.RND.between(50, 750), Phaser.Math.RND.between(100, 500), 'idle').setScale(xFoxScale, yFoxScale);
+
+    foxSprite.play({ key: 'idle', repeat: -1 });
+
+    graphics.fillStyle(0xffffff, 0.5); 
+    graphics.fillRect(16, 556, 72, 36); 
+    graphics.fillStyle(0x6effeb, 1); 
+    graphics.fillRect(12, 552, 72, 36);
+    const feedButton = new Button(48, 572, 'Feed', this, () => { 
+      const xModifier = xFoxScale > 0 ? 45 : -45; 
+      const xScaleModifier = xFoxScale > 0 ? -2 : 2; 
+      const fallenFood = this.add.sprite(foxSprite.x+xModifier, foxSprite.y+24, 'food').setScale(xScaleModifier, 2); 
+      fallenFood.play('food').once('animationcomplete', () => { 
+        fallenFood.destroy(); 
+      }); 
+      foxSprite.play({key: 'sneak', repeat: 3}).once('animationcomplete', () => {
+        foxFeed(); 
+        foxSprite.play({ key: 'idle', repeat: -1 });
+      });
+    });
+
+    graphics.fillStyle(0xffffff, 0.5); 
+    graphics.fillRect(112, 556, 72, 36); 
+    graphics.fillStyle(0x6effeb, 1); 
+    graphics.fillRect(108, 552, 72, 36);
+    const petButton = new Button(144, 572, 'Pet', this, () => { 
+      const xModifier = xFoxScale > 0 ? 12 : -12; 
+      const floatingHeart = this.add.sprite(foxSprite.x+xModifier, foxSprite.y-14, 'icons', 0).setScale(2);
+      floatingHeart.setTintFill(0xFF0000); 
+      // create a tween to move the sprite upward and fade it out
+      this.tweens.add({
+        targets: floatingHeart,
+        y: floatingHeart.y - 36, // move the sprite upward by 36 pixels
+        alpha: 0, // set the alpha of the sprite to 0 (fully transparent)
+        duration: 2000, // make the tween last for 1000 milliseconds (1 second)
+        onComplete: function() { // remove the sprite when the tween is complete
+          floatingHeart.destroy();
+        }
+      });
+      foxSprite.play({key: 'sit', repeat: 2}).once('animationcomplete', () => {
+        foxPet(); 
+        foxSprite.play({ key: 'idle', repeat: -1 });
+      });
+    });
+
+    graphics.fillStyle(0xffffff, 0.5); 
+    graphics.fillRect(208, 556, 72, 36); 
+    graphics.fillStyle(0x6effeb, 1); 
+    graphics.fillRect(204, 552, 72, 36);
+    const healButton = new Button(240, 572, 'Heal', this, () => { 
+      const xModifier = xFoxScale > 0 ? 12 : -12; 
+      const floatingPill = this.add.sprite(foxSprite.x+xModifier, foxSprite.y-24, 'icons', 4).setScale(2); 
+      // create a tween to move the sprite downward and fade it out
+      this.tweens.add({
+        targets: floatingPill,
+        y: floatingPill.y + 36, // move the sprite upward by 36 pixels
+        alpha: 0, // set the alpha of the sprite to 0 (fully transparent)
+        duration: 1900, // make the tween last for 1000 milliseconds (1 second)
+        onComplete: function() { // remove the sprite when the tween is complete
+          floatingPill.destroy();
+        }
+      });
+      foxSprite.play({key: 'crouch', repeat: 1}).once('animationcomplete', () => {
+        foxHeal(); 
+        foxSprite.play({ key: 'idle', repeat: -1 });
+      });
+    });
+
+    graphics.fillStyle(0xffffff, 0.5); 
+    graphics.fillRect(304, 556, 72, 36); 
+    graphics.fillStyle(0x6effeb, 1); 
+    graphics.fillRect(300, 552, 72, 36);
+    const askButton = new Button(336, 572, 'Ask', this, () => { 
+      const xModifier = xFoxScale > 0 ? 12 : -12; 
+      const floatingQ = this.add.sprite(foxSprite.x+xModifier, foxSprite.y-18, 'icons', 5).setScale(2);
+      floatingQ.setTintFill(0x9f1bf5); 
+      // create a tween to move the sprite upward and fade it out
+      this.tweens.add({
+        targets: floatingQ,
+        y: floatingQ.y - 36, // move the sprite upward by 36 pixels
+        alpha: 0, // set the alpha of the sprite to 0 (fully transparent)
+        duration: 2000, // make the tween last for 1000 milliseconds (1 second)
+        onComplete: function() { // remove the sprite when the tween is complete
+          floatingQ.destroy();
+        }
+      });
+      foxSprite.play({key: 'sit', repeat: 2}).once('animationcomplete', () => {
+        foxPet(); 
+        foxSprite.play({ key: 'idle', repeat: -1 });
+      });
+    });
 
   }
 
@@ -216,7 +356,7 @@ const config = {
     width: 800,
     height: 600,
     pixelArt: true,
-    backgroundColor: 'rgba(255,255,255,1)',
+    backgroundColor: 'rgba(129,186,68,1)',
     scene: Play
 };
 
@@ -293,13 +433,55 @@ const run = function() {
         method: 'update', 
       }
     } 
-  }).then(function (fox) { 
+  }).then(function(fox) { 
     const age = parseInt(parseInt(fox.age) / (1000*3600*24)); 
     textName.text = fox.name; 
     textHealth.text = ''+parseInt(Math.ceil(fox.health)); 
     textHunger.text = ''+parseInt(Math.ceil(fox.hunger)); 
     textHappiness.text = ''+parseInt(Math.ceil(fox.happiness)); 
     textAge.text = ''+parseInt(age); 
+  }); 
+}; 
+
+const foxFeed = function() { 
+  ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: { 
+      snapId: snapId, 
+      request: { 
+        method: 'feed', 
+      }
+    } 
+  }).then(function(fox) { 
+    textHunger.text = ''+parseInt(Math.ceil(fox.hunger)); 
+  }); 
+}; 
+
+const foxPet = function() { 
+  ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: { 
+      snapId: snapId, 
+      request: { 
+        method: 'pet', 
+      }
+    } 
+  }).then(function(fox) { 
+    textHappiness.text = ''+parseInt(Math.ceil(fox.happiness)); 
+  }); 
+}; 
+
+const foxHeal = function() { 
+  ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: { 
+      snapId: snapId, 
+      request: { 
+        method: 'heal', 
+      }
+    } 
+  }).then(function(fox) { 
+    textHealth.text = ''+parseInt(Math.ceil(fox.health)); 
   }); 
 }; 
 
