@@ -115,7 +115,8 @@
         margin-top:-30px;
         margin-left:-24px;
         text-align:center;
-        text-shadow: #fff 0 0 2px;
+        text-shadow:#fff 0 0 2px;
+        font-weight:bold; 
       }
 
       /* start out closed */
@@ -145,7 +146,7 @@
 
     <script type="text/javascript">
 
-var game, inter, foxSprite, textName, textHealth, textHunger, textHappiness, textAge; 
+var game, inter, foxSprite, textName, textHealth, textHunger, textHappiness, textAge, moveTween; 
 var xFoxScale = yFoxScale = 4; 
 var interacting = walking = false; 
 var delayCounter = 0; 
@@ -271,8 +272,13 @@ class Play extends Phaser.Scene {
     graphics.fillStyle(0x6effeb, 1); 
     graphics.fillRect(12, 552, 72, 36);
     const feedButton = new Button(48, 572, 'Feed', this, () => { 
-      if(interacting || walking) { return; }
+      if(interacting) { return; }
       interacting = true; 
+      if(walking) { 
+        foxSprite.anims.stop(); 
+        try { moveTween.stop(); } catch {} 
+        walking = false; 
+      }
       const xModifier = xFoxScale > 0 ? 45 : -45; 
       const xScaleModifier = xFoxScale > 0 ? -2 : 2; 
       const fallenFood = this.add.sprite(foxSprite.x+xModifier, foxSprite.y+24, 'food').setScale(xScaleModifier, 2); 
@@ -291,8 +297,13 @@ class Play extends Phaser.Scene {
     graphics.fillStyle(0x6effeb, 1); 
     graphics.fillRect(108, 552, 72, 36);
     const petButton = new Button(144, 572, 'Pet', this, () => { 
-      if(interacting || walking) { return; }
+      if(interacting) { return; }
       interacting = true; 
+      if(walking) { 
+        foxSprite.anims.stop(); 
+        try { moveTween.stop(); } catch {} 
+        walking = false; 
+      }
       const xModifier = xFoxScale > 0 ? 12 : -12; 
       const floatingHeart = this.add.sprite(foxSprite.x+xModifier, foxSprite.y-14, 'icons', 0).setScale(2);
       floatingHeart.setTintFill(0xFF0000); 
@@ -318,8 +329,13 @@ class Play extends Phaser.Scene {
     graphics.fillStyle(0x6effeb, 1); 
     graphics.fillRect(204, 552, 72, 36);
     const healButton = new Button(240, 572, 'Heal', this, () => { 
-      if(interacting || walking) { return; }
+      if(interacting) { return; }
       interacting = true; 
+      if(walking) { 
+        foxSprite.anims.stop(); 
+        try { moveTween.stop(); } catch {} 
+        walking = false; 
+      }
       const xModifier = xFoxScale > 0 ? 12 : -12; 
       const floatingPill = this.add.sprite(foxSprite.x+xModifier, foxSprite.y-24, 'icons', 4).setScale(2); 
       // create a tween to move the sprite downward and fade it out
@@ -346,6 +362,11 @@ class Play extends Phaser.Scene {
     const askButton = new Button(336, 572, 'Ask', this, () => { 
       if(interacting) { return; }
       interacting = true; 
+      if(walking) { 
+        foxSprite.anims.stop(); 
+        try { moveTween.stop(); } catch {} 
+        walking = false; 
+      }
       const xModifier = xFoxScale > 0 ? 12 : -12; 
       const floatingQ = this.add.sprite(foxSprite.x+xModifier, foxSprite.y-18, 'icons', 5).setScale(2);
       floatingQ.setTintFill(0x9f1bf5); 
@@ -384,7 +405,7 @@ class Play extends Phaser.Scene {
           foxSprite.setScale(xFoxScale,yFoxScale).play({key: 'walk', repeat: -1}); 
 
           // tween the sprite to the new position
-          this.tweens.add({
+          moveTween = this.tweens.add({
             targets: foxSprite,
             x: newX, 
             y: newY,
@@ -476,6 +497,9 @@ const connectSnap = async (event) => {
 const closeGame = async (event) => { 
   event.preventDefault(); 
   clearInterval(inter); 
+  interacting = false; 
+  walking = false; 
+  delayCounter = 0; 
   game.destroy(true, false); 
   document.getElementById('main').className = 'frame'; 
 }; 
