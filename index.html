@@ -147,6 +147,8 @@
 
 var game, inter, foxSprite, textName, textHealth, textHunger, textHappiness, textAge; 
 var xFoxScale = yFoxScale = 4; 
+var interacting = walking = false; 
+var delayCounter = 0; 
 
 class Button {
   constructor(x, y, label, scene, callback) {
@@ -171,6 +173,7 @@ class Play extends Phaser.Scene {
     this.load.spritesheet('crouch', 'assets/animations/lilfox_crouch_strip8.png', { frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('sit', 'assets/animations/lilfox_sit_strip8.png', { frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('sneak', 'assets/animations/lilfox_sneak_strip4.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('walk', 'assets/animations/lilfox_walk_strip8.png', { frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('food', 'assets/sprites/food.png', { frameWidth: 16, frameHeight: 16 }); 
     this.load.spritesheet('flora', 'assets/sprites/flora.png', { frameWidth: 16, frameHeight: 16 }); 
     this.load.bitmapFont('pixelfont', 'assets/fonts/minogram_6x10.png', 'assets/fonts/minogram_6x10.xml');
@@ -242,6 +245,11 @@ class Play extends Phaser.Scene {
         frames: this.anims.generateFrameNumbers('sneak'),
         frameRate: 8
     });
+    const walkAnimation = this.anims.create({
+        key: 'walk',
+        frames: this.anims.generateFrameNumbers('walk'),
+        frameRate: 8
+    });
 
     const foodAnimation = this.anims.create({ 
       key: 'food', 
@@ -249,8 +257,11 @@ class Play extends Phaser.Scene {
       frameRate: 2
     }); 
 
-
     foxSprite = this.add.sprite(Phaser.Math.RND.between(50, 750), Phaser.Math.RND.between(100, 500), 'idle').setScale(xFoxScale, yFoxScale);
+    if(foxSprite.x > 500) { 
+      xFoxScale = -xFoxScale; 
+      foxSprite.setScale(xFoxScale, yFoxScale); 
+    }
 
     foxSprite.play({ key: 'idle', repeat: -1 });
 
@@ -259,6 +270,8 @@ class Play extends Phaser.Scene {
     graphics.fillStyle(0x6effeb, 1); 
     graphics.fillRect(12, 552, 72, 36);
     const feedButton = new Button(48, 572, 'Feed', this, () => { 
+      if(interacting) { return; }
+      interacting = true; 
       const xModifier = xFoxScale > 0 ? 45 : -45; 
       const xScaleModifier = xFoxScale > 0 ? -2 : 2; 
       const fallenFood = this.add.sprite(foxSprite.x+xModifier, foxSprite.y+24, 'food').setScale(xScaleModifier, 2); 
@@ -268,6 +281,7 @@ class Play extends Phaser.Scene {
       foxSprite.play({key: 'sneak', repeat: 3}).once('animationcomplete', () => {
         foxFeed(); 
         foxSprite.play({ key: 'idle', repeat: -1 });
+        interacting = false; 
       });
     });
 
@@ -276,6 +290,8 @@ class Play extends Phaser.Scene {
     graphics.fillStyle(0x6effeb, 1); 
     graphics.fillRect(108, 552, 72, 36);
     const petButton = new Button(144, 572, 'Pet', this, () => { 
+      if(interacting) { return; }
+      interacting = true; 
       const xModifier = xFoxScale > 0 ? 12 : -12; 
       const floatingHeart = this.add.sprite(foxSprite.x+xModifier, foxSprite.y-14, 'icons', 0).setScale(2);
       floatingHeart.setTintFill(0xFF0000); 
@@ -292,6 +308,7 @@ class Play extends Phaser.Scene {
       foxSprite.play({key: 'sit', repeat: 2}).once('animationcomplete', () => {
         foxPet(); 
         foxSprite.play({ key: 'idle', repeat: -1 });
+        interacting = false; 
       });
     });
 
@@ -300,6 +317,8 @@ class Play extends Phaser.Scene {
     graphics.fillStyle(0x6effeb, 1); 
     graphics.fillRect(204, 552, 72, 36);
     const healButton = new Button(240, 572, 'Heal', this, () => { 
+      if(interacting) { return; }
+      interacting = true; 
       const xModifier = xFoxScale > 0 ? 12 : -12; 
       const floatingPill = this.add.sprite(foxSprite.x+xModifier, foxSprite.y-24, 'icons', 4).setScale(2); 
       // create a tween to move the sprite downward and fade it out
@@ -315,6 +334,7 @@ class Play extends Phaser.Scene {
       foxSprite.play({key: 'crouch', repeat: 1}).once('animationcomplete', () => {
         foxHeal(); 
         foxSprite.play({ key: 'idle', repeat: -1 });
+        interacting = false; 
       });
     });
 
@@ -323,6 +343,8 @@ class Play extends Phaser.Scene {
     graphics.fillStyle(0x6effeb, 1); 
     graphics.fillRect(300, 552, 72, 36);
     const askButton = new Button(336, 572, 'Ask', this, () => { 
+      if(interacting) { return; }
+      interacting = true; 
       const xModifier = xFoxScale > 0 ? 12 : -12; 
       const floatingQ = this.add.sprite(foxSprite.x+xModifier, foxSprite.y-18, 'icons', 5).setScale(2);
       floatingQ.setTintFill(0x9f1bf5); 
@@ -339,13 +361,43 @@ class Play extends Phaser.Scene {
       foxSprite.play({key: 'sit', repeat: 2}).once('animationcomplete', () => {
         foxPet(); 
         foxSprite.play({ key: 'idle', repeat: -1 });
+        interacting = false; 
       });
     });
 
   }
 
   update() { 
-    
+    if(!interacting && !walking) { 
+      delayCounter++; 
+      if(delayCounter > 60) { 
+        const shouldWalk = Phaser.Math.RND.between(1,10); 
+        if(shouldWalk > 9) { 
+          walking = true; 
+          // let's walk 
+          let newX = Phaser.Math.RND.between(50, 750); 
+          let newY = Phaser.Math.RND.between(100, 500); 
+          if(xFoxScale > 0 && newX < foxSprite.x || xFoxScale < 0 && newX > foxSprite.x) { 
+            xFoxScale = -xFoxScale; 
+          }
+          foxSprite.setScale(xFoxScale,yFoxScale).play({key: 'walk', repeat: -1}); 
+
+          // tween the sprite to the new position
+          this.tweens.add({
+            targets: foxSprite,
+            x: newX, 
+            y: newY,
+            duration: 10*Phaser.Math.Distance.Between(foxSprite.x, foxSprite.y, newX, newY), 
+            onComplete: function() {
+              // destroy the sprite when the tween is complete
+              foxSprite.play({ key: 'idle', repeat: -1 });
+              walking = false; 
+            }
+          });
+        }
+        delayCounter = 0; 
+      }
+    }
   }
   
 }
