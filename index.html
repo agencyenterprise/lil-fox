@@ -149,6 +149,7 @@ var game, inter, foxSprite, textName, textHealth, textHunger, textHappiness, tex
 var xFoxScale = yFoxScale = 4; 
 var interacting = walking = false; 
 var delayCounter = 0; 
+// var curHealth, curHunger, curHappiness; 
 
 class Button {
   constructor(x, y, label, scene, callback) {
@@ -270,7 +271,7 @@ class Play extends Phaser.Scene {
     graphics.fillStyle(0x6effeb, 1); 
     graphics.fillRect(12, 552, 72, 36);
     const feedButton = new Button(48, 572, 'Feed', this, () => { 
-      if(interacting) { return; }
+      if(interacting || walking) { return; }
       interacting = true; 
       const xModifier = xFoxScale > 0 ? 45 : -45; 
       const xScaleModifier = xFoxScale > 0 ? -2 : 2; 
@@ -290,7 +291,7 @@ class Play extends Phaser.Scene {
     graphics.fillStyle(0x6effeb, 1); 
     graphics.fillRect(108, 552, 72, 36);
     const petButton = new Button(144, 572, 'Pet', this, () => { 
-      if(interacting) { return; }
+      if(interacting || walking) { return; }
       interacting = true; 
       const xModifier = xFoxScale > 0 ? 12 : -12; 
       const floatingHeart = this.add.sprite(foxSprite.x+xModifier, foxSprite.y-14, 'icons', 0).setScale(2);
@@ -317,7 +318,7 @@ class Play extends Phaser.Scene {
     graphics.fillStyle(0x6effeb, 1); 
     graphics.fillRect(204, 552, 72, 36);
     const healButton = new Button(240, 572, 'Heal', this, () => { 
-      if(interacting) { return; }
+      if(interacting || walking) { return; }
       interacting = true; 
       const xModifier = xFoxScale > 0 ? 12 : -12; 
       const floatingPill = this.add.sprite(foxSprite.x+xModifier, foxSprite.y-24, 'icons', 4).setScale(2); 
@@ -412,7 +413,10 @@ const config = {
     scene: Play
 };
 
-const snapId = 'local:http://localhost:8080'; 
+var snapId = 'npm:pet-fox'; 
+if ( ["localhost", "127.0.0.1", ""].includes(window.location.hostname) ) {
+  snapId = 'local:http://localhost:8080';
+}
 
 const isFlask = async () => {
   const provider = window.ethereum;
@@ -488,9 +492,24 @@ const run = function() {
   }).then(function(fox) { 
     const age = parseInt(parseInt(fox.age) / (1000*3600*24)); 
     textName.text = fox.name; 
+
     textHealth.text = ''+parseInt(Math.ceil(fox.health)); 
-    textHunger.text = ''+parseInt(Math.ceil(fox.hunger)); 
+    textHunger.text = ''+parseInt(Math.ceil(fox.hunger));
     textHappiness.text = ''+parseInt(Math.ceil(fox.happiness)); 
+    /*
+    if(curHealth==null) { 
+      textHealth.text = ''+parseInt(Math.ceil(fox.health)); 
+    }
+    curHealth = parseInt(Math.ceil(fox.health)); 
+    if(curHunger==null) { 
+      textHunger.text = ''+parseInt(Math.ceil(fox.hunger)); 
+    }
+    curHunger = parseInt(Math.ceil(fox.hunger)); 
+    if(curHappiness==null) { 
+      textHappiness.text = ''+parseInt(Math.ceil(fox.happiness)); 
+    }
+    curHappiness = parseInt(Math.ceil(fox.happiness)); 
+    */
     textAge.text = ''+parseInt(age); 
   }); 
 }; 
