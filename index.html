@@ -381,10 +381,10 @@ class Play extends Phaser.Scene {
         }
       });
       foxSprite.play({key: 'sit', repeat: 2}).once('animationcomplete', () => {
-        foxPet(); 
         foxSprite.play({ key: 'idle', repeat: -1 });
         interacting = false; 
       });
+      foxAsk(); 
     });
 
   }
@@ -577,6 +577,18 @@ const foxHeal = function() {
     } 
   }).then(function(fox) { 
     textHealth.text = ''+parseInt(Math.ceil(fox.health)); 
+  }); 
+}; 
+
+const foxAsk = function() { 
+  ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: { 
+      snapId: snapId, 
+      request: { 
+        method: 'ask', 
+      }
+    } 
   }); 
 }; 
 
