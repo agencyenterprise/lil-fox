@@ -126,6 +126,7 @@
       }
     </style>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+    <script src="https://unpkg.com/compare-versions/lib/umd/index.js"></script>
 </head>
 <body>
 
@@ -150,6 +151,8 @@
   </div>
 
   <script type="text/javascript">
+
+const { compareVersions, compare, satisfies, validate } = window.compareVersions; 
 
 var game, inter, foxSprite, textName, textHealth, textHunger, textHappiness, textAge, moveTween; 
 var xFoxScale = yFoxScale = 4; 
@@ -440,8 +443,11 @@ const config = {
 };
 
 var snapId = 'npm:pet-fox'; 
+var snapVersion = '^0'; 
 if ( ["localhost", "127.0.0.1", ""].includes(window.location.hostname) ) {
   snapId = 'local:http://localhost:8080';
+} else { 
+  snapVersion = '^0.1.4'; 
 }
 
 const isFlask = async () => {
@@ -468,7 +474,7 @@ const getSnap = async () => {
 
     return Object.values(snaps).find(
       (snap) =>
-        snap.id === snapId
+      snap.id === snapId && satisfies(snap.version, snapVersion)
     );
   } catch (e) {
     console.log('Failed to obtain installed snap', e);
@@ -484,7 +490,7 @@ const connectSnap = async (event) => {
       method: 'wallet_requestSnaps', 
       params: 
         {
-          [snapId]: { }
+          [snapId]: { version: snapVersion }
         },
     });
     const installedSnap = await getSnap();
