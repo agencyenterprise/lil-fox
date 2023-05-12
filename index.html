@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <style type="text/css">
 
-      #icon, button { cursor:pointer;  }
+      #icon, #flask, button { cursor:pointer;  }
 
       /* site design based on https://codepen.io/sooooooo/pen/mZdpwK */
       body {
@@ -108,7 +108,7 @@
         animation:scale-up 0.4s forwards ease-in-out;
       }
 
-      #icon { 
+      #icon, #flask { 
         position:absolute;
         top:50%;
         left:50%;
@@ -129,22 +129,27 @@
 </head>
 <body>
 
-  <div id="icon">
+  <div id="icon" style="display:none">
     <img src="fox.png" width="48" height="48" alt="fox icon">
     <div>Fox.exe</div>
   </div>
 
-    <div id="main" class="frame">
-      <div class= "header">
-        <h1 id="title">Fox.exe</h1>
-        <button id="close" class="close">X</button>
-      </div>
-      <div class= "body">
-        <div id="game"></div>
-      </div>
-    </div>
+  <div id="flask" style="display:none">
+    <img src="ie.png" width="48" height="48" alt="flask icon">
+    <div>Get Flask</div>
+  </div>
 
-    <script type="text/javascript">
+  <div id="main" class="frame">
+    <div class= "header">
+      <h1 id="title">Fox.exe</h1>
+      <button id="close" class="close">X</button>
+    </div>
+    <div class= "body">
+      <div id="game"></div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
 
 var game, inter, foxSprite, textName, textHealth, textHunger, textHappiness, textAge, moveTween; 
 var xFoxScale = yFoxScale = 4; 
@@ -592,7 +597,18 @@ const foxAsk = function() {
   }); 
 }; 
 
+const getFlask = function() { 
+  window.location.href = 'https://metamask.io/flask/'; 
+}
+
 window.onload = async (event) => {
+  const isFlaskDetected = await isFlask(); 
+  if(!isFlaskDetected) {
+    document.getElementById('flask').style.display = 'block'; 
+    document.getElementById('flask').addEventListener('dblclick',getFlask); 
+    return; 
+  }
+  document.getElementById('icon').style.display="block"; 
   document.getElementById('icon').addEventListener('dblclick',connectSnap); 
   document.getElementById('close').addEventListener('click',closeGame); 
 }; 
