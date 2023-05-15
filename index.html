@@ -527,11 +527,16 @@ class Play extends Phaser.Scene {
       }); 
       poops.add(aPoop); 
     }
-    if('hurt'==idleKey&&'idle'==foxSprite.anims.getCurrentKey()) { 
-      foxSprite.play({ key: idleKey, repeat: 0 }); 
-    } else if('idle'==idleKey&&'hurt'==foxSprite.anims.getCurrentKey()) { 
-      foxSprite.play({ key: idleKey, repeat: 0 }); 
-    }
+
+    try { 
+      let currentKey = foxSprite.anims.getName(); 
+      if('hurt'==idleKey&&'idle'==currentKey || 'idle'==idleKey&&'hurt'==currentKey) { 
+        foxSprite.anims.stop(); 
+        try { moveTween.stop(); } catch {} 
+        foxSprite.play({ key: idleKey, repeat: -1 }); 
+      }
+    } catch{ }
+
     if(!interacting && idleKey=='die') { 
       foxSprite.play({ key: idleKey, repeat: 0 });
       interacting = true; 
