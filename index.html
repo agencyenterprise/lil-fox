@@ -456,10 +456,12 @@ class Play extends Phaser.Scene {
         delayCounter = poopCounter = 0; 
         idleKey = 'idle'; 
         foxAdopt().then(function() { 
-          document.getElementById('main').className = "frame open"; 
-          game = new Phaser.Game(config); 
-          run(); 
-          inter = setInterval(run, 500); 
+          setTimeout( function() { 
+            document.getElementById('main').className = "frame open"; 
+            game = new Phaser.Game(config); 
+            run(); 
+            inter = setInterval(run, 500); 
+          }, 200); 
         }); 
       }); 
     });
@@ -524,6 +526,11 @@ class Play extends Phaser.Scene {
         }); 
       }); 
       poops.add(aPoop); 
+    }
+    if('hurt'==idleKey&&'idle'==foxSprite.anims.getCurrentKey()) { 
+      foxSprite.play({ key: idleKey, repeat: 0 }); 
+    } else if('idle'==idleKey&&'hurt'==foxSprite.anims.getCurrentKey()) { 
+      foxSprite.play({ key: idleKey, repeat: 0 }); 
     }
     if(!interacting && idleKey=='die') { 
       foxSprite.play({ key: idleKey, repeat: 0 });
