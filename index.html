@@ -526,6 +526,9 @@ class Play extends Phaser.Scene {
         }); 
       }); 
       poops.add(aPoop); 
+    } else if(!cleaning && poops.getLength() > poopCounter) { 
+      let aPoop = poops.getLast(true); 
+      poops.remove(aPoop, true, true); 
     }
 
     try { 
