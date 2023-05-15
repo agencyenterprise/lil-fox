@@ -158,6 +158,7 @@ var game, inter, foxSprite, textName, textHealth, textHunger, textHappiness, tex
 var xFoxScale = yFoxScale = 4; 
 var interacting = walking = cleaning = false; 
 var delayCounter = poopCounter = 0; 
+var idleKey = 'idle'; 
 // var curHealth, curHunger, curHappiness; 
 
 var tips = [
@@ -215,6 +216,8 @@ class Play extends Phaser.Scene {
     this.load.spritesheet('sneak', 'assets/animations/lilfox_sneak_strip4.png', { frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('run', 'assets/animations/lilfox_run_strip4.png', { frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('walk', 'assets/animations/lilfox_walk_strip8.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('hurt', 'assets/animations/lilfox_hurt_strip5.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('die', 'assets/animations/lilfox_die_strip8.png', { frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('food', 'assets/sprites/food.png', { frameWidth: 16, frameHeight: 16 }); 
     this.load.spritesheet('flora', 'assets/sprites/flora.png', { frameWidth: 16, frameHeight: 16 }); 
     this.load.bitmapFont('pixelfont', 'assets/fonts/minogram_6x10.png', 'assets/fonts/minogram_6x10.xml');
@@ -296,6 +299,16 @@ class Play extends Phaser.Scene {
       frames: this.anims.generateFrameNumbers('run'), 
       frameRate: 8
     }); 
+    const hurtAnimation = this.anims.create({
+      key: 'hurt', 
+      frames: this.anims.generateFrameNumbers('hurt'), 
+      frameRate: 8
+    });
+    const dieAnimation = this.anims.create({
+      key: 'die', 
+      frames: this.anims.generateFrameNumbers('die'), 
+      frameRate: 8
+    });
 
     const foodAnimation = this.anims.create({ 
       key: 'food', 
@@ -311,7 +324,7 @@ class Play extends Phaser.Scene {
       foxSprite.setScale(xFoxScale, yFoxScale); 
     }
 
-    foxSprite.play({ key: 'idle', repeat: -1 });
+    foxSprite.play({ key: idleKey, repeat: -1 });
 
     graphics.fillStyle(0xffffff, 0.5); 
     graphics.fillRect(16, 556, 72, 36); 
@@ -333,7 +346,7 @@ class Play extends Phaser.Scene {
       }); 
       foxSprite.play({key: 'sneak', repeat: 3}).once('animationcomplete', () => {
         foxFeed(); 
-        foxSprite.play({ key: 'idle', repeat: -1 });
+        foxSprite.play({ key: idleKey, repeat: -1 });
         interacting = false; 
       });
     });
@@ -365,7 +378,7 @@ class Play extends Phaser.Scene {
       });
       foxSprite.play({key: 'sit', repeat: 2}).once('animationcomplete', () => {
         foxPet(); 
-        foxSprite.play({ key: 'idle', repeat: -1 });
+        foxSprite.play({ key: idleKey, repeat: -1 });
         interacting = false; 
       });
     });
@@ -396,7 +409,7 @@ class Play extends Phaser.Scene {
       });
       foxSprite.play({key: 'crouch', repeat: 1}).once('animationcomplete', () => {
         foxHeal(); 
-        foxSprite.play({ key: 'idle', repeat: -1 });
+        foxSprite.play({ key: idleKey, repeat: -1 });
         interacting = false; 
       });
     });
@@ -427,7 +440,7 @@ class Play extends Phaser.Scene {
         }
       });
       foxSprite.play({key: 'sit', repeat: 2}).once('animationcomplete', () => {
-        foxSprite.play({ key: 'idle', repeat: -1 });
+        foxSprite.play({ key: idleKey, repeat: -1 });
         interacting = false; 
       });
       foxAsk(); 
@@ -437,17 +450,17 @@ class Play extends Phaser.Scene {
     graphics.fillRect(712, 556, 72, 36); 
     graphics.fillStyle(0x6effeb, 1); 
     graphics.fillRect(708, 552, 72, 36);
-    const newButton = new Button(752, 572, 'New', this, () => { 
-      interacting = true; 
-      walking = false; 
-      foxSprite.anims.stop(); 
-      try { moveTween.stop(); } catch {} 
-      clearInterval(inter); 
-      foxAdopt().then(function() { 
-        interacting = false; 
-        foxSprite.play({ key: 'idle', repeat: -1 });
-        run(); 
-        inter = setInterval(run, 500); 
+    const newButton = new Button(744, 572, 'New', this, () => { 
+      closeGame().then(function() { 
+        interacting = walking = cleaning = false; 
+        delayCounter = poopCounter = 0; 
+        idleKey = 'idle'; 
+        foxAdopt().then(function() { 
+          document.getElementById('main').className = "frame open"; 
+          game = new Phaser.Game(config); 
+          run(); 
+          inter = setInterval(run, 500); 
+        }); 
       }); 
     });
 
@@ -455,7 +468,7 @@ class Play extends Phaser.Scene {
 
   update() { 
     this.children.bringToTop(foxSprite); 
-    if(!interacting && !walking) { 
+    if(!interacting && !walking && idleKey=='idle') { 
       delayCounter++; 
       if(delayCounter > 60) { 
         const shouldWalk = Phaser.Math.RND.between(1,10); 
@@ -483,7 +496,7 @@ class Play extends Phaser.Scene {
             duration: duration, 
             onComplete: function() {
               // destroy the sprite when the tween is complete
-              foxSprite.play({ key: 'idle', repeat: -1 });
+              foxSprite.play({ key: idleKey, repeat: -1 });
               walking = false; 
             }
           });
@@ -511,6 +524,10 @@ class Play extends Phaser.Scene {
         }); 
       }); 
       poops.add(aPoop); 
+    }
+    if(!interacting && idleKey=='die') { 
+      foxSprite.play({ key: idleKey, repeat: 0 });
+      interacting = true; 
     }
   }
   
@@ -616,7 +633,7 @@ const connectSnap = async (event) => {
 }; 
 
 const closeGame = async (event) => { 
-  event.preventDefault(); 
+  try { event.preventDefault(); } catch (error) { }
   clearInterval(inter); 
   interacting = false; 
   walking = false; 
@@ -657,6 +674,15 @@ const run = function() {
     */
     textAge.text = ''+parseInt(age); 
     if(!cleaning) { poopCounter = parseInt(fox.dirty); } 
+    if(fox.health < 1) { 
+      idleKey = 'die'; 
+    }
+    else if(fox.health < 60) { 
+      idleKey = 'hurt'; 
+    }
+    else { 
+      idleKey = 'idle'; 
+    }
   }); 
 }; 
 
