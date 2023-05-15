@@ -160,6 +160,36 @@ var interacting = walking = cleaning = false;
 var delayCounter = poopCounter = 0; 
 // var curHealth, curHunger, curHappiness; 
 
+var tips = [
+  // beginner 
+  "Don’t be a total greenhorn! Brush up on the basics of blockchain technology before jumping into the world of MetaMask with MetaMask Learn: **learn.metamask.io**", 
+  "Be clever like a fox! Get savvy with the MetaMask knowledge base to start your journey in crypto: **support.metamask.io**", 
+  "Guard your seed phrase like a fox guards its den - keep it safe and secure! Never share it with anyone, not even someone who claims to be from MetaMask!", 
+  "Psst! Keep your seed phrase or private key under wraps, like a fox keeping its den out of sight.", 
+  "Take baby steps and start with small transactions to get the hang of MetaMask, just like a curious fox testing the waters.", 
+  "Don't let gas fees sneak up on you! Learn about fees before you start making transactions.", 
+  "Stay sharp and keep your wits about you. Only use official MetaMask websites and links. Don't be fooled by imitators!", 
+  // intermediate
+  "Add some foxy flair to your MetaMask wallet by customizing it with your favorite tokens for quick access.", 
+  "Keep the good times rolling with the MetaMask mobile app. Take your wallet with you when you're a fox on the run!", 
+  "Use the swap feature in MetaMask to exchange assets and tokens with ease, then you can relax like a lazy fox!", 
+  "Keep your tokens safe and your mind at ease by checking gas fees on the Ethereum network before making transactions.", 
+  "Separate your crypto holdings by setting up multiple accounts in MetaMask.", 
+  "Surf the web and access your wallet at the same time with the MetaMask browser extension. It’s like a fox on the prowl, always on the lookout!", 
+  "Like a fox masking its scent, keep your online identity hidden from prying eyes with a VPN!", 
+  // advanced 
+  "Get foxy and connect your MetaMask wallet with your own applications using the MetaMask API. You’re a coding whiz!", 
+  "Like a sly fox, you can outsmart the competition with MetaMask's advanced gas settings for your transactions.", 
+  "Switch it up! Use the MetaMask network settings to hop between different Ethereum networks like a nimble fox.", 
+  "Get out there and investigate like a fantastic fox. Explore the details of your transaction history on Etherscan!", 
+  "Tax season got you down? No sweat! Export your transaction history from MetaMask for easy tax filing.", 
+  "Say goodbye to old-school passwords and hello to decentralized identity with MetaMask's Sign In With Ethereum feature.", 
+  "Track your balances across all your accounts with the MetaMask Portfolio: **portfolio.metamask.io**", 
+  // tax tips 
+  "Taxes may be sly, but you can outfox them with MetaMask’s built-in transaction tracker and export tools.", 
+  "Filing taxes can be a tricky game of cat and mouse, but with MetaMask’s detailed transaction history, you’ll be as sly as a fox.", 
+]; 
+
 class Button {
   constructor(x, y, label, scene, callback) {
     const button = scene.add.bitmapText(x, y, 'pixelfont', label, 20)
@@ -403,6 +433,24 @@ class Play extends Phaser.Scene {
       foxAsk(); 
     });
 
+    graphics.fillStyle(0xffffff, 0.5); 
+    graphics.fillRect(712, 556, 72, 36); 
+    graphics.fillStyle(0x6effeb, 1); 
+    graphics.fillRect(708, 552, 72, 36);
+    const newButton = new Button(752, 572, 'New', this, () => { 
+      interacting = true; 
+      walking = false; 
+      foxSprite.anims.stop(); 
+      try { moveTween.stop(); } catch {} 
+      clearInterval(inter); 
+      foxAdopt().then(function() { 
+        interacting = false; 
+        foxSprite.play({ key: 'idle', repeat: -1 });
+        run(); 
+        inter = setInterval(run, 500); 
+      }); 
+    });
+
   }
 
   update() { 
@@ -458,6 +506,7 @@ class Play extends Phaser.Scene {
         foxClean().then(function() { 
           poops.remove(aPoop, true, true); 
           poopCounter--; 
+          foxSay(); 
           cleaning = false; 
         }); 
       }); 
@@ -531,10 +580,36 @@ const connectSnap = async (event) => {
     const installedSnap = await getSnap();
 
     if(installedSnap) { 
-      document.getElementById('main').className = "frame open"; 
-      game = new Phaser.Game(config); 
-      run(); 
-      inter = setInterval(run, 500); 
+      const foxExists = await provider.request({
+        method: 'wallet_invokeSnap',
+        params: { 
+          snapId: snapId, 
+          request: { 
+            method: 'check', 
+          }
+        } 
+      }); 
+      if(foxExists) { 
+        document.getElementById('main').className = "frame open"; 
+        game = new Phaser.Game(config); 
+        run(); 
+        inter = setInterval(run, 500); 
+      } else { 
+        provider.request({
+          method: 'wallet_invokeSnap',
+          params: { 
+            snapId: snapId, 
+            request: { 
+              method: 'hello', 
+            }
+          } 
+        }).then(function() { 
+          document.getElementById('main').className = "frame open"; 
+          game = new Phaser.Game(config); 
+          run(); 
+          inter = setInterval(run, 500); 
+        }); 
+      }
     }
   } catch { }
   return false; 
@@ -551,7 +626,7 @@ const closeGame = async (event) => {
 }; 
 
 const run = function() { 
-  ethereum.request({
+  window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: { 
       snapId: snapId, 
@@ -586,7 +661,7 @@ const run = function() {
 }; 
 
 const foxFeed = function() { 
-  ethereum.request({
+  window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: { 
       snapId: snapId, 
@@ -600,7 +675,7 @@ const foxFeed = function() {
 }; 
 
 const foxPet = function() { 
-  ethereum.request({
+  window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: { 
       snapId: snapId, 
@@ -614,7 +689,7 @@ const foxPet = function() {
 }; 
 
 const foxHeal = function() { 
-  ethereum.request({
+  window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: { 
       snapId: snapId, 
@@ -628,7 +703,7 @@ const foxHeal = function() {
 }; 
 
 const foxAsk = function() { 
-  ethereum.request({
+  window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: { 
       snapId: snapId, 
@@ -640,7 +715,7 @@ const foxAsk = function() {
 }; 
 
 const foxClean = function() { 
-  return ethereum.request({
+  return window.ethereum.request({
     method: 'wallet_invokeSnap', 
     params: {
       snapId: snapId, 
@@ -648,6 +723,34 @@ const foxClean = function() {
         method: 'clean', 
       }
     }
+  }); 
+}; 
+
+const foxSay = function() { 
+  const rSay = Math.floor(Math.random()*tips.length); 
+  window.ethereum.request({
+    method: 'wallet_invokeSnap', 
+    params: {
+      snapId: snapId, 
+      request: { 
+        method: 'speak', 
+        params: {
+          message: tips[rSay]
+        }
+      }
+    }
+  })
+}; 
+
+const foxAdopt = function() { 
+  return window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: { 
+      snapId: snapId, 
+      request: { 
+        method: 'hello', 
+      }
+    } 
   }); 
 }; 
 
