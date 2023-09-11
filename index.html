@@ -488,6 +488,7 @@ class Play extends Phaser.Scene {
     const loadButton = new Button(menuPosition + 32, 572, "Load", this, () => {
       foxLoad().then((fox) => {
         console.info("loaded fox", fox);
+        if (!fox) { return }
         updateUI(fox)
       });
     });
