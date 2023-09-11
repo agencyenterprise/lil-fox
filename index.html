@@ -488,6 +488,7 @@ class Play extends Phaser.Scene {
     const loadButton = new Button(menuPosition + 32, 572, "Load", this, () => {
       foxLoad().then((fox) => {
         console.info("loaded fox", fox);
+        updateUI(fox)
       });
     });
   }
@@ -689,7 +690,10 @@ const run = function() {
         method: 'update', 
       }
     } 
-  }).then(function(fox) { 
+  }).then(updateUI); 
+}; 
+
+const updateUI = function(fox) { 
     const age = parseInt(parseInt(fox.age) / (1000*3600*24)); 
     textName.text = fox.name; 
 
@@ -721,8 +725,7 @@ const run = function() {
     else { 
       idleKey = 'idle'; 
     }
-  }); 
-}; 
+  }
 
 const foxFeed = function() { 
   window.ethereum.request({
