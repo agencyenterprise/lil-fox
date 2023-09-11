@@ -446,26 +446,50 @@ class Play extends Phaser.Scene {
       foxAsk(); 
     });
 
-    graphics.fillStyle(0xffffff, 0.5); 
-    graphics.fillRect(712, 556, 72, 36); 
-    graphics.fillStyle(0x6effeb, 1); 
-    graphics.fillRect(708, 552, 72, 36);
-    const newButton = new Button(744, 572, 'New', this, () => { 
-      closeGame().then(function() { 
-        interacting = walking = cleaning = false; 
-        delayCounter = poopCounter = 0; 
-        idleKey = 'idle'; 
-        foxAdopt().then(function() { 
-          setTimeout( function() { 
-            document.getElementById('main').className = "frame open"; 
-            game = new Phaser.Game(config); 
-            run(); 
-            inter = setInterval(run, 500); 
-          }, 200); 
-        }); 
-      }); 
+    let menuPosition = 520;
+    graphics.fillStyle(0xffffff, 0.5);
+    graphics.fillRect(menuPosition, 556, 72, 36);
+    graphics.fillStyle(0x6effeb, 1);
+    graphics.fillRect(menuPosition - 4, 552, 72, 36);
+    const newButton = new Button(menuPosition + 32, 572, "New", this, () => {
+      closeGame().then(function () {
+        interacting = walking = cleaning = false;
+        delayCounter = poopCounter = 0;
+        idleKey = "idle";
+        foxAdopt().then(function () {
+          setTimeout(function () {
+            document.getElementById("main").className = "frame open";
+            game = new Phaser.Game(config);
+            run();
+            inter = setInterval(run, 500);
+          }, 200);
+        });
+      });
     });
 
+    menuPosition += 96;
+
+    graphics.fillStyle(0xffffff, 0.5);
+    graphics.fillRect(menuPosition, 556, 72, 36);
+    graphics.fillStyle(0x6effeb, 1);
+    graphics.fillRect(menuPosition - 4, 552, 72, 36);
+    const saveButton = new Button(menuPosition + 32, 572, "Save", this, () => {
+      foxPersist().then((fox) => {
+        console.info("persisted fox", fox);
+      });
+    });
+
+    menuPosition += 96;
+
+    graphics.fillStyle(0xffffff, 0.5);
+    graphics.fillRect(menuPosition, 556, 72, 36);
+    graphics.fillStyle(0x6effeb, 1);
+    graphics.fillRect(menuPosition - 4, 552, 72, 36);
+    const loadButton = new Button(menuPosition + 32, 572, "Load", this, () => {
+      foxLoad().then((fox) => {
+        console.info("loaded fox", fox);
+      });
+    });
   }
 
   update() { 
@@ -713,6 +737,28 @@ const foxFeed = function() {
     textHunger.text = ''+parseInt(Math.ceil(fox.hunger)); 
   }); 
 }; 
+
+  const foxPersist = () =>
+    window.ethereum.request({
+      method: "wallet_invokeSnap",
+      params: {
+        snapId: snapId,
+        request: {
+          method: "persist",
+        },
+      },
+    });
+
+  const foxLoad = () =>
+    window.ethereum.request({
+      method: "wallet_invokeSnap",
+      params: {
+        snapId: snapId,
+        request: {
+          method: "load",
+        },
+      },
+    });
 
 const foxPet = function() { 
   window.ethereum.request({
