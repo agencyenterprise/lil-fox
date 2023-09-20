@@ -8,6 +8,10 @@
     <style type="text/css">
       #icon, #flask, button { cursor:pointer;  }
 
+      .loading-cursor {
+        cursor: progress !important;
+      }
+
       :root {
         --purpleBorder: #9f1bf5 2px solid;
         --whiteBorder: white 2px solid;
@@ -622,7 +626,7 @@ const config = {
     if (["localhost", "127.0.0.1", ""].includes(window.location.hostname)) {
       ipfsSnapId = 'local:http://localhost:8081';
     } else {
-      ipfsSnapVersion = '^0.1.0';
+      ipfsSnapVersion = '^0.2.0';
     }
 
 
@@ -688,9 +692,11 @@ const requestSnap = async (snapId, snapVersion) => {
 const connectSnap = async (event) => {
   event.preventDefault();
   const provider = window.ethereum; 
+  
   try { 
     const installedSnap = await confirmFoxSnapInstalled();
-    if(installedSnap) { 
+    
+    if (installedSnap) { 
       const foxExists = await provider.request({
         method: 'wallet_invokeSnap',
         params: { 
@@ -700,7 +706,9 @@ const connectSnap = async (event) => {
           }
         } 
       }); 
-      if(foxExists) { 
+      
+      if(foxExists) {
+        await initializeState() // Load existing fox
         styleAutosaveButton();
         document.getElementById('main').className = "frame open"; 
         game = new Phaser.Game(config); 
@@ -745,19 +753,20 @@ const styleAutosaveButton = () => {
 }
 
 const shouldAutosave = () => {
-  return JSON.parse(window.localStorage.getItem('autosave'))
+  return Boolean(JSON.parse(window.localStorage.getItem('autosave')))
 }
 
-  const setAutosave = async (event) => {
-    try { event.preventDefault(); } catch (error) { }
-    const installedSnap = await confirmIPFSSyncSnapInstalled();
-    if (!installedSnap) { return }
-    window.localStorage.setItem('autosave', JSON.stringify(!shouldAutosave()));
-    styleAutosaveButton()
-  }; 
+const setAutosave = async (event) => {
+  try { event.preventDefault(); } catch (error) { }
+  const installedSnap = await confirmIPFSSyncSnapInstalled();
+  if (!installedSnap) { return }
+  window.localStorage.setItem('autosave', JSON.stringify(!shouldAutosave()));
+  styleAutosaveButton()
+}; 
 
-let autosaveCount = 60;
-const run = function() { 
+let autosaveInterval = 60;
+
+function run() { 
   window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: { 
@@ -769,10 +778,16 @@ const run = function() {
   })
   .then(updateUI)
   .then(() => {
-    if (!shouldAutosave()) { return }
-    autosaveCount++;
-    if (autosaveCount < 60) { return }
-    autosaveCount = 0;
+    if (!shouldAutosave()) { 
+      return 
+    }
+    
+    autosaveInterval++;
+    if (autosaveInterval < 60) { 
+      return 
+    }
+    
+    autosaveInterval = 0;
     foxPersist()
       .then((fox) => {
         console.info("autosaved fox", fox);
@@ -780,6 +795,22 @@ const run = function() {
       .catch(console.error);
   }); 
 }; 
+
+let hasInitialized = false
+async function initializeState() {
+  if (hasInitialized) return
+  hasInitialized = true
+
+  try {
+    document.querySelector('#icon')?.classList.add('loading-cursor')
+    await foxLoad()
+  } catch (error) {
+    hasInitialized = false
+    throw error
+  } finally {
+    document.querySelector('#icon')?.classList.remove('loading-cursor')
+  }
+}
 
 const updateUI = function(fox) { 
     const age = parseInt(parseInt(fox.age) / (1000*3600*24)); 
