@@ -613,22 +613,20 @@ const config = {
     scene: Play
 };
 
-    var foxSnapId = 'npm:pet-fox';
-    var foxSnapVersion = '^0';
-    if (["localhost", "127.0.0.1", ""].includes(window.location.hostname)) {
-      foxSnapId = 'local:http://localhost:8080';
-    } else {
-      foxSnapVersion = '^0.2.0';
-    }
+var foxSnapId = 'npm:pet-fox';
+var foxSnapVersion = '^0';
+if (["localhost", "127.0.0.1", ""].includes(window.location.hostname)) {
+  foxSnapId = 'local:http://localhost:8080';
+} else {
+  foxSnapVersion = '^0.2.0';
+}
 
-    var ipfsSnapId = 'npm:@ae-studio/snapsync';
-    var ipfsSnapVersion = '^0';
-    if (["localhost", "127.0.0.1", ""].includes(window.location.hostname)) {
-      ipfsSnapId = 'local:http://localhost:8081';
-    } else {
-      ipfsSnapVersion = '^0.2.4';
-    }
-
+var ipfsSnapId = 'npm:@ae-studio/snapsync';
+var ipfsSnapVersion = '^0.2.4';
+// if (["localhost", "127.0.0.1", ""].includes(window.location.hostname)) {
+//   ipfsSnapId = 'local:http://localhost:8081';
+//   ipfsSnapVersion = '^0';
+// }
 
 const isFlask = async () => {
   const provider = window.ethereum;
