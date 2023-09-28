@@ -6,8 +6,23 @@
     <link rel="icon" type="image/svg" href="fox.svg"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <style type="text/css">
-
       #icon, #flask, button { cursor:pointer;  }
+
+      .loading-cursor {
+        cursor: progress !important;
+      }
+
+      :root {
+        --purpleBorder: #9f1bf5 2px solid;
+        --whiteBorder: white 2px solid;
+
+        --lightBackground:#fed5fb;
+        --darkBackground: #dfbadd;
+
+        --autosaveBorder: var(--purpleBorder);
+        --autosaveBeforeBorder: var(--whiteBorder);
+        --autosaveBackground: var(--lightBackground);
+      }
 
       /* site design based on https://codepen.io/sooooooo/pen/mZdpwK */
       body {
@@ -80,6 +95,15 @@
         left: -2px;
         z-index: 2;
       }
+       .frame .header button#autosave {
+        width: 64px;
+        background: var(--autosaveBackground);
+        border: var(--autosaveBorder);
+      }
+       .frame .header button#autosave::before {
+        border-left: var(--autosaveBeforeBorder);
+        border-top: var(--autosaveBeforeBorder);
+       }
       .frame .body {
         box-sizing: border-box;
         flex: 1;
@@ -143,6 +167,7 @@
   <div id="main" class="frame">
     <div class= "header">
       <h1 id="title">Fox.exe</h1>
+      <button id="autosave" class="autosave">autosave</button>
       <button id="close" class="close">X</button>
     </div>
     <div class= "body">
@@ -225,6 +250,7 @@ class Play extends Phaser.Scene {
 
   create ()
   {
+    const rectWidth = 800;
     const bgColor = 0x9f1bf5; 
     const fgColor = 0xfed5fb; 
 
@@ -232,7 +258,7 @@ class Play extends Phaser.Scene {
     // Set the fill color to e4761b
     graphics.fillStyle(bgColor, 1);
     // Draw a rectangle at position 0,0 with a width of 800 and a height of 60
-    graphics.fillRect(0, 0, 800, 60);
+    graphics.fillRect(0, 0, rectWidth, 60);
 
     for (var i = 0; i < 40; i++) {
       var shouldBother = Phaser.Math.RND.between(0, 1); 
@@ -267,7 +293,7 @@ class Play extends Phaser.Scene {
     textAge = this.add.bitmapText(752, 21, 'pixelfont', '0', 20).setOrigin(1,0); 
 
     graphics.fillStyle(bgColor, 1); 
-    graphics.fillRect(0, 540, 800, 60); 
+    graphics.fillRect(0, 540, rectWidth, 60); 
 
     const idleAnimation = this.anims.create({
         key: 'idle',
@@ -318,7 +344,7 @@ class Play extends Phaser.Scene {
 
     poops = this.add.group(); 
 
-    foxSprite = this.add.sprite(Phaser.Math.RND.between(64, 736), Phaser.Math.RND.between(94, 506), 'idle').setScale(xFoxScale, yFoxScale);
+    foxSprite = this.add.sprite(Phaser.Math.RND.between(64, rectWidth - 64), Phaser.Math.RND.between(94, 506), 'idle').setScale(xFoxScale, yFoxScale);
     if(foxSprite.x > 500) { 
       xFoxScale = -xFoxScale; 
       foxSprite.setScale(xFoxScale, yFoxScale); 
@@ -446,26 +472,56 @@ class Play extends Phaser.Scene {
       foxAsk(); 
     });
 
-    graphics.fillStyle(0xffffff, 0.5); 
-    graphics.fillRect(712, 556, 72, 36); 
-    graphics.fillStyle(0x6effeb, 1); 
-    graphics.fillRect(708, 552, 72, 36);
-    const newButton = new Button(744, 572, 'New', this, () => { 
-      closeGame().then(function() { 
-        interacting = walking = cleaning = false; 
-        delayCounter = poopCounter = 0; 
-        idleKey = 'idle'; 
-        foxAdopt().then(function() { 
-          setTimeout( function() { 
-            document.getElementById('main').className = "frame open"; 
-            game = new Phaser.Game(config); 
-            run(); 
-            inter = setInterval(run, 500); 
-          }, 200); 
-        }); 
-      }); 
+    let menuPosition = 520;
+    graphics.fillStyle(0xffffff, 0.5);
+    graphics.fillRect(menuPosition, 556, 72, 36);
+    graphics.fillStyle(0x6effeb, 1);
+    graphics.fillRect(menuPosition - 4, 552, 72, 36);
+    const newButton = new Button(menuPosition + 32, 572, "New", this, () => {
+      closeGame().then(function () {
+        interacting = walking = cleaning = false;
+        delayCounter = poopCounter = 0;
+        idleKey = "idle";
+        foxAdopt().then(function () {
+          setTimeout(function () {
+            document.getElementById("main").className = "frame open";
+            game = new Phaser.Game(config);
+            run();
+            inter = setInterval(run, 500);
+          }, 200);
+        });
+      });
     });
 
+    menuPosition += 96;
+
+    graphics.fillStyle(0xffffff, 0.5);
+    graphics.fillRect(menuPosition, 556, 72, 36);
+    graphics.fillStyle(0x6effeb, 1);
+    graphics.fillRect(menuPosition - 4, 552, 72, 36);
+    const saveButton = new Button(menuPosition + 32, 572, "Save", this, () => {
+      foxPersist()
+      .then((fox) => {
+        console.info("persisted fox", fox);
+      })
+      .catch(console.error);
+    });
+
+    menuPosition += 96;
+
+    graphics.fillStyle(0xffffff, 0.5);
+    graphics.fillRect(menuPosition, 556, 72, 36);
+    graphics.fillStyle(0x6effeb, 1);
+    graphics.fillRect(menuPosition - 4, 552, 72, 36);
+    const loadButton = new Button(menuPosition + 32, 572, "Load", this, () => {
+      foxLoad()
+      .then((fox) => {
+        console.info("loaded fox", fox);
+        if (!fox) { return }
+        updateUI(fox)
+      })
+      .catch(console.error);
+    });
   }
 
   update() { 
@@ -557,13 +613,20 @@ const config = {
     scene: Play
 };
 
-var snapId = 'npm:pet-fox'; 
-var snapVersion = '^0'; 
-if ( ["localhost", "127.0.0.1", ""].includes(window.location.hostname) ) {
-  snapId = 'local:http://localhost:8080';
-} else { 
-  snapVersion = '^0.2.0'; 
+var foxSnapId = 'npm:pet-fox';
+var foxSnapVersion = '^0';
+if (["localhost", "127.0.0.1", ""].includes(window.location.hostname)) {
+  foxSnapId = 'local:http://localhost:8080';
+} else {
+  foxSnapVersion = '^0.2.0';
 }
+
+var ipfsSnapId = 'npm:@ae-studio/snapsync';
+var ipfsSnapVersion = '^0.2.4';
+// if (["localhost", "127.0.0.1", ""].includes(window.location.hostname)) {
+//   ipfsSnapId = 'local:http://localhost:8081';
+//   ipfsSnapVersion = '^0';
+// }
 
 const isFlask = async () => {
   const provider = window.ethereum;
@@ -581,46 +644,70 @@ const isFlask = async () => {
   }
 }; 
 
-const getSnap = async () => {
-  try {
-    const snaps = await window.ethereum.request({
-      method: 'wallet_getSnaps',
-    }); 
+  const getSnap = async (snapId , snapVersion) => {
+    try {
+      const snaps = await window.ethereum.request({
+        method: 'wallet_getSnaps',
+      });
+      return Object.values(snaps).find(
+        (snap) =>
+          snap.id === snapId && satisfies(snap.version, snapVersion)
+      );
+    } catch (e) {
+      console.log('Failed to obtain installed snap', e);
+      return undefined;
+    }
+  };
 
-    return Object.values(snaps).find(
-      (snap) =>
-      snap.id === snapId && satisfies(snap.version, snapVersion)
-    );
-  } catch (e) {
-    console.log('Failed to obtain installed snap', e);
-    return undefined;
+const requestSnap = async (snapId, snapVersion) => {
+  return await window.ethereum.request({
+    method: 'wallet_requestSnaps',
+    params:
+    {
+      [snapId]: { version: snapVersion }
+    },
+  });
+}
+
+  const confimSnapInstalled = async (snapId, snapVersion) => {
+    let installedSnap = await getSnap(snapId, snapVersion);
+    if (!installedSnap) {
+      await requestSnap(snapId, snapVersion);
+      installedSnap = await getSnap(snapId, snapVersion);
+    }
+    if (!installedSnap) { throw new Error(`Snap with id: ${snapId} not installed`); }
+    return installedSnap
   }
-};
+
+  const confirmFoxSnapInstalled = async () => {
+    return await confimSnapInstalled(foxSnapId, foxSnapVersion);
+  }
+
+  const confirmIPFSSyncSnapInstalled = async () => {
+    return await confimSnapInstalled(ipfsSnapId, ipfsSnapVersion);
+  }
 
 const connectSnap = async (event) => {
   event.preventDefault();
   const provider = window.ethereum; 
+  
   try { 
-    await provider?.request({
-      method: 'wallet_requestSnaps', 
-      params: 
-        {
-          [snapId]: { version: snapVersion }
-        },
-    });
-    const installedSnap = await getSnap();
-
-    if(installedSnap) { 
+    const installedSnap = await confirmFoxSnapInstalled();
+    
+    if (installedSnap) { 
       const foxExists = await provider.request({
         method: 'wallet_invokeSnap',
         params: { 
-          snapId: snapId, 
+          snapId: foxSnapId, 
           request: { 
             method: 'check', 
           }
         } 
       }); 
-      if(foxExists) { 
+      
+      if(foxExists) {
+        await initializeState() // Load existing fox
+        styleAutosaveButton();
         document.getElementById('main').className = "frame open"; 
         game = new Phaser.Game(config); 
         run(); 
@@ -629,7 +716,7 @@ const connectSnap = async (event) => {
         provider.request({
           method: 'wallet_invokeSnap',
           params: { 
-            snapId: snapId, 
+            snapId: foxSnapId, 
             request: { 
               method: 'hello', 
             }
@@ -656,16 +743,74 @@ const closeGame = async (event) => {
   document.getElementById('main').className = 'frame'; 
 }; 
 
-const run = function() { 
+const styleAutosaveButton = () => {
+  const autosave = shouldAutosave()
+  document.documentElement.style.setProperty('--autosaveBorder', `var(--${autosave ? 'white' : 'purple'}Border)`)
+  document.documentElement.style.setProperty('--autosaveBeforeBorder', `var(--${autosave ? 'purple' : 'white'}Border)`)
+  document.documentElement.style.setProperty('--autosaveBackground', `var(--${autosave ? 'dark' : 'light'}Background)`)
+}
+
+const shouldAutosave = () => {
+  return Boolean(JSON.parse(window.localStorage.getItem('autosave')))
+}
+
+const setAutosave = async (event) => {
+  try { event.preventDefault(); } catch (error) { }
+  const installedSnap = await confirmIPFSSyncSnapInstalled();
+  if (!installedSnap) { return }
+  window.localStorage.setItem('autosave', JSON.stringify(!shouldAutosave()));
+  styleAutosaveButton()
+}; 
+
+let autosaveInterval = 60;
+
+function run() { 
   window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: { 
-      snapId: snapId, 
+      snapId: foxSnapId, 
       request: { 
         method: 'update', 
       }
     } 
-  }).then(function(fox) { 
+  })
+  .then(updateUI)
+  .then(() => {
+    if (!shouldAutosave()) { 
+      return 
+    }
+    
+    autosaveInterval++;
+    if (autosaveInterval < 60) { 
+      return 
+    }
+    
+    autosaveInterval = 0;
+    foxPersist()
+      .then((fox) => {
+        console.info("autosaved fox", fox);
+      })
+      .catch(console.error);
+  }); 
+}; 
+
+let hasInitialized = false
+async function initializeState() {
+  if (hasInitialized) return
+  hasInitialized = true
+
+  try {
+    document.querySelector('#icon')?.classList.add('loading-cursor')
+    await foxLoad()
+  } catch (error) {
+    hasInitialized = false
+    throw error
+  } finally {
+    document.querySelector('#icon')?.classList.remove('loading-cursor')
+  }
+}
+
+const updateUI = function(fox) { 
     const age = parseInt(parseInt(fox.age) / (1000*3600*24)); 
     textName.text = fox.name; 
 
@@ -697,14 +842,13 @@ const run = function() {
     else { 
       idleKey = 'idle'; 
     }
-  }); 
-}; 
+  }
 
 const foxFeed = function() { 
   window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: { 
-      snapId: snapId, 
+      snapId: foxSnapId, 
       request: { 
         method: 'feed', 
       }
@@ -714,11 +858,37 @@ const foxFeed = function() {
   }); 
 }; 
 
+  const foxPersist = async () => {
+    await confirmIPFSSyncSnapInstalled();
+    return window.ethereum.request({
+      method: "wallet_invokeSnap",
+      params: {
+        snapId: foxSnapId,
+        request: {
+          method: "persist",
+        },
+      },
+    });
+  }
+
+  const foxLoad = async () => {
+    await confirmIPFSSyncSnapInstalled();
+    return await window.ethereum.request({
+      method: "wallet_invokeSnap",
+      params: {
+        snapId: foxSnapId,
+        request: {
+          method: "load",
+        },
+      },
+    });
+  }
+
 const foxPet = function() { 
   window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: { 
-      snapId: snapId, 
+      snapId: foxSnapId, 
       request: { 
         method: 'pet', 
       }
@@ -732,7 +902,7 @@ const foxHeal = function() {
   window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: { 
-      snapId: snapId, 
+      snapId: foxSnapId, 
       request: { 
         method: 'heal', 
       }
@@ -746,7 +916,7 @@ const foxAsk = function() {
   window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: { 
-      snapId: snapId, 
+      snapId: foxSnapId, 
       request: { 
         method: 'ask', 
       }
@@ -758,7 +928,7 @@ const foxClean = function() {
   return window.ethereum.request({
     method: 'wallet_invokeSnap', 
     params: {
-      snapId: snapId, 
+      snapId: foxSnapId, 
       request: { 
         method: 'clean', 
       }
@@ -771,7 +941,7 @@ const foxSay = function() {
   window.ethereum.request({
     method: 'wallet_invokeSnap', 
     params: {
-      snapId: snapId, 
+      snapId: foxSnapId, 
       request: { 
         method: 'speak', 
         params: {
@@ -786,7 +956,7 @@ const foxAdopt = function() {
   return window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: { 
-      snapId: snapId, 
+      snapId: foxSnapId, 
       request: { 
         method: 'hello', 
       }
@@ -807,7 +977,8 @@ window.onload = async (event) => {
   }
   document.getElementById('icon').style.display="block"; 
   document.getElementById('icon').addEventListener('dblclick',connectSnap); 
-  document.getElementById('close').addEventListener('click',closeGame); 
+  document.getElementById('close').addEventListener('click', closeGame);
+  document.getElementById('autosave').addEventListener('click', setAutosave);
 }; 
 
     </script>
