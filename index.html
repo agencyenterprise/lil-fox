@@ -1,133 +1,146 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Lil Fox</title>
-    <link rel="icon" type="image/svg" href="fox.svg"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <style type="text/css">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>Lil Fox</title>
+  <link rel="icon" type="image/svg" href="fox.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <style type="text/css">
+    #icon,
+    #metamask,
+    button {
+      cursor: pointer;
+    }
 
-      #icon, #flask, button { cursor:pointer;  }
+    /* site design based on https://codepen.io/sooooooo/pen/mZdpwK */
+    body {
+      background: #4955c3;
+      background: linear-gradient(to bottom, #fed5fb 0%, #4955c3 100%);
+      height: 100vh;
+      margin: 0;
+      font-family: sans-serif;
+      font-size: 12px;
+    }
 
-      /* site design based on https://codepen.io/sooooooo/pen/mZdpwK */
-      body {
-        background: #4955c3;
-        background: linear-gradient(to bottom, #fed5fb 0%, #4955c3 100%);
-        height:100vh; 
-        margin:0; 
-        font-family:sans-serif; 
-        font-size:12px; 
-      }
+    .frame {
+      text-align: center;
+      display: flex;
+      width: 814px;
+      border-top: 2px solid white;
+      border-bottom: 2px solid #9f1bf5;
+      border-left: 2px solid white;
+      border-right: 2px solid #9f1bf5;
+      background-color: #6effeb;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -334px;
+      margin-left: -407px;
+      justify-content: center;
+      flex-direction: column;
+      box-shadow: 10px 10px rgba(90, 90, 90, 0.9);
+    }
 
-      .frame {
-        text-align: center;
-        display: flex;
-        width: 814px;
-        border-top: 2px solid white;
-        border-bottom: 2px solid #9f1bf5;
-        border-left: 2px solid white;
-        border-right: 2px solid #9f1bf5;
-        background-color: #6effeb;
-        position: absolute;
-        top:50%;
-        left:50%; 
-        margin-top:-334px; 
-        margin-left:-407px; 
-        justify-content: center;
-        flex-direction: column;
-        box-shadow: 10px 10px rgba(90, 90, 90, 0.9);
-      }
-      .frame .header {
-        display: flex;
-        margin: 4px;
-        margin-bottom: 0;
-        box-sizing: border-box;
-        width: 804px;
-        height: 48px;
-        margin-top: 4px;
-        padding: 4px;
-        background: #fed5fb;
-        border: 2px solid #9f1bf5;
-      }
-      .frame .header h1 {
-        font-size:24px;
-        margin-right: auto;
-        margin-top: auto;
-        margin-bottom: auto;
-        padding-left:8px; 
-      }
-      .frame .header button {
-        align-self: flex-end;
-        flex: 0 1 auto;
-        margin: auto 2px;
-        padding: 0 2px;
-        background: none;
-        border: #9f1bf5 2px solid;
-        width: 24px;
-        height: 24px;
-        color: #9f1bf5;
-        line-height: 1.0;
-        position: relative;
-      }
-      .frame .header button:before {
-        content: "";
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        border-left: white solid 2px;
-        border-top: white solid 2px;
-        top: -2px;
-        left: -2px;
-        z-index: 2;
-      }
-      .frame .body {
-        box-sizing: border-box;
-        flex: 1;
-        width: 804px;
-        margin: 4px;
-        background: #fed5fb;
-        border: 2px solid #9f1bf5;
-      }
-      #game {
-        width: 800px;
-        height: 600px;
-        float: left;
-      }
+    .frame .header {
+      display: flex;
+      margin: 4px;
+      margin-bottom: 0;
+      box-sizing: border-box;
+      width: 804px;
+      height: 48px;
+      margin-top: 4px;
+      padding: 4px;
+      background: #fed5fb;
+      border: 2px solid #9f1bf5;
+    }
 
-      @keyframes scale-up {
-        from {
-          transform: scale(0.01);
-        }
-        to {
-          transform: scale(1);
-        }
-      }
+    .frame .header h1 {
+      font-size: 24px;
+      margin-right: auto;
+      margin-top: auto;
+      margin-bottom: auto;
+      padding-left: 8px;
+    }
 
-      .open { 
-        visibility:visible !important;
-        animation:scale-up 0.4s forwards ease-in-out;
-      }
+    .frame .header button {
+      align-self: flex-end;
+      flex: 0 1 auto;
+      margin: auto 2px;
+      padding: 0 2px;
+      background: none;
+      border: #9f1bf5 2px solid;
+      width: 24px;
+      height: 24px;
+      color: #9f1bf5;
+      line-height: 1.0;
+      position: relative;
+    }
 
-      #icon, #flask { 
-        position:absolute;
-        top:50%;
-        left:50%;
-        margin-top:-30px;
-        margin-left:-24px;
-        text-align:center;
-        text-shadow:#fff 0 0 2px;
-        font-weight:bold; 
+    .frame .header button:before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-left: white solid 2px;
+      border-top: white solid 2px;
+      top: -2px;
+      left: -2px;
+      z-index: 2;
+    }
+
+    .frame .body {
+      box-sizing: border-box;
+      flex: 1;
+      width: 804px;
+      margin: 4px;
+      background: #fed5fb;
+      border: 2px solid #9f1bf5;
+    }
+
+    #game {
+      width: 800px;
+      height: 600px;
+      float: left;
+    }
+
+    @keyframes scale-up {
+      from {
+        transform: scale(0.01);
       }
 
-      /* start out closed */
-      .frame { 
-        visibility: hidden;
-        transform: scale(0.01); 
+      to {
+        transform: scale(1);
       }
-    </style>
-    <script src="//cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
-    <script src="https://unpkg.com/compare-versions/lib/umd/index.js"></script>
+    }
+
+    .open {
+      visibility: visible !important;
+      animation: scale-up 0.4s forwards ease-in-out;
+    }
+
+    #icon,
+    #metamask {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -30px;
+      margin-left: -24px;
+      text-align: center;
+      text-shadow: #fff 0 0 2px;
+      font-weight: bold;
+    }
+
+    /* start out closed */
+    .frame {
+      visibility: hidden;
+      transform: scale(0.01);
+    }
+  </style>
+  <script src="//cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+  <script src="https://unpkg.com/compare-versions/lib/umd/index.js"></script>
 </head>
+
 <body>
 
   <div id="icon" style="display:none">
@@ -135,682 +148,689 @@
     <div>Fox.exe</div>
   </div>
 
-  <div id="flask" style="display:none">
-    <img src="ie.png" width="48" height="48" alt="flask icon">
-    <div>Get Flask</div>
+  <div id="metamask" style="display:none">
+    <img src="ie.png" width="48" height="48" alt="metamask icon">
+    <div>MetaMask v11+ Required</div>
+    <div>Get MetaMask</div>
   </div>
 
   <div id="main" class="frame">
-    <div class= "header">
+    <div class="header">
       <h1 id="title">Fox.exe</h1>
       <button id="close" class="close">X</button>
     </div>
-    <div class= "body">
+    <div class="body">
       <div id="game"></div>
     </div>
   </div>
 
   <script type="text/javascript">
 
-const { compareVersions, compare, satisfies, validate } = window.compareVersions; 
+    const { compareVersions, compare, satisfies, validate } = window.compareVersions;
 
-var game, inter, foxSprite, textName, textHealth, textHunger, textHappiness, textAge, moveTween, poops; 
-var xFoxScale = yFoxScale = 4; 
-var interacting = walking = cleaning = false; 
-var delayCounter = poopCounter = 0; 
-var idleKey = 'idle'; 
-// var curHealth, curHunger, curHappiness; 
+    var game, inter, foxSprite, textName, textHealth, textHunger, textHappiness, textAge, moveTween, poops;
+    var xFoxScale = yFoxScale = 4;
+    var interacting = walking = cleaning = false;
+    var delayCounter = poopCounter = 0;
+    var idleKey = 'idle';
+    // var curHealth, curHunger, curHappiness; 
 
-var tips = [
-  // beginner 
-  "Don’t be a total greenhorn! Brush up on the basics of blockchain technology before jumping into the world of MetaMask with MetaMask Learn: **learn.metamask.io**", 
-  "Be clever like a fox! Get savvy with the MetaMask knowledge base to start your journey in crypto: **support.metamask.io**", 
-  "Guard your seed phrase like a fox guards its den - keep it safe and secure! Never share it with anyone, not even someone who claims to be from MetaMask!", 
-  "Psst! Keep your seed phrase or private key under wraps, like a fox keeping its den out of sight.", 
-  "Take baby steps and start with small transactions to get the hang of MetaMask, just like a curious fox testing the waters.", 
-  "Don't let gas fees sneak up on you! Learn about fees before you start making transactions.", 
-  "Stay sharp and keep your wits about you. Only use official MetaMask websites and links. Don't be fooled by imitators!", 
-  // intermediate
-  "Add some foxy flair to your MetaMask wallet by customizing it with your favorite tokens for quick access.", 
-  "Keep the good times rolling with the MetaMask mobile app. Take your wallet with you when you're a fox on the run!", 
-  "Use the swap feature in MetaMask to exchange assets and tokens with ease, then you can relax like a lazy fox!", 
-  "Keep your tokens safe and your mind at ease by checking gas fees on the Ethereum network before making transactions.", 
-  "Separate your crypto holdings by setting up multiple accounts in MetaMask.", 
-  "Surf the web and access your wallet at the same time with the MetaMask browser extension. It’s like a fox on the prowl, always on the lookout!", 
-  "Like a fox masking its scent, keep your online identity hidden from prying eyes with a VPN!", 
-  // advanced 
-  "Get foxy and connect your MetaMask wallet with your own applications using the MetaMask API. You’re a coding whiz!", 
-  "Like a sly fox, you can outsmart the competition with MetaMask's advanced gas settings for your transactions.", 
-  "Switch it up! Use the MetaMask network settings to hop between different Ethereum networks like a nimble fox.", 
-  "Get out there and investigate like a fantastic fox. Explore the details of your transaction history on Etherscan!", 
-  "Tax season got you down? No sweat! Export your transaction history from MetaMask for easy tax filing.", 
-  "Say goodbye to old-school passwords and hello to decentralized identity with MetaMask's Sign In With Ethereum feature.", 
-  "Track your balances across all your accounts with the MetaMask Portfolio: **portfolio.metamask.io**", 
-  // tax tips 
-  "Taxes may be sly, but you can outfox them with MetaMask’s built-in transaction tracker and export tools.", 
-  "Filing taxes can be a tricky game of cat and mouse, but with MetaMask’s detailed transaction history, you’ll be as sly as a fox.", 
-]; 
+    var tips = [
+      // beginner 
+      "Don’t be a total greenhorn! Brush up on the basics of blockchain technology before jumping into the world of MetaMask with MetaMask Learn: **learn.metamask.io**",
+      "Be clever like a fox! Get savvy with the MetaMask knowledge base to start your journey in crypto: **support.metamask.io**",
+      "Guard your seed phrase like a fox guards its den - keep it safe and secure! Never share it with anyone, not even someone who claims to be from MetaMask!",
+      "Psst! Keep your seed phrase or private key under wraps, like a fox keeping its den out of sight.",
+      "Take baby steps and start with small transactions to get the hang of MetaMask, just like a curious fox testing the waters.",
+      "Don't let gas fees sneak up on you! Learn about fees before you start making transactions.",
+      "Stay sharp and keep your wits about you. Only use official MetaMask websites and links. Don't be fooled by imitators!",
+      // intermediate
+      "Add some foxy flair to your MetaMask wallet by customizing it with your favorite tokens for quick access.",
+      "Keep the good times rolling with the MetaMask mobile app. Take your wallet with you when you're a fox on the run!",
+      "Use the swap feature in MetaMask to exchange assets and tokens with ease, then you can relax like a lazy fox!",
+      "Keep your tokens safe and your mind at ease by checking gas fees on the Ethereum network before making transactions.",
+      "Separate your crypto holdings by setting up multiple accounts in MetaMask.",
+      "Surf the web and access your wallet at the same time with the MetaMask browser extension. It’s like a fox on the prowl, always on the lookout!",
+      "Like a fox masking its scent, keep your online identity hidden from prying eyes with a VPN!",
+      // advanced 
+      "Get foxy and connect your MetaMask wallet with your own applications using the MetaMask API. You’re a coding whiz!",
+      "Like a sly fox, you can outsmart the competition with MetaMask's advanced gas settings for your transactions.",
+      "Switch it up! Use the MetaMask network settings to hop between different Ethereum networks like a nimble fox.",
+      "Get out there and investigate like a fantastic fox. Explore the details of your transaction history on Etherscan!",
+      "Tax season got you down? No sweat! Export your transaction history from MetaMask for easy tax filing.",
+      "Say goodbye to old-school passwords and hello to decentralized identity with MetaMask's Sign In With Ethereum feature.",
+      "Track your balances across all your accounts with the MetaMask Portfolio: **portfolio.metamask.io**",
+      // tax tips 
+      "Taxes may be sly, but you can outfox them with MetaMask’s built-in transaction tracker and export tools.",
+      "Filing taxes can be a tricky game of cat and mouse, but with MetaMask’s detailed transaction history, you’ll be as sly as a fox.",
+    ];
 
-class Button {
-  constructor(x, y, label, scene, callback) {
-    const button = scene.add.bitmapText(x, y, 'pixelfont', label, 20)
-        .setOrigin(0.5)
-        .setInteractive({ useHandCursor: true })
-        .on('pointerdown', () => callback()); 
-  }
-}
-
-class Play extends Phaser.Scene {
-
-  constructor ()
-  {
-    super();
-  }
-
-  preload ()
-  {
-    this.load.spritesheet('icons', 'assets/sprites/icons.png', { frameWidth: 16, frameHeight: 16 }); 
-    this.load.spritesheet('idle', 'assets/animations/lilfox_idle_strip8.png', { frameWidth: 32, frameHeight: 32 });
-    this.load.spritesheet('crouch', 'assets/animations/lilfox_crouch_strip8.png', { frameWidth: 32, frameHeight: 32 });
-    this.load.spritesheet('sit', 'assets/animations/lilfox_sit_strip8.png', { frameWidth: 32, frameHeight: 32 });
-    this.load.spritesheet('sneak', 'assets/animations/lilfox_sneak_strip4.png', { frameWidth: 32, frameHeight: 32 });
-    this.load.spritesheet('run', 'assets/animations/lilfox_run_strip4.png', { frameWidth: 32, frameHeight: 32 });
-    this.load.spritesheet('walk', 'assets/animations/lilfox_walk_strip8.png', { frameWidth: 32, frameHeight: 32 });
-    this.load.spritesheet('hurt', 'assets/animations/lilfox_hurt_strip5.png', { frameWidth: 32, frameHeight: 32 });
-    this.load.spritesheet('die', 'assets/animations/lilfox_die_strip8.png', { frameWidth: 32, frameHeight: 32 });
-    this.load.spritesheet('food', 'assets/sprites/food.png', { frameWidth: 16, frameHeight: 16 }); 
-    this.load.spritesheet('flora', 'assets/sprites/flora.png', { frameWidth: 16, frameHeight: 16 }); 
-    this.load.bitmapFont('pixelfont', 'assets/fonts/minogram_6x10.png', 'assets/fonts/minogram_6x10.xml');
-  }
-
-  create ()
-  {
-    const bgColor = 0x9f1bf5; 
-    const fgColor = 0xfed5fb; 
-
-    var graphics = this.add.graphics(); 
-    // Set the fill color to e4761b
-    graphics.fillStyle(bgColor, 1);
-    // Draw a rectangle at position 0,0 with a width of 800 and a height of 60
-    graphics.fillRect(0, 0, 800, 60);
-
-    for (var i = 0; i < 40; i++) {
-      var shouldBother = Phaser.Math.RND.between(0, 1); 
-      if(shouldBother) { 
-        var spriteIndex = Phaser.Math.RND.between(0, 5); 
-        var col = i % 8; 
-        var row = Math.floor(i / 8); 
-        var x = 64 + col * 96 + Phaser.Math.RND.between(-36, 36); 
-        var y = 120 + row * 88 + Phaser.Math.RND.between(-24, 24); 
-        this.add.image(x, y, 'flora', spriteIndex).setScale(3);
+    class Button {
+      constructor(x, y, label, scene, callback) {
+        const button = scene.add.bitmapText(x, y, 'pixelfont', label, 20)
+          .setOrigin(0.5)
+          .setInteractive({ useHandCursor: true })
+          .on('pointerdown', () => callback());
       }
     }
 
-    graphics.fillStyle(fgColor, 1);
-    graphics.fillRoundedRect(12, 12, 300, 36, 10);
-    textName = this.add.bitmapText(25, 21, 'pixelfont', 'Fox', 20);
+    class Play extends Phaser.Scene {
 
-    graphics.fillRoundedRect(336, 12, 88, 36, 10);
-    this.add.image(342, 15, 'icons', 0).setOrigin(0,0).setScale(2); 
-    textHealth = this.add.bitmapText(416, 21, 'pixelfont', '100', 20).setOrigin(1,0); 
-
-    graphics.fillRoundedRect(448, 12, 88, 36, 10);
-    this.add.image(454, 15, 'icons', 1).setOrigin(0,0).setScale(2); 
-    textHunger = this.add.bitmapText(528, 21, 'pixelfont', '100', 20).setOrigin(1,0); 
-
-    graphics.fillRoundedRect(560, 12, 88, 36, 10);
-    this.add.image(566, 14, 'icons', 2).setOrigin(0,0).setScale(2); 
-    textHappiness = this.add.bitmapText(640, 21, 'pixelfont', '100', 20).setOrigin(1,0); 
-
-    graphics.fillRoundedRect(672, 12, 88, 36, 10);
-    this.add.image(678, 14, 'icons', 3).setOrigin(0,0).setScale(2); 
-    textAge = this.add.bitmapText(752, 21, 'pixelfont', '0', 20).setOrigin(1,0); 
-
-    graphics.fillStyle(bgColor, 1); 
-    graphics.fillRect(0, 540, 800, 60); 
-
-    const idleAnimation = this.anims.create({
-        key: 'idle',
-        frames: this.anims.generateFrameNumbers('idle'),
-        frameRate: 8
-    });
-    const crouchAnimation = this.anims.create({
-        key: 'crouch',
-        frames: this.anims.generateFrameNumbers('crouch'),
-        frameRate: 8
-    });
-    const sitAnimation = this.anims.create({
-        key: 'sit',
-        frames: this.anims.generateFrameNumbers('sit'),
-        frameRate: 8
-    });
-    const sneakAnimation = this.anims.create({
-        key: 'sneak',
-        frames: this.anims.generateFrameNumbers('sneak'),
-        frameRate: 8
-    });
-    const walkAnimation = this.anims.create({
-        key: 'walk',
-        frames: this.anims.generateFrameNumbers('walk'),
-        frameRate: 8
-    });
-    const runAnimation = this.anims.create({
-      key: 'run', 
-      frames: this.anims.generateFrameNumbers('run'), 
-      frameRate: 8
-    }); 
-    const hurtAnimation = this.anims.create({
-      key: 'hurt', 
-      frames: this.anims.generateFrameNumbers('hurt'), 
-      frameRate: 8
-    });
-    const dieAnimation = this.anims.create({
-      key: 'die', 
-      frames: this.anims.generateFrameNumbers('die'), 
-      frameRate: 8
-    });
-
-    const foodAnimation = this.anims.create({ 
-      key: 'food', 
-      frames: this.anims.generateFrameNumbers('food'), 
-      frameRate: 2
-    }); 
-
-    poops = this.add.group(); 
-
-    foxSprite = this.add.sprite(Phaser.Math.RND.between(64, 736), Phaser.Math.RND.between(94, 506), 'idle').setScale(xFoxScale, yFoxScale);
-    if(foxSprite.x > 500) { 
-      xFoxScale = -xFoxScale; 
-      foxSprite.setScale(xFoxScale, yFoxScale); 
-    }
-
-    foxSprite.play({ key: idleKey, repeat: -1 });
-
-    graphics.fillStyle(0xffffff, 0.5); 
-    graphics.fillRect(16, 556, 72, 36); 
-    graphics.fillStyle(0x6effeb, 1); 
-    graphics.fillRect(12, 552, 72, 36);
-    const feedButton = new Button(48, 572, 'Feed', this, () => { 
-      if(interacting) { return; }
-      interacting = true; 
-      if(walking) { 
-        foxSprite.anims.stop(); 
-        try { moveTween.stop(); } catch {} 
-        walking = false; 
+      constructor() {
+        super();
       }
-      const xModifier = xFoxScale > 0 ? 45 : -45; 
-      const xScaleModifier = xFoxScale > 0 ? -2 : 2; 
-      const fallenFood = this.add.sprite(foxSprite.x+xModifier, foxSprite.y+24, 'food').setScale(xScaleModifier, 2); 
-      fallenFood.play('food').once('animationcomplete', () => { 
-        fallenFood.destroy(); 
-      }); 
-      foxSprite.play({key: 'sneak', repeat: 3}).once('animationcomplete', () => {
-        foxFeed(); 
-        foxSprite.play({ key: idleKey, repeat: -1 });
-        interacting = false; 
-      });
-    });
 
-    graphics.fillStyle(0xffffff, 0.5); 
-    graphics.fillRect(112, 556, 72, 36); 
-    graphics.fillStyle(0x6effeb, 1); 
-    graphics.fillRect(108, 552, 72, 36);
-    const petButton = new Button(144, 572, 'Pet', this, () => { 
-      if(interacting) { return; }
-      interacting = true; 
-      if(walking) { 
-        foxSprite.anims.stop(); 
-        try { moveTween.stop(); } catch {} 
-        walking = false; 
+      preload() {
+        this.load.spritesheet('icons', 'assets/sprites/icons.png', { frameWidth: 16, frameHeight: 16 });
+        this.load.spritesheet('idle', 'assets/animations/lilfox_idle_strip8.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('crouch', 'assets/animations/lilfox_crouch_strip8.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('sit', 'assets/animations/lilfox_sit_strip8.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('sneak', 'assets/animations/lilfox_sneak_strip4.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('run', 'assets/animations/lilfox_run_strip4.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('walk', 'assets/animations/lilfox_walk_strip8.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('hurt', 'assets/animations/lilfox_hurt_strip5.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('die', 'assets/animations/lilfox_die_strip8.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('food', 'assets/sprites/food.png', { frameWidth: 16, frameHeight: 16 });
+        this.load.spritesheet('flora', 'assets/sprites/flora.png', { frameWidth: 16, frameHeight: 16 });
+        this.load.bitmapFont('pixelfont', 'assets/fonts/minogram_6x10.png', 'assets/fonts/minogram_6x10.xml');
       }
-      const xModifier = xFoxScale > 0 ? 12 : -12; 
-      const floatingHeart = this.add.sprite(foxSprite.x+xModifier, foxSprite.y-14, 'icons', 0).setScale(2);
-      floatingHeart.setTintFill(0xFF0000); 
-      // create a tween to move the sprite upward and fade it out
-      this.tweens.add({
-        targets: floatingHeart,
-        y: floatingHeart.y - 36, // move the sprite upward by 36 pixels
-        alpha: 0, // set the alpha of the sprite to 0 (fully transparent)
-        duration: 2000, // make the tween last for 1000 milliseconds (1 second)
-        onComplete: function() { // remove the sprite when the tween is complete
-          floatingHeart.destroy();
-        }
-      });
-      foxSprite.play({key: 'sit', repeat: 2}).once('animationcomplete', () => {
-        foxPet(); 
-        foxSprite.play({ key: idleKey, repeat: -1 });
-        interacting = false; 
-      });
-    });
 
-    graphics.fillStyle(0xffffff, 0.5); 
-    graphics.fillRect(208, 556, 72, 36); 
-    graphics.fillStyle(0x6effeb, 1); 
-    graphics.fillRect(204, 552, 72, 36);
-    const healButton = new Button(240, 572, 'Heal', this, () => { 
-      if(interacting) { return; }
-      interacting = true; 
-      if(walking) { 
-        foxSprite.anims.stop(); 
-        try { moveTween.stop(); } catch {} 
-        walking = false; 
-      }
-      const xModifier = xFoxScale > 0 ? 12 : -12; 
-      const floatingPill = this.add.sprite(foxSprite.x+xModifier, foxSprite.y-24, 'icons', 4).setScale(2); 
-      // create a tween to move the sprite downward and fade it out
-      this.tweens.add({
-        targets: floatingPill,
-        y: floatingPill.y + 36, // move the sprite upward by 36 pixels
-        alpha: 0, // set the alpha of the sprite to 0 (fully transparent)
-        duration: 1900, // make the tween last for 1000 milliseconds (1 second)
-        onComplete: function() { // remove the sprite when the tween is complete
-          floatingPill.destroy();
-        }
-      });
-      foxSprite.play({key: 'crouch', repeat: 1}).once('animationcomplete', () => {
-        foxHeal(); 
-        foxSprite.play({ key: idleKey, repeat: -1 });
-        interacting = false; 
-      });
-    });
+      create() {
+        const bgColor = 0x9f1bf5;
+        const fgColor = 0xfed5fb;
 
-    graphics.fillStyle(0xffffff, 0.5); 
-    graphics.fillRect(304, 556, 72, 36); 
-    graphics.fillStyle(0x6effeb, 1); 
-    graphics.fillRect(300, 552, 72, 36);
-    const askButton = new Button(336, 572, 'Ask', this, () => { 
-      if(interacting) { return; }
-      interacting = true; 
-      if(walking) { 
-        foxSprite.anims.stop(); 
-        try { moveTween.stop(); } catch {} 
-        walking = false; 
-      }
-      const xModifier = xFoxScale > 0 ? 12 : -12; 
-      const floatingQ = this.add.sprite(foxSprite.x+xModifier, foxSprite.y-18, 'icons', 5).setScale(2);
-      floatingQ.setTintFill(0x9f1bf5); 
-      // create a tween to move the sprite upward and fade it out
-      this.tweens.add({
-        targets: floatingQ,
-        y: floatingQ.y - 36, // move the sprite upward by 36 pixels
-        alpha: 0, // set the alpha of the sprite to 0 (fully transparent)
-        duration: 2000, // make the tween last for 1000 milliseconds (1 second)
-        onComplete: function() { // remove the sprite when the tween is complete
-          floatingQ.destroy();
-        }
-      });
-      foxSprite.play({key: 'sit', repeat: 2}).once('animationcomplete', () => {
-        foxSprite.play({ key: idleKey, repeat: -1 });
-        interacting = false; 
-      });
-      foxAsk(); 
-    });
+        var graphics = this.add.graphics();
+        // Set the fill color to e4761b
+        graphics.fillStyle(bgColor, 1);
+        // Draw a rectangle at position 0,0 with a width of 800 and a height of 60
+        graphics.fillRect(0, 0, 800, 60);
 
-    graphics.fillStyle(0xffffff, 0.5); 
-    graphics.fillRect(712, 556, 72, 36); 
-    graphics.fillStyle(0x6effeb, 1); 
-    graphics.fillRect(708, 552, 72, 36);
-    const newButton = new Button(744, 572, 'New', this, () => { 
-      closeGame().then(function() { 
-        interacting = walking = cleaning = false; 
-        delayCounter = poopCounter = 0; 
-        idleKey = 'idle'; 
-        foxAdopt().then(function() { 
-          setTimeout( function() { 
-            document.getElementById('main').className = "frame open"; 
-            game = new Phaser.Game(config); 
-            run(); 
-            inter = setInterval(run, 500); 
-          }, 200); 
-        }); 
-      }); 
-    });
-
-  }
-
-  update() { 
-    this.children.bringToTop(foxSprite); 
-    if(!interacting && !walking && idleKey=='idle') { 
-      delayCounter++; 
-      if(delayCounter > 60) { 
-        const shouldWalk = Phaser.Math.RND.between(1,10); 
-        if(shouldWalk > 9) { 
-          walking = true; 
-          // let's walk 
-          let newX = Phaser.Math.RND.between(50, 750); 
-          let newY = Phaser.Math.RND.between(100, 500); 
-          if(xFoxScale > 0 && newX < foxSprite.x || xFoxScale < 0 && newX > foxSprite.x) { 
-            xFoxScale = -xFoxScale; 
+        for (var i = 0; i < 40; i++) {
+          var shouldBother = Phaser.Math.RND.between(0, 1);
+          if (shouldBother) {
+            var spriteIndex = Phaser.Math.RND.between(0, 5);
+            var col = i % 8;
+            var row = Math.floor(i / 8);
+            var x = 64 + col * 96 + Phaser.Math.RND.between(-36, 36);
+            var y = 120 + row * 88 + Phaser.Math.RND.between(-24, 24);
+            this.add.image(x, y, 'flora', spriteIndex).setScale(3);
           }
-          const distance = Phaser.Math.Distance.Between(foxSprite.x, foxSprite.y, newX, newY); 
-          let key = 'walk'; 
-          let duration = 10*distance; 
-          if(distance > 300) { 
-            key = 'run'; 
-            duration = 6*distance; 
+        }
+
+        graphics.fillStyle(fgColor, 1);
+        graphics.fillRoundedRect(12, 12, 300, 36, 10);
+        textName = this.add.bitmapText(25, 21, 'pixelfont', 'Fox', 20);
+
+        graphics.fillRoundedRect(336, 12, 88, 36, 10);
+        this.add.image(342, 15, 'icons', 0).setOrigin(0, 0).setScale(2);
+        textHealth = this.add.bitmapText(416, 21, 'pixelfont', '100', 20).setOrigin(1, 0);
+
+        graphics.fillRoundedRect(448, 12, 88, 36, 10);
+        this.add.image(454, 15, 'icons', 1).setOrigin(0, 0).setScale(2);
+        textHunger = this.add.bitmapText(528, 21, 'pixelfont', '100', 20).setOrigin(1, 0);
+
+        graphics.fillRoundedRect(560, 12, 88, 36, 10);
+        this.add.image(566, 14, 'icons', 2).setOrigin(0, 0).setScale(2);
+        textHappiness = this.add.bitmapText(640, 21, 'pixelfont', '100', 20).setOrigin(1, 0);
+
+        graphics.fillRoundedRect(672, 12, 88, 36, 10);
+        this.add.image(678, 14, 'icons', 3).setOrigin(0, 0).setScale(2);
+        textAge = this.add.bitmapText(752, 21, 'pixelfont', '0', 20).setOrigin(1, 0);
+
+        graphics.fillStyle(bgColor, 1);
+        graphics.fillRect(0, 540, 800, 60);
+
+        const idleAnimation = this.anims.create({
+          key: 'idle',
+          frames: this.anims.generateFrameNumbers('idle'),
+          frameRate: 8
+        });
+        const crouchAnimation = this.anims.create({
+          key: 'crouch',
+          frames: this.anims.generateFrameNumbers('crouch'),
+          frameRate: 8
+        });
+        const sitAnimation = this.anims.create({
+          key: 'sit',
+          frames: this.anims.generateFrameNumbers('sit'),
+          frameRate: 8
+        });
+        const sneakAnimation = this.anims.create({
+          key: 'sneak',
+          frames: this.anims.generateFrameNumbers('sneak'),
+          frameRate: 8
+        });
+        const walkAnimation = this.anims.create({
+          key: 'walk',
+          frames: this.anims.generateFrameNumbers('walk'),
+          frameRate: 8
+        });
+        const runAnimation = this.anims.create({
+          key: 'run',
+          frames: this.anims.generateFrameNumbers('run'),
+          frameRate: 8
+        });
+        const hurtAnimation = this.anims.create({
+          key: 'hurt',
+          frames: this.anims.generateFrameNumbers('hurt'),
+          frameRate: 8
+        });
+        const dieAnimation = this.anims.create({
+          key: 'die',
+          frames: this.anims.generateFrameNumbers('die'),
+          frameRate: 8
+        });
+
+        const foodAnimation = this.anims.create({
+          key: 'food',
+          frames: this.anims.generateFrameNumbers('food'),
+          frameRate: 2
+        });
+
+        poops = this.add.group();
+
+        foxSprite = this.add.sprite(Phaser.Math.RND.between(64, 736), Phaser.Math.RND.between(94, 506), 'idle').setScale(xFoxScale, yFoxScale);
+        if (foxSprite.x > 500) {
+          xFoxScale = -xFoxScale;
+          foxSprite.setScale(xFoxScale, yFoxScale);
+        }
+
+        foxSprite.play({ key: idleKey, repeat: -1 });
+
+        graphics.fillStyle(0xffffff, 0.5);
+        graphics.fillRect(16, 556, 72, 36);
+        graphics.fillStyle(0x6effeb, 1);
+        graphics.fillRect(12, 552, 72, 36);
+        const feedButton = new Button(48, 572, 'Feed', this, () => {
+          if (interacting) { return; }
+          interacting = true;
+          if (walking) {
+            foxSprite.anims.stop();
+            try { moveTween.stop(); } catch { }
+            walking = false;
           }
-          foxSprite.setScale(xFoxScale,yFoxScale).play({key: key, repeat: -1}); 
-          // tween the sprite to the new position
-          moveTween = this.tweens.add({
-            targets: foxSprite,
-            x: newX, 
-            y: newY,
-            duration: duration, 
-            onComplete: function() {
-              // destroy the sprite when the tween is complete
-              foxSprite.play({ key: idleKey, repeat: -1 });
-              walking = false; 
+          const xModifier = xFoxScale > 0 ? 45 : -45;
+          const xScaleModifier = xFoxScale > 0 ? -2 : 2;
+          const fallenFood = this.add.sprite(foxSprite.x + xModifier, foxSprite.y + 24, 'food').setScale(xScaleModifier, 2);
+          fallenFood.play('food').once('animationcomplete', () => {
+            fallenFood.destroy();
+          });
+          foxSprite.play({ key: 'sneak', repeat: 3 }).once('animationcomplete', () => {
+            foxFeed();
+            foxSprite.play({ key: idleKey, repeat: -1 });
+            interacting = false;
+          });
+        });
+
+        graphics.fillStyle(0xffffff, 0.5);
+        graphics.fillRect(112, 556, 72, 36);
+        graphics.fillStyle(0x6effeb, 1);
+        graphics.fillRect(108, 552, 72, 36);
+        const petButton = new Button(144, 572, 'Pet', this, () => {
+          if (interacting) { return; }
+          interacting = true;
+          if (walking) {
+            foxSprite.anims.stop();
+            try { moveTween.stop(); } catch { }
+            walking = false;
+          }
+          const xModifier = xFoxScale > 0 ? 12 : -12;
+          const floatingHeart = this.add.sprite(foxSprite.x + xModifier, foxSprite.y - 14, 'icons', 0).setScale(2);
+          floatingHeart.setTintFill(0xFF0000);
+          // create a tween to move the sprite upward and fade it out
+          this.tweens.add({
+            targets: floatingHeart,
+            y: floatingHeart.y - 36, // move the sprite upward by 36 pixels
+            alpha: 0, // set the alpha of the sprite to 0 (fully transparent)
+            duration: 2000, // make the tween last for 1000 milliseconds (1 second)
+            onComplete: function () { // remove the sprite when the tween is complete
+              floatingHeart.destroy();
             }
           });
-        }
-        delayCounter = 0; 
-      }
-    }
-    if(!cleaning && poops.getLength() < poopCounter) { 
-      let rX = Phaser.Math.RND.between(36, 766); 
-      let rY = Phaser.Math.RND.between(106, 504); 
-      if(poopCounter == (poops.getLength() + 1)) { 
-        let xFoxModifer = xFoxScale > 0 ? -42 : 42; 
-        // most recent poop. drop it where the fox is at. 
-        rX = foxSprite.x + xFoxModifer; 
-        rY = foxSprite.y+19; 
-      }
-      let aPoop = this.add.image(rX, rY, 'icons', 6).setOrigin(0.5,0.5).setScale(2).setInteractive({ useHandCursor: true }); 
-      aPoop.on('pointerdown', function(pointer, localX, localY, event) { 
-        cleaning = true; 
-        foxClean().then(function() { 
-          poops.remove(aPoop, true, true); 
-          poopCounter--; 
-          foxSay(); 
-          cleaning = false; 
-        }); 
-      }); 
-      poops.add(aPoop); 
-    } else if(!cleaning && poops.getLength() > poopCounter) { 
-      let aPoop = poops.getLast(true); 
-      poops.remove(aPoop, true, true); 
-    }
+          foxSprite.play({ key: 'sit', repeat: 2 }).once('animationcomplete', () => {
+            foxPet();
+            foxSprite.play({ key: idleKey, repeat: -1 });
+            interacting = false;
+          });
+        });
 
-    try { 
-      let currentKey = foxSprite.anims.getName(); 
-      if('hurt'==idleKey&&'idle'==currentKey || 'idle'==idleKey&&'hurt'==currentKey) { 
-        foxSprite.anims.stop(); 
-        try { moveTween.stop(); } catch {} 
-        foxSprite.play({ key: idleKey, repeat: -1 }); 
-      } else if('die'==idleKey&&'die'!=currentKey) { 
-        foxSprite.play({ key: idleKey, repeat: 0 });
-        interacting = true; 
-      }
-    } catch{ }
-
-  }
-  
-}
-
-const config = {
-    type: Phaser.AUTO,
-    parent: 'game',
-    width: 800,
-    height: 600,
-    pixelArt: true,
-    backgroundColor: 'rgba(129,186,68,1)',
-    scene: Play
-};
-
-var snapId = 'npm:pet-fox'; 
-var snapVersion = '^0'; 
-if ( ["localhost", "127.0.0.1", ""].includes(window.location.hostname) ) {
-  snapId = 'local:http://localhost:8080';
-} else { 
-  snapVersion = '^0.2.0'; 
-}
-
-const isFlask = async () => {
-  const provider = window.ethereum;
-
-  try {
-    const clientVersion = await provider?.request({
-      method: 'web3_clientVersion',
-    });
-
-    const isFlaskDetected = (clientVersion)?.includes('flask');
-
-    return provider && isFlaskDetected;
-  } catch {
-    return false;
-  }
-}; 
-
-const getSnap = async () => {
-  try {
-    const snaps = await window.ethereum.request({
-      method: 'wallet_getSnaps',
-    }); 
-
-    return Object.values(snaps).find(
-      (snap) =>
-      snap.id === snapId && satisfies(snap.version, snapVersion)
-    );
-  } catch (e) {
-    console.log('Failed to obtain installed snap', e);
-    return undefined;
-  }
-};
-
-const connectSnap = async (event) => {
-  event.preventDefault();
-  const provider = window.ethereum; 
-  try { 
-    await provider?.request({
-      method: 'wallet_requestSnaps', 
-      params: 
-        {
-          [snapId]: { version: snapVersion }
-        },
-    });
-    const installedSnap = await getSnap();
-
-    if(installedSnap) { 
-      const foxExists = await provider.request({
-        method: 'wallet_invokeSnap',
-        params: { 
-          snapId: snapId, 
-          request: { 
-            method: 'check', 
+        graphics.fillStyle(0xffffff, 0.5);
+        graphics.fillRect(208, 556, 72, 36);
+        graphics.fillStyle(0x6effeb, 1);
+        graphics.fillRect(204, 552, 72, 36);
+        const healButton = new Button(240, 572, 'Heal', this, () => {
+          if (interacting) { return; }
+          interacting = true;
+          if (walking) {
+            foxSprite.anims.stop();
+            try { moveTween.stop(); } catch { }
+            walking = false;
           }
-        } 
-      }); 
-      if(foxExists) { 
-        document.getElementById('main').className = "frame open"; 
-        game = new Phaser.Game(config); 
-        run(); 
-        inter = setInterval(run, 500); 
-      } else { 
-        provider.request({
-          method: 'wallet_invokeSnap',
-          params: { 
-            snapId: snapId, 
-            request: { 
-              method: 'hello', 
+          const xModifier = xFoxScale > 0 ? 12 : -12;
+          const floatingPill = this.add.sprite(foxSprite.x + xModifier, foxSprite.y - 24, 'icons', 4).setScale(2);
+          // create a tween to move the sprite downward and fade it out
+          this.tweens.add({
+            targets: floatingPill,
+            y: floatingPill.y + 36, // move the sprite upward by 36 pixels
+            alpha: 0, // set the alpha of the sprite to 0 (fully transparent)
+            duration: 1900, // make the tween last for 1000 milliseconds (1 second)
+            onComplete: function () { // remove the sprite when the tween is complete
+              floatingPill.destroy();
             }
-          } 
-        }).then(function() { 
-          document.getElementById('main').className = "frame open"; 
-          game = new Phaser.Game(config); 
-          run(); 
-          inter = setInterval(run, 500); 
-        }); 
+          });
+          foxSprite.play({ key: 'crouch', repeat: 1 }).once('animationcomplete', () => {
+            foxHeal();
+            foxSprite.play({ key: idleKey, repeat: -1 });
+            interacting = false;
+          });
+        });
+
+        graphics.fillStyle(0xffffff, 0.5);
+        graphics.fillRect(304, 556, 72, 36);
+        graphics.fillStyle(0x6effeb, 1);
+        graphics.fillRect(300, 552, 72, 36);
+        const askButton = new Button(336, 572, 'Ask', this, () => {
+          if (interacting) { return; }
+          interacting = true;
+          if (walking) {
+            foxSprite.anims.stop();
+            try { moveTween.stop(); } catch { }
+            walking = false;
+          }
+          const xModifier = xFoxScale > 0 ? 12 : -12;
+          const floatingQ = this.add.sprite(foxSprite.x + xModifier, foxSprite.y - 18, 'icons', 5).setScale(2);
+          floatingQ.setTintFill(0x9f1bf5);
+          // create a tween to move the sprite upward and fade it out
+          this.tweens.add({
+            targets: floatingQ,
+            y: floatingQ.y - 36, // move the sprite upward by 36 pixels
+            alpha: 0, // set the alpha of the sprite to 0 (fully transparent)
+            duration: 2000, // make the tween last for 1000 milliseconds (1 second)
+            onComplete: function () { // remove the sprite when the tween is complete
+              floatingQ.destroy();
+            }
+          });
+          foxSprite.play({ key: 'sit', repeat: 2 }).once('animationcomplete', () => {
+            foxSprite.play({ key: idleKey, repeat: -1 });
+            interacting = false;
+          });
+          foxAsk();
+        });
+
+        graphics.fillStyle(0xffffff, 0.5);
+        graphics.fillRect(712, 556, 72, 36);
+        graphics.fillStyle(0x6effeb, 1);
+        graphics.fillRect(708, 552, 72, 36);
+        const newButton = new Button(744, 572, 'New', this, () => {
+          closeGame().then(function () {
+            interacting = walking = cleaning = false;
+            delayCounter = poopCounter = 0;
+            idleKey = 'idle';
+            foxAdopt().then(function () {
+              setTimeout(function () {
+                document.getElementById('main').className = "frame open";
+                game = new Phaser.Game(config);
+                run();
+                inter = setInterval(run, 500);
+              }, 200);
+            });
+          });
+        });
+
       }
-    }
-  } catch { }
-  return false; 
-}; 
 
-const closeGame = async (event) => { 
-  try { event.preventDefault(); } catch (error) { }
-  clearInterval(inter); 
-  interacting = false; 
-  walking = false; 
-  delayCounter = 0; 
-  game.destroy(true, false); 
-  document.getElementById('main').className = 'frame'; 
-}; 
-
-const run = function() { 
-  window.ethereum.request({
-    method: 'wallet_invokeSnap',
-    params: { 
-      snapId: snapId, 
-      request: { 
-        method: 'update', 
-      }
-    } 
-  }).then(function(fox) { 
-    const age = parseInt(parseInt(fox.age) / (1000*3600*24)); 
-    textName.text = fox.name; 
-
-    textHealth.text = ''+parseInt(Math.ceil(fox.health)); 
-    textHunger.text = ''+parseInt(Math.ceil(fox.hunger));
-    textHappiness.text = ''+parseInt(Math.ceil(fox.happiness)); 
-    /*
-    if(curHealth==null) { 
-      textHealth.text = ''+parseInt(Math.ceil(fox.health)); 
-    }
-    curHealth = parseInt(Math.ceil(fox.health)); 
-    if(curHunger==null) { 
-      textHunger.text = ''+parseInt(Math.ceil(fox.hunger)); 
-    }
-    curHunger = parseInt(Math.ceil(fox.hunger)); 
-    if(curHappiness==null) { 
-      textHappiness.text = ''+parseInt(Math.ceil(fox.happiness)); 
-    }
-    curHappiness = parseInt(Math.ceil(fox.happiness)); 
-    */
-    textAge.text = ''+parseInt(age); 
-    if(!cleaning) { poopCounter = parseInt(fox.dirty); } 
-    if(fox.health < 1) { 
-      idleKey = 'die'; 
-    }
-    else if(fox.health < 60) { 
-      idleKey = 'hurt'; 
-    }
-    else { 
-      idleKey = 'idle'; 
-    }
-  }); 
-}; 
-
-const foxFeed = function() { 
-  window.ethereum.request({
-    method: 'wallet_invokeSnap',
-    params: { 
-      snapId: snapId, 
-      request: { 
-        method: 'feed', 
-      }
-    } 
-  }).then(function(fox) { 
-    textHunger.text = ''+parseInt(Math.ceil(fox.hunger)); 
-  }); 
-}; 
-
-const foxPet = function() { 
-  window.ethereum.request({
-    method: 'wallet_invokeSnap',
-    params: { 
-      snapId: snapId, 
-      request: { 
-        method: 'pet', 
-      }
-    } 
-  }).then(function(fox) { 
-    textHappiness.text = ''+parseInt(Math.ceil(fox.happiness)); 
-  }); 
-}; 
-
-const foxHeal = function() { 
-  window.ethereum.request({
-    method: 'wallet_invokeSnap',
-    params: { 
-      snapId: snapId, 
-      request: { 
-        method: 'heal', 
-      }
-    } 
-  }).then(function(fox) { 
-    textHealth.text = ''+parseInt(Math.ceil(fox.health)); 
-  }); 
-}; 
-
-const foxAsk = function() { 
-  window.ethereum.request({
-    method: 'wallet_invokeSnap',
-    params: { 
-      snapId: snapId, 
-      request: { 
-        method: 'ask', 
-      }
-    } 
-  }); 
-}; 
-
-const foxClean = function() { 
-  return window.ethereum.request({
-    method: 'wallet_invokeSnap', 
-    params: {
-      snapId: snapId, 
-      request: { 
-        method: 'clean', 
-      }
-    }
-  }); 
-}; 
-
-const foxSay = function() { 
-  const rSay = Math.floor(Math.random()*tips.length); 
-  window.ethereum.request({
-    method: 'wallet_invokeSnap', 
-    params: {
-      snapId: snapId, 
-      request: { 
-        method: 'speak', 
-        params: {
-          message: tips[rSay]
+      update() {
+        this.children.bringToTop(foxSprite);
+        if (!interacting && !walking && idleKey == 'idle') {
+          delayCounter++;
+          if (delayCounter > 60) {
+            const shouldWalk = Phaser.Math.RND.between(1, 10);
+            if (shouldWalk > 9) {
+              walking = true;
+              // let's walk 
+              let newX = Phaser.Math.RND.between(50, 750);
+              let newY = Phaser.Math.RND.between(100, 500);
+              if (xFoxScale > 0 && newX < foxSprite.x || xFoxScale < 0 && newX > foxSprite.x) {
+                xFoxScale = -xFoxScale;
+              }
+              const distance = Phaser.Math.Distance.Between(foxSprite.x, foxSprite.y, newX, newY);
+              let key = 'walk';
+              let duration = 10 * distance;
+              if (distance > 300) {
+                key = 'run';
+                duration = 6 * distance;
+              }
+              foxSprite.setScale(xFoxScale, yFoxScale).play({ key: key, repeat: -1 });
+              // tween the sprite to the new position
+              moveTween = this.tweens.add({
+                targets: foxSprite,
+                x: newX,
+                y: newY,
+                duration: duration,
+                onComplete: function () {
+                  // destroy the sprite when the tween is complete
+                  foxSprite.play({ key: idleKey, repeat: -1 });
+                  walking = false;
+                }
+              });
+            }
+            delayCounter = 0;
+          }
         }
+        if (!cleaning && poops.getLength() < poopCounter) {
+          let rX = Phaser.Math.RND.between(36, 766);
+          let rY = Phaser.Math.RND.between(106, 504);
+          if (poopCounter == (poops.getLength() + 1)) {
+            let xFoxModifer = xFoxScale > 0 ? -42 : 42;
+            // most recent poop. drop it where the fox is at. 
+            rX = foxSprite.x + xFoxModifer;
+            rY = foxSprite.y + 19;
+          }
+          let aPoop = this.add.image(rX, rY, 'icons', 6).setOrigin(0.5, 0.5).setScale(2).setInteractive({ useHandCursor: true });
+          aPoop.on('pointerdown', function (pointer, localX, localY, event) {
+            cleaning = true;
+            foxClean().then(function () {
+              poops.remove(aPoop, true, true);
+              poopCounter--;
+              foxSay();
+              cleaning = false;
+            });
+          });
+          poops.add(aPoop);
+        } else if (!cleaning && poops.getLength() > poopCounter) {
+          let aPoop = poops.getLast(true);
+          poops.remove(aPoop, true, true);
+        }
+
+        try {
+          let currentKey = foxSprite.anims.getName();
+          if ('hurt' == idleKey && 'idle' == currentKey || 'idle' == idleKey && 'hurt' == currentKey) {
+            foxSprite.anims.stop();
+            try { moveTween.stop(); } catch { }
+            foxSprite.play({ key: idleKey, repeat: -1 });
+          } else if ('die' == idleKey && 'die' != currentKey) {
+            foxSprite.play({ key: idleKey, repeat: 0 });
+            interacting = true;
+          }
+        } catch { }
+
       }
+
     }
-  })
-}; 
 
-const foxAdopt = function() { 
-  return window.ethereum.request({
-    method: 'wallet_invokeSnap',
-    params: { 
-      snapId: snapId, 
-      request: { 
-        method: 'hello', 
+    const config = {
+      type: Phaser.AUTO,
+      parent: 'game',
+      width: 800,
+      height: 600,
+      pixelArt: true,
+      backgroundColor: 'rgba(129,186,68,1)',
+      scene: Play
+    };
+
+    var snapId = 'npm:pet-fox';
+    var snapVersion = '^0';
+    if (["localhost", "127.0.0.1", ""].includes(window.location.hostname)) {
+      snapId = 'local:http://localhost:8080';
+    } else {
+      snapVersion = '^0.2.0';
+    }
+
+    var ipfsSnapId = 'npm:@ae-studio/snapsync';
+    var ipfsSnapVersion = '^0.2.4';
+    // if (["localhost", "127.0.0.1", ""].includes(window.location.hostname)) {
+    //   ipfsSnapId = 'local:http://localhost:8081';
+    //   ipfsSnapVersion = '^0';
+    // }
+
+    const isMetamask = async () => {
+      const provider = window.ethereum;
+
+      try {
+        const clientVersion = await provider?.request({
+          method: 'web3_clientVersion',
+        });
+
+        // supports MetaMask > v11 or Flask
+        const isMetamaskDetected = clientVersion.split('/v')[1].replace('v', '').split('.')[0] >= 11 || (clientVersion?.includes('flask'));
+
+        return provider && isMetamaskDetected;
+      } catch {
+        return false;
       }
-    } 
-  }); 
-}; 
+    };
 
-const getFlask = function() { 
-  window.location.href = 'https://metamask.io/flask/'; 
-}
+    const getSnap = async () => {
+      try {
+        const snaps = await window.ethereum.request({
+          method: 'wallet_getSnaps',
+        });
 
-window.onload = async (event) => {
-  const isFlaskDetected = await isFlask(); 
-  if(!isFlaskDetected) {
-    document.getElementById('flask').style.display = 'block'; 
-    document.getElementById('flask').addEventListener('dblclick',getFlask); 
-    return; 
-  }
-  document.getElementById('icon').style.display="block"; 
-  document.getElementById('icon').addEventListener('dblclick',connectSnap); 
-  document.getElementById('close').addEventListener('click',closeGame); 
-}; 
+        return Object.values(snaps).find(
+          (snap) =>
+            snap.id === snapId && satisfies(snap.version, snapVersion)
+        );
+      } catch (e) {
+        console.log('Failed to obtain installed snap', e);
+        return undefined;
+      }
+    };
 
-    </script>
+    const connectSnap = async (event) => {
+      event.preventDefault();
+      const provider = window.ethereum;
+      try {
+        await provider?.request({
+          method: 'wallet_requestSnaps',
+          params:
+          {
+            [snapId]: { version: snapVersion }
+          },
+        });
+        const installedSnap = await getSnap();
+
+        if (installedSnap) {
+          const foxExists = await provider.request({
+            method: 'wallet_invokeSnap',
+            params: {
+              snapId: snapId,
+              request: {
+                method: 'check',
+              }
+            }
+          });
+          if (foxExists) {
+            document.getElementById('main').className = "frame open";
+            game = new Phaser.Game(config);
+            run();
+            inter = setInterval(run, 500);
+          } else {
+            provider.request({
+              method: 'wallet_invokeSnap',
+              params: {
+                snapId: snapId,
+                request: {
+                  method: 'hello',
+                }
+              }
+            }).then(function () {
+              document.getElementById('main').className = "frame open";
+              game = new Phaser.Game(config);
+              run();
+              inter = setInterval(run, 500);
+            });
+          }
+        }
+      } catch { }
+      return false;
+    };
+
+    const closeGame = async (event) => {
+      try { event.preventDefault(); } catch (error) { }
+      clearInterval(inter);
+      interacting = false;
+      walking = false;
+      delayCounter = 0;
+      game.destroy(true, false);
+      document.getElementById('main').className = 'frame';
+    };
+
+    const run = function () {
+      window.ethereum.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId: snapId,
+          request: {
+            method: 'update',
+          }
+        }
+      }).then(function (fox) {
+        const age = parseInt(parseInt(fox.age) / (1000 * 3600 * 24));
+        textName.text = fox.name;
+
+        textHealth.text = '' + parseInt(Math.ceil(fox.health));
+        textHunger.text = '' + parseInt(Math.ceil(fox.hunger));
+        textHappiness.text = '' + parseInt(Math.ceil(fox.happiness));
+        /*
+        if(curHealth==null) { 
+          textHealth.text = ''+parseInt(Math.ceil(fox.health)); 
+        }
+        curHealth = parseInt(Math.ceil(fox.health)); 
+        if(curHunger==null) { 
+          textHunger.text = ''+parseInt(Math.ceil(fox.hunger)); 
+        }
+        curHunger = parseInt(Math.ceil(fox.hunger)); 
+        if(curHappiness==null) { 
+          textHappiness.text = ''+parseInt(Math.ceil(fox.happiness)); 
+        }
+        curHappiness = parseInt(Math.ceil(fox.happiness)); 
+        */
+        textAge.text = '' + parseInt(age);
+        if (!cleaning) { poopCounter = parseInt(fox.dirty); }
+        if (fox.health < 1) {
+          idleKey = 'die';
+        }
+        else if (fox.health < 60) {
+          idleKey = 'hurt';
+        }
+        else {
+          idleKey = 'idle';
+        }
+      });
+    };
+
+    const foxFeed = function () {
+      window.ethereum.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId: snapId,
+          request: {
+            method: 'feed',
+          }
+        }
+      }).then(function (fox) {
+        textHunger.text = '' + parseInt(Math.ceil(fox.hunger));
+      });
+    };
+
+    const foxPet = function () {
+      window.ethereum.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId: snapId,
+          request: {
+            method: 'pet',
+          }
+        }
+      }).then(function (fox) {
+        textHappiness.text = '' + parseInt(Math.ceil(fox.happiness));
+      });
+    };
+
+    const foxHeal = function () {
+      window.ethereum.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId: snapId,
+          request: {
+            method: 'heal',
+          }
+        }
+      }).then(function (fox) {
+        textHealth.text = '' + parseInt(Math.ceil(fox.health));
+      });
+    };
+
+    const foxAsk = function () {
+      window.ethereum.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId: snapId,
+          request: {
+            method: 'ask',
+          }
+        }
+      });
+    };
+
+    const foxClean = function () {
+      return window.ethereum.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId: snapId,
+          request: {
+            method: 'clean',
+          }
+        }
+      });
+    };
+
+    const foxSay = function () {
+      const rSay = Math.floor(Math.random() * tips.length);
+      window.ethereum.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId: snapId,
+          request: {
+            method: 'speak',
+            params: {
+              message: tips[rSay]
+            }
+          }
+        }
+      })
+    };
+
+    const foxAdopt = function () {
+      return window.ethereum.request({
+        method: 'wallet_invokeSnap',
+        params: {
+          snapId: snapId,
+          request: {
+            method: 'hello',
+          }
+        }
+      });
+    };
+
+    const getMetamask = function () {
+      window.location.href = 'https://metamask.io/';
+    }
+
+    window.onload = async (event) => {
+      const isMetamaskDetected = await isMetamask();
+      if (!isMetamaskDetected) {
+        document.getElementById('metamask').style.display = 'block';
+        document.getElementById('metamask').addEventListener('dblclick', getMetamask);
+        return;
+      }
+      document.getElementById('icon').style.display = "block";
+      document.getElementById('icon').addEventListener('dblclick', connectSnap);
+      document.getElementById('close').addEventListener('click', closeGame);
+    };
+
+  </script>
 
 </body>
+
 </html>
