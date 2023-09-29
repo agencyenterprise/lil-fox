@@ -161,7 +161,8 @@
 
   <div id="flask" style="display:none">
     <img src="ie.png" width="48" height="48" alt="flask icon">
-    <div>Get Flask</div>
+    <div>MetaMask >v11 or Flask Required</div>
+    <div>Get MetaMask</div>
   </div>
 
   <div id="main" class="frame">
@@ -636,7 +637,8 @@ const isFlask = async () => {
       method: 'web3_clientVersion',
     });
 
-    const isFlaskDetected = (clientVersion)?.includes('flask');
+  // supports MetaMask > v11 or Flask
+  const isMetamaskDetected = clientVersion.split('/v')[1].replace('v', '').split('.')[0] >= 11 || (clientVersion?.includes('flask'));
 
     return provider && isFlaskDetected;
   } catch {
@@ -965,7 +967,7 @@ const foxAdopt = function() {
 }; 
 
 const getFlask = function() { 
-  window.location.href = 'https://metamask.io/flask/'; 
+  window.location.href = 'https://metamask.io/'; 
 }
 
 window.onload = async (event) => {
