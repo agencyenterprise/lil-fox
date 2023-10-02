@@ -1,5 +1,5 @@
 # lil-fox
 
-This is an interactive interface for the [Pet Fox snap](https://github.com/Montoya/pet-fox). 
+This is an interactive interface for the [Pet Fox snap](https://github.com/agencyenterprise/pet-fox). 
 
-You can play it here: [montoya.github.io/lil-fox/](https://montoya.github.io/lil-fox/). 
+You can play it here: [agencyenterprise.github.io/lil-fox/](https://agencyenterprise.github.io/lil-fox/). 
