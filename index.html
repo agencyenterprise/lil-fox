@@ -640,7 +640,7 @@ const isFlask = async () => {
   // supports MetaMask > v11 or Flask
   const isMetamaskDetected = clientVersion.split('/v')[1].replace('v', '').split('.')[0] >= 11 || (clientVersion?.includes('flask'));
 
-    return provider && isFlaskDetected;
+    return provider && isMetamaskDetected;
   } catch {
     return false;
   }
