@@ -636,6 +636,7 @@ const isFlask = async () => {
     const clientVersion = await provider?.request({
       method: 'web3_clientVersion',
     });
+    console.debug({ clientVersion });
 
   // supports MetaMask > v11 or Flask
   const isMetamaskDetected = clientVersion.split('/v')[1].replace('v', '').split('.')[0] >= 11 || (clientVersion?.includes('flask'));
