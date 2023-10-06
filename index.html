@@ -496,6 +496,13 @@ class Play extends Phaser.Scene {
     const photoButton = new Button(438, 572, 'Photo', this, () => { 
       if(interacting) { return; }
       interacting = true;
+      const picEl = document.getElementById("pic");
+      const imgEl = document.createElement("img");
+      imgEl.height = 256;
+      imgEl.width = 256;
+      imgEl.src = "nyan.gif";
+      picEl.replaceChildren(imgEl);
+      picEl.style.opacity = 1;
       foxLoad()
       .then((fox) => {
         if (!fox) { return }
@@ -509,13 +516,8 @@ class Play extends Phaser.Scene {
         })
         .then(response => response.json())
         .then(data => {
-          const picEl = document.getElementById("pic");
-          const imgEl = document.createElement("img");
           imgEl.src = data;
-          imgEl.height = 256;
-          imgEl.width = 256;
-          picEl.replaceChildren(imgEl);
-          picEl.style.opacity = 1;
+          
 
           interacting = false;
         })
