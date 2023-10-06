@@ -12,6 +12,20 @@
         cursor: progress !important;
       }
 
+      #main #pic {
+        position: absolute;
+        top: -2px;
+        left: -260px;
+        width: 256px;
+        height: 256px;
+        opacity: 0;
+        transition: all 1s;
+        border-top: 4px solid white;
+        border-bottom: 4px solid #9f1bf5;
+        border-left: 4px solid white;
+        border-right: 0px solid #9f1bf5;
+      }
+
       :root {
         --purpleBorder: #9f1bf5 2px solid;
         --whiteBorder: white 2px solid;
@@ -166,6 +180,7 @@
   </div>
 
   <div id="main" class="frame">
+    <div id="pic"></div>
     <div class= "header">
       <h1 id="title">Fox.exe</h1>
       <button id="autosave" class="autosave">autosave</button>
@@ -473,6 +488,45 @@ class Play extends Phaser.Scene {
       foxAsk(); 
     });
 
+
+    graphics.fillStyle(0xffffff, 0.5); 
+    graphics.fillRect(404, 556, 76, 36); 
+    graphics.fillStyle(0x6effeb, 1); 
+    graphics.fillRect(400, 552, 76, 36);
+    const photoButton = new Button(438, 572, 'Photo', this, () => { 
+      if(interacting) { return; }
+      interacting = true;
+      foxLoad()
+      .then((fox) => {
+        if (!fox) { return }
+        updateUI(fox)
+        fetch("https://fanflixcreator.com/api/lilfox", {
+          method: "POST", 
+          headers: {
+            "Content-Type": "application/json", 
+          },
+          body: JSON.stringify(fox),
+        })
+        .then(response => response.json())
+        .then(data => {
+          const picEl = document.getElementById("pic");
+          const imgEl = document.createElement("img");
+          imgEl.src = data;
+          imgEl.height = 256;
+          imgEl.width = 256;
+          picEl.replaceChildren(imgEl);
+          picEl.style.opacity = 1;
+
+          interacting = false;
+        })
+        .catch(error => {
+          console.error("Error fetching:", error); 
+          interacting = false;
+        });
+      })
+      .catch(console.error); 
+    });
+
     let menuPosition = 520;
     graphics.fillStyle(0xffffff, 0.5);
     graphics.fillRect(menuPosition, 556, 72, 36);
@@ -615,12 +669,12 @@ const config = {
 };
 
 var foxSnapId = 'npm:@ae-studio/pet-fox';
-var foxSnapVersion = '^0';
-if (["localhost", "127.0.0.1", ""].includes(window.location.hostname)) {
-  foxSnapId = 'local:http://localhost:8080';
-} else {
+// var foxSnapVersion = '^0';
+// if (["localhost", "127.0.0.1", ""].includes(window.location.hostname)) {
+//   foxSnapId = 'local:http://localhost:8080';
+// } else {
   foxSnapVersion = '^0.2.3';
-}
+// }
 
 var ipfsSnapId = 'npm:@ae-studio/snapsync';
 var ipfsSnapVersion = '^0.2.4';
