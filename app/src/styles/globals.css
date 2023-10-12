@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+#icon,
+#flask,
+button {
+  cursor: pointer;
+}
+
+.loading-cursor {
+  cursor: progress !important;
+}
+
+#main #pic {
+  position: absolute;
+  top: -2px;
+  left: -260px;
+  width: 256px;
+  height: 256px;
+  opacity: 0;
+  transition: all 1s;
+  border-top: 4px solid white;
+  border-bottom: 4px solid #9f1bf5;
+  border-left: 4px solid white;
+  border-right: 0px solid #9f1bf5;
+}
+
+:root {
+  --purpleBorder: #9f1bf5 2px solid;
+  --whiteBorder: white 2px solid;
+
+  --lightBackground: #fed5fb;
+  --darkBackground: #dfbadd;
+
+  --autosaveBorder: var(--purpleBorder);
+  --autosaveBeforeBorder: var(--whiteBorder);
+  --autosaveBackground: var(--lightBackground);
+}
+
+/* site design based on https://codepen.io/sooooooo/pen/mZdpwK */
+body {
+  background: #4955c3;
+  background: linear-gradient(to bottom, #fed5fb 0%, #4955c3 100%);
+  height: 100vh;
+  margin: 0;
+  font-family: sans-serif;
+  font-size: 12px;
+}
+
+.frame {
+  text-align: center;
+  display: flex;
+  width: 814px;
+  border-top: 2px solid white;
+  border-bottom: 2px solid #9f1bf5;
+  border-left: 2px solid white;
+  border-right: 2px solid #9f1bf5;
+  background-color: #6effeb;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -334px;
+  margin-left: -407px;
+  justify-content: center;
+  flex-direction: column;
+  box-shadow: 10px 10px rgba(90, 90, 90, 0.9);
+}
+.frame .header {
+  display: flex;
+  margin: 4px;
+  margin-bottom: 0;
+  box-sizing: border-box;
+  width: 804px;
+  height: 48px;
+  margin-top: 4px;
+  padding: 4px;
+  background: #fed5fb;
+  border: 2px solid #9f1bf5;
+}
+.frame .header h1 {
+  font-size: 24px;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-left: 8px;
+}
+.frame .header button {
+  align-self: flex-end;
+  flex: 0 1 auto;
+  margin: auto 2px;
+  padding: 0 2px;
+  background: none;
+  border: #9f1bf5 2px solid;
+  width: 24px;
+  height: 24px;
+  color: #9f1bf5;
+  line-height: 1;
+  position: relative;
+}
+.frame .header button:before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-left: white solid 2px;
+  border-top: white solid 2px;
+  top: -2px;
+  left: -2px;
+  z-index: 2;
+}
+.frame .header button#autosave {
+  width: 64px;
+  background: var(--autosaveBackground);
+  border: var(--autosaveBorder);
+}
+.frame .header button#autosave::before {
+  border-left: var(--autosaveBeforeBorder);
+  border-top: var(--autosaveBeforeBorder);
+}
+.frame .body {
+  box-sizing: border-box;
+  flex: 1;
+  width: 804px;
+  margin: 4px;
+  background: #fed5fb;
+  border: 2px solid #9f1bf5;
+}
+#game {
+  width: 800px;
+  height: 600px;
+  float: left;
+}
+
+@keyframes scale-up {
+  from {
+    transform: scale(0.01);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.open {
+  visibility: visible !important;
+  animation: scale-up 0.4s forwards ease-in-out;
+}
+
+#icon,
+#flask {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -30px;
+  margin-left: -24px;
+  text-align: center;
+  text-shadow: #fff 0 0 2px;
+  font-weight: bold;
+}
+
+/* start out closed */
+.frame {
+  visibility: hidden;
+  transform: scale(0.01);
+}
