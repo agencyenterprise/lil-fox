@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import config from "@/PhaserGame";
 import Image from "next/image";
-import { FoxGame } from "@/scenes";
 
 declare global {
   interface Window {
@@ -45,9 +43,32 @@ export default function Home() {
   const startGame = () => {
     setInitiated(true);
     // deploy one cycle so that the game can be started on the correct tag
-    setTimeout(() => {
-      game.current = new Phaser.Game(config);
-    });
+    if (typeof window !== "undefined") {
+      const FoxGame = require("@/scenes").FoxGame;
+      setTimeout(() => {
+        game.current = new Phaser.Game({
+          type: Phaser.AUTO,
+          parent: "phaser-container",
+          backgroundColor: "rgba(129,186,68,1)",
+          // scale: {
+          //   mode: Phaser.Scale.ScaleModes.RESIZE,
+          //   width: window.innerWidth,
+          //   height: window.innerHeight,
+          // },
+          width: 800,
+          height: 600,
+          pixelArt: true,
+          physics: {
+            default: "arcade",
+            arcade: {
+              gravity: { y: 0 },
+              debug: true,
+            },
+          },
+          scene: FoxGame,
+        });
+      });
+    }
   };
 
   const closeGame = () => {
@@ -56,8 +77,11 @@ export default function Home() {
   };
 
   const autosave = () => {
-    const gameScene = game.current?.scene.scenes[0] as FoxGame;
-    gameScene.setAutosave();
+    if (typeof window !== "undefined") {
+      const FoxGame = require("@/scenes").FoxGame;
+      const gameScene = game.current?.scene.scenes[0] as typeof FoxGame;
+      gameScene.setAutosave();
+    }
   };
 
   return (

@@ -1,4 +1,4 @@
-// src/PhaserGame.ts file
+"use client";
 
 import Phaser from "phaser";
 
