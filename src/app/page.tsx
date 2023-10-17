@@ -94,11 +94,16 @@ export default function Home() {
       )}
 
       {!hasFlask && !initiated && (
-        <div id="flask">
+        <a
+          id="flask"
+          className="flex flex-col absolute mx-auto my-auto justify-center items-center text-center"
+          href="https://metamask.io"
+          target="_blank"
+        >
           <Image src="/ie.png" width="48" height="48" alt="flask icon" />
-          <div>MetaMask v11 or Flask Required</div>
-          <div>Get MetaMask</div>
-        </div>
+          <p>Flask Required</p>
+          <p>Get MetaMask</p>
+        </a>
       )}
       {initiated && (
         <div className="flex text-center w-[814px] pb-1 border-2 border-r-[#9f1bf5] border-b-[#9f1bf5] border-t-white border-l-white bg-[#6effeb] absolute top-[50%] left-[50%] mt-[-334px] ml-[-407px] justify-center items-center flex-row shadow-frame">
