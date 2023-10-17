@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "bitecs": "^0.3.40",
+    "mathjs": "^11.11.2",
     "next": "13.5.4",
     "phaser": "^3.60.0",
+    "phaser3spectorjs": "^0.0.8",
     "react": "^18",
     "react-dom": "^18",
     "regenerator-runtime": "^0.14.0"

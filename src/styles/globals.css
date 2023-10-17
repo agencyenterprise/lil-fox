@@ -13,7 +13,7 @@ button {
   cursor: progress !important;
 }
 
-#main #pic {
+#main {
   position: absolute;
   top: -2px;
   left: -260px;
@@ -86,7 +86,7 @@ body {
   margin-bottom: auto;
   padding-left: 8px;
 }
-.frame .header button {
+.button {
   align-self: flex-end;
   flex: 0 1 auto;
   margin: auto 2px;
@@ -99,7 +99,7 @@ body {
   line-height: 1;
   position: relative;
 }
-.frame .header button:before {
+.button:before {
   content: "";
   position: absolute;
   width: 100%;
@@ -110,12 +110,12 @@ body {
   left: -2px;
   z-index: 2;
 }
-.frame .header button#autosave {
+.button#autosave {
   width: 64px;
   background: var(--autosaveBackground);
   border: var(--autosaveBorder);
 }
-.frame .header button#autosave::before {
+.button#autosave::before {
   border-left: var(--autosaveBeforeBorder);
   border-top: var(--autosaveBeforeBorder);
 }
