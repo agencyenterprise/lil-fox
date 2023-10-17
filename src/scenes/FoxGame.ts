@@ -562,23 +562,15 @@ export class FoxGame extends Phaser.Scene {
         .setOrigin(0.5, 0.5)
         .setScale(2)
         .setInteractive({ useHandCursor: true });
-      aPoop.on(
-        "pointerdown",
-        (
-          pointer: Phaser.Input.Pointer,
-          localX: number,
-          localY: number,
-          event: any
-        ) => {
-          this.cleaning = true;
-          // foxClean().then(function () {
+      aPoop.on("pointerdown", () => {
+        this.cleaning = true;
+        this.foxClean().then(() => {
           this.poops.remove(aPoop, true, true);
           this.poopCounter--;
-          // foxSay();
+          this.foxSay();
           this.cleaning = false;
-          // });
-        }
-      );
+        });
+      });
       this.poops.add(aPoop);
     } else if (!this.cleaning && this.poops.getLength() > this.poopCounter) {
       let aPoop = this.poops.getLast(true);
