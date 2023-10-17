@@ -611,30 +611,18 @@
             imgEl.src = "nyan.gif";
             picEl.replaceChildren(imgEl);
             picEl.style.opacity = 1;
-            const payload = {
-              age: 632795,
-              birth: 1696530628377,
-              dirty: 0.029741364999999943,
-              happiness: 100,
-              health: 100,
-              hunger: 100,
-              lastNotify: 0,
-              name: "norizinho",
-              stamp: 1697032528117,
-              updateModifier: 1,
-            };
             foxLoad()
               .then((fox) => {
                 if (!fox) {
                   return;
                 }
                 updateUI(fox);
-                fetch("http://localhost:3001/api/lilfox", {
+                fetch("https://fanflixcreator.com/api/lilfox", {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
                   },
-                  body: "the fox is sick",
+                  body: JSON.stringify(fox),
                 })
                   .then((response) => response.json())
                   .then((data) => {

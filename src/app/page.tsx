@@ -3,21 +3,18 @@
 import { useEffect, useRef, useState } from "react";
 import config from "@/PhaserGame";
 import Image from "next/image";
-import { Game } from "phaser";
 import { FoxGame } from "@/scenes";
-import { Amethysta } from "next/font/google";
+
+declare global {
+  interface Window {
+    ethereum: any;
+  }
+}
 
 export default function Home() {
   const [hasFlask, setHasFlask] = useState(false);
   const [initiated, setInitiated] = useState(false);
   let game = useRef<Phaser.Game | null>(null);
-
-  // useEffect(() => {
-  //   if (!initiated.current) {
-  //     initiated.current = true;
-  //     game.current = new Phaser.Game(config);
-  //   }
-  // }, []);
 
   useEffect(() => {
     isFlask().then((result) => {

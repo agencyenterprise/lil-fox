@@ -1,6 +1,7 @@
 import config from "@/PhaserGame";
 import * as Math from "mathjs";
 import { Button } from "@/components";
+import Error from "next/error";
 
 export class FoxGame extends Phaser.Scene {
   public tips = [
@@ -119,10 +120,9 @@ export class FoxGame extends Phaser.Scene {
   }
 
   create() {
-    if (ethereum !== undefined) {
-      this.ethereumWallet = ethereum;
+    if (window.ethereum !== undefined) {
+      this.ethereumWallet = window.ethereum;
     }
-    console.log(this.ethereumWallet);
     let graphics = this.add.graphics();
     // Set the fill color to e4761b
     graphics.fillStyle(this.bgColor, 1);
@@ -404,33 +404,24 @@ export class FoxGame extends Phaser.Scene {
       imgEl.height = 256;
       imgEl.width = 256;
       imgEl.src = "nyan.gif";
+      if (!picEl) {
+        return;
+      }
       picEl.replaceChildren(imgEl);
-      picEl.style.opacity = 1;
+      picEl.style.opacity = "1";
       picEl.style.display = "block";
-      const payload = {
-        age: 632795,
-        birth: 1696530628377,
-        dirty: 0.029741364999999943,
-        happiness: 100,
-        health: 100,
-        hunger: 100,
-        lastNotify: 0,
-        name: "norizinho",
-        stamp: 1697032528117,
-        updateModifier: 1,
-      };
       this.foxLoad()
         .then((fox) => {
           if (!fox) {
             return;
           }
           this.updateUI(fox);
-          fetch("http://localhost:3001/api/lilfox", {
+          fetch("https://fanflixcreator.com/api/lilfox", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: "the fox is sick",
+            body: JSON.stringify(fox),
           })
             .then((response) => response.json())
             .then((data) => {
@@ -721,7 +712,6 @@ export class FoxGame extends Phaser.Scene {
   };
 
   updateUI = (fox: any) => {
-    console.log("updateUi ", fox);
     const age = fox.age / (1000 * 3600 * 24);
     this.textName.text = fox.name;
 
@@ -783,7 +773,10 @@ export class FoxGame extends Phaser.Scene {
       installedSnap = await this.getSnap(snapId, snapVersion);
     }
     if (!installedSnap) {
-      throw new Error(`Snap with id: ${snapId} not installed`);
+      throw new Error({
+        message: `Snap with id: ${snapId} not installed`,
+        statusCode: 422,
+      });
     }
     return installedSnap;
   };
@@ -842,7 +835,6 @@ export class FoxGame extends Phaser.Scene {
   };
 
   foxPet = () => {
-    console.log("petei");
     this.ethereumWallet
       .request({
         method: "wallet_invokeSnap",
@@ -854,7 +846,6 @@ export class FoxGame extends Phaser.Scene {
         },
       })
       .then((fox: any) => {
-        console.log(fox);
         this.textHappiness.text = "" + parseInt(Math.ceil(fox.happiness));
       });
   };
