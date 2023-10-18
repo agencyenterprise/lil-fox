@@ -39,6 +39,17 @@ button {
   --autosaveBackground: var(--lightBackground);
 }
 
+.window-style {
+  @apply border-2 border-r-[#9f1bf5] border-b-[#9f1bf5] border-t-white border-l-white bg-[#6effeb] shadow-frame
+}
+
+.button-inactive {
+  @apply border-2 border-t-white border-l-white border-r-[#9f1bf5] border-b-[#9f1bf5] bg-[#fed5fb]
+}
+
+.button-active {
+  @apply bg-[#dfbadd] border-2 border-r-white border-b-white border-l-[#9f1bf5] border-t-[#9f1bf5]
+}
 /* site design based on https://codepen.io/sooooooo/pen/mZdpwK */
 body {
   background: #4955c3;

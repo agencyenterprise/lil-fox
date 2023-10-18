@@ -1,4 +1,4 @@
-import config from "@/PhaserGame";
+import semver from "semver";
 import * as Math from "mathjs";
 import { Button } from "@/components";
 import Error from "next/error";
@@ -47,11 +47,13 @@ export class FoxGame extends Phaser.Scene {
   public ethereumWallet: any;
   public interval: any;
   public foxSnapId: string = "npm:@ae-studio/pet-fox";
-  public foxSnapVersion = "^0.2.3";
+  public foxSnapVersion = "^0.2.5";
   public ipfsSnapId = "npm:@ae-studio/snapsync";
   public ipfsSnapVersion = "^0.2.4";
   public autosaveInterval = 60;
   public hasInitialized = false;
+  public availableSkins = ["default", "blue"];
+  public selectedSkin = "default";
   public textName: Phaser.GameObjects.BitmapText;
   public textHealth: Phaser.GameObjects.BitmapText;
   public textHunger: Phaser.GameObjects.BitmapText;
@@ -70,40 +72,123 @@ export class FoxGame extends Phaser.Scene {
       frameWidth: 16,
       frameHeight: 16,
     });
-    this.load.spritesheet("idle", "/assets/animations/lilfox_idle_strip8.png", {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
     this.load.spritesheet(
-      "crouch",
-      "/assets/animations/lilfox_crouch_strip8.png",
+      "idle-blue",
+      "/assets/animations/fox/blue/lilfox_idle_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "crouch-blue",
+      "/assets/animations/fox/blue/lilfox_crouch_strip8.png",
       { frameWidth: 32, frameHeight: 32 }
     );
-    this.load.spritesheet("sit", "/assets/animations/lilfox_sit_strip8.png", {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
     this.load.spritesheet(
-      "sneak",
-      "/assets/animations/lilfox_sneak_strip4.png",
+      "sit-blue",
+      "/assets/animations/fox/blue/lilfox_sit_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "sneak-blue",
+      "/assets/animations/fox/blue/lilfox_sneak_strip4.png",
       { frameWidth: 32, frameHeight: 32 }
     );
-    this.load.spritesheet("run", "/assets/animations/lilfox_run_strip4.png", {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
-    this.load.spritesheet("walk", "/assets/animations/lilfox_walk_strip8.png", {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
-    this.load.spritesheet("hurt", "/assets/animations/lilfox_hurt_strip5.png", {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
-    this.load.spritesheet("die", "/assets/animations/lilfox_die_strip8.png", {
-      frameWidth: 32,
-      frameHeight: 32,
-    });
+    this.load.spritesheet(
+      "run-blue",
+      "/assets/animations/fox/blue/lilfox_run_strip4.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "walk-blue",
+      "/assets/animations/fox/blue/lilfox_walk_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "hurt-blue",
+      "/assets/animations/fox/blue/lilfox_hurt_strip5.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "die-blue",
+      "/assets/animations/fox/blue/lilfox_die_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+
+    this.load.spritesheet(
+      "idle-default",
+      "/assets/animations/fox/default/lilfox_idle_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "crouch-default",
+      "/assets/animations/fox/default/lilfox_crouch_strip8.png",
+      { frameWidth: 32, frameHeight: 32 }
+    );
+    this.load.spritesheet(
+      "sit-default",
+      "/assets/animations/fox/default/lilfox_sit_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "sneak-default",
+      "/assets/animations/fox/default/lilfox_sneak_strip4.png",
+      { frameWidth: 32, frameHeight: 32 }
+    );
+    this.load.spritesheet(
+      "run-default",
+      "/assets/animations/fox/default/lilfox_run_strip4.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "walk-default",
+      "/assets/animations/fox/default/lilfox_walk_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "hurt-default",
+      "/assets/animations/fox/default/lilfox_hurt_strip5.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "die-default",
+      "/assets/animations/fox/default/lilfox_die_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
     this.load.spritesheet("food", "/assets/sprites/food.png", {
       frameWidth: 16,
       frameHeight: 16,
@@ -172,45 +257,85 @@ export class FoxGame extends Phaser.Scene {
     graphics.fillStyle(this.bgColor, 1);
     graphics.fillRect(0, 540, this.rectWidth, 60);
 
-    const idleAnimation = this.anims.create({
-      key: "idle",
-      frames: this.anims.generateFrameNumbers("idle"),
+    const idleAnimationDefault = this.anims.create({
+      key: "idle-default",
+      frames: this.anims.generateFrameNumbers("idle-default"),
       frameRate: 8,
     });
-    const crouchAnimation = this.anims.create({
-      key: "crouch",
-      frames: this.anims.generateFrameNumbers("crouch"),
+    const crouchAnimationDefault = this.anims.create({
+      key: "crouch-default",
+      frames: this.anims.generateFrameNumbers("crouch-default"),
       frameRate: 8,
     });
-    const sitAnimation = this.anims.create({
-      key: "sit",
-      frames: this.anims.generateFrameNumbers("sit"),
+    const sitAnimationDefault = this.anims.create({
+      key: "sit-default",
+      frames: this.anims.generateFrameNumbers("sit-default"),
       frameRate: 8,
     });
-    const sneakAnimation = this.anims.create({
-      key: "sneak",
-      frames: this.anims.generateFrameNumbers("sneak"),
+    const sneakAnimationDefault = this.anims.create({
+      key: "sneak-default",
+      frames: this.anims.generateFrameNumbers("sneak-default"),
       frameRate: 8,
     });
-    const walkAnimation = this.anims.create({
-      key: "walk",
-      frames: this.anims.generateFrameNumbers("walk"),
+    const walkAnimationDefault = this.anims.create({
+      key: "walk-default",
+      frames: this.anims.generateFrameNumbers("walk-default"),
+      frameRate: 8,
+    });
+    const runAnimationDefault = this.anims.create({
+      key: "run-default",
+      frames: this.anims.generateFrameNumbers("run-default"),
+      frameRate: 8,
+    });
+    const hurtAnimationDefault = this.anims.create({
+      key: "hurt-default",
+      frames: this.anims.generateFrameNumbers("hurt-default"),
+      frameRate: 8,
+    });
+    const dieAnimationDefault = this.anims.create({
+      key: "die-default",
+      frames: this.anims.generateFrameNumbers("die-default"),
       frameRate: 8,
     });
 
-    const runAnimation = this.anims.create({
-      key: "run",
-      frames: this.anims.generateFrameNumbers("run"),
+    const idleAnimationBlue = this.anims.create({
+      key: "idle-blue",
+      frames: this.anims.generateFrameNumbers("idle-blue"),
       frameRate: 8,
     });
-    const hurtAnimation = this.anims.create({
-      key: "hurt",
-      frames: this.anims.generateFrameNumbers("hurt"),
+    const crouchAnimationBlue = this.anims.create({
+      key: "crouch-blue",
+      frames: this.anims.generateFrameNumbers("crouch-blue"),
       frameRate: 8,
     });
-    const dieAnimation = this.anims.create({
-      key: "die",
-      frames: this.anims.generateFrameNumbers("die"),
+    const sitAnimationBlue = this.anims.create({
+      key: "sit-blue",
+      frames: this.anims.generateFrameNumbers("sit-blue"),
+      frameRate: 8,
+    });
+    const sneakAnimationBlue = this.anims.create({
+      key: "sneak-blue",
+      frames: this.anims.generateFrameNumbers("sneak-blue"),
+      frameRate: 8,
+    });
+    const walkAnimationBlue = this.anims.create({
+      key: "walk-blue",
+      frames: this.anims.generateFrameNumbers("walk-blue"),
+      frameRate: 8,
+    });
+    const runAnimationBlue = this.anims.create({
+      key: "run-blue",
+      frames: this.anims.generateFrameNumbers("run-blue"),
+      frameRate: 8,
+    });
+    const hurtAnimationBlue = this.anims.create({
+      key: "hurt-blue",
+      frames: this.anims.generateFrameNumbers("hurt-blue"),
+      frameRate: 8,
+    });
+    const dieAnimationBlue = this.anims.create({
+      key: "die-blue",
+      frames: this.anims.generateFrameNumbers("die-blue"),
       frameRate: 8,
     });
 
@@ -225,7 +350,7 @@ export class FoxGame extends Phaser.Scene {
       .sprite(
         Phaser.Math.RND.between(64, this.rectWidth - 64),
         Phaser.Math.RND.between(94, 506),
-        "idle"
+        `idle-${this.selectedSkin}`
       )
       .setScale(this.xFoxScale, this.yFoxScale);
     if (this.foxSprite.x > 500) {
@@ -233,7 +358,10 @@ export class FoxGame extends Phaser.Scene {
       this.foxSprite.setScale(this.xFoxScale, this.yFoxScale);
     }
 
-    this.foxSprite.play({ key: this.idleKey, repeat: -1 });
+    this.foxSprite.play({
+      key: `${this.idleKey}-${this.selectedSkin}`,
+      repeat: -1,
+    });
 
     graphics.fillStyle(0xffffff, 0.5);
     graphics.fillRect(16, 556, 72, 36);
@@ -260,10 +388,16 @@ export class FoxGame extends Phaser.Scene {
         fallenFood.destroy();
       });
       this.foxSprite
-        .play({ key: "sneak", repeat: 3 })
+        .play({
+          key: `sneak-${this.selectedSkin}`,
+          repeat: 3,
+        })
         .once("animationcomplete", () => {
           this.foxFeed();
-          this.foxSprite.play({ key: this.idleKey, repeat: -1 });
+          this.foxSprite.play({
+            key: `${this.idleKey}-${this.selectedSkin}`,
+            repeat: -1,
+          });
           this.interacting = false;
         });
     });
@@ -301,10 +435,16 @@ export class FoxGame extends Phaser.Scene {
         },
       });
       this.foxSprite
-        .play({ key: "sit", repeat: 2 })
+        .play({
+          key: `sit-${this.selectedSkin}`,
+          repeat: 2,
+        })
         .once("animationcomplete", () => {
           this.foxPet();
-          this.foxSprite.play({ key: this.idleKey, repeat: -1 });
+          this.foxSprite.play({
+            key: `${this.idleKey}-${this.selectedSkin}`,
+            repeat: -1,
+          });
           this.interacting = false;
         });
     });
@@ -341,10 +481,16 @@ export class FoxGame extends Phaser.Scene {
         },
       });
       this.foxSprite
-        .play({ key: "crouch", repeat: 1 })
+        .play({
+          key: `crouch-${this.selectedSkin}`,
+          repeat: 1,
+        })
         .once("animationcomplete", () => {
           this.foxHeal();
-          this.foxSprite.play({ key: this.idleKey, repeat: -1 });
+          this.foxSprite.play({
+            key: `${this.idleKey}-${this.selectedSkin}`,
+            repeat: -1,
+          });
           this.interacting = false;
         });
     });
@@ -382,9 +528,15 @@ export class FoxGame extends Phaser.Scene {
         },
       });
       this.foxSprite
-        .play({ key: "sit", repeat: 2 })
+        .play({
+          key: `sit-${this.selectedSkin}`,
+          repeat: 2,
+        })
         .once("animationcomplete", () => {
-          this.foxSprite.play({ key: this.idleKey, repeat: -1 });
+          this.foxSprite.play({
+            key: `${this.idleKey}-${this.selectedSkin}`,
+            repeat: -1,
+          });
           this.interacting = false;
         });
       this.foxAsk();
@@ -426,7 +578,6 @@ export class FoxGame extends Phaser.Scene {
             .then((response) => response.json())
             .then((data) => {
               imgEl.src = data;
-
               this.interacting = false;
             })
             .catch((error) => {
@@ -448,7 +599,7 @@ export class FoxGame extends Phaser.Scene {
       this.cleaning = false;
       this.delayCounter = 0;
       this.poopCounter = 0;
-      this.idleKey = "idle";
+      this.idleKey = `idle-${this.selectedSkin}`;
       this.foxAdopt().then(() => {
         setTimeout(() => {
           this.run();
@@ -520,9 +671,10 @@ export class FoxGame extends Phaser.Scene {
             key = "run";
             duration = 6 * distance;
           }
-          this.foxSprite
-            .setScale(this.xFoxScale, this.yFoxScale)
-            .play({ key: key, repeat: -1 });
+          this.foxSprite.setScale(this.xFoxScale, this.yFoxScale).play({
+            key: `${key}-${this.selectedSkin}`,
+            repeat: -1,
+          });
           // tween the sprite to the new position
           this.moveTween = this.tweens.add({
             targets: this.foxSprite,
@@ -531,7 +683,10 @@ export class FoxGame extends Phaser.Scene {
             duration: duration,
             onComplete: () => {
               // destroy the sprite when the tween is complete
-              this.foxSprite.play({ key: this.idleKey, repeat: -1 });
+              this.foxSprite.play({
+                key: `${this.idleKey}-${this.selectedSkin}`,
+                repeat: -1,
+              });
               this.walking = false;
             },
           });
@@ -578,9 +733,15 @@ export class FoxGame extends Phaser.Scene {
         try {
           this.moveTween.stop();
         } catch {}
-        this.foxSprite.play({ key: this.idleKey, repeat: -1 });
+        this.foxSprite.play({
+          key: `${this.idleKey}-${this.selectedSkin}`,
+          repeat: -1,
+        });
       } else if ("die" == this.idleKey && "die" != currentKey) {
-        this.foxSprite.play({ key: this.idleKey, repeat: 0 });
+        this.foxSprite.play({
+          key: `${this.idleKey}-${this.selectedSkin}`,
+          repeat: 0,
+        });
         this.interacting = true;
       }
     } catch {}
@@ -590,7 +751,8 @@ export class FoxGame extends Phaser.Scene {
     this.hasInitialized = true;
 
     try {
-      await this.foxLoad();
+      const fox = await this.foxLoad();
+      this.selectedSkin = fox.skin;
     } catch (error) {
       this.hasInitialized = false;
       throw error;
@@ -617,6 +779,7 @@ export class FoxGame extends Phaser.Scene {
         if (foxExists) {
           await this.initializeState(); // Load existing fox
           this.styleAutosaveButton();
+          this.styleSkinButtons();
           this.run();
           this.interval = setInterval(this.run, 500);
         } else {
@@ -698,6 +861,20 @@ export class FoxGame extends Phaser.Scene {
     );
   };
 
+  styleSkinButtons = () => {
+    const skinButtons = document.getElementsByClassName("skin-button");
+    Array.from(skinButtons).forEach((button: any) => {
+      button.classList.remove("button-active");
+      if (button.id == this.selectedSkin) {
+        button.classList.add("button-active");
+        button.classList.remove("button-inactive");
+      } else {
+        button.classList.remove("button-active");
+        button.classList.add("button-inactive");
+      }
+    });
+  };
+
   shouldAutosave = () => {
     return Boolean(JSON.parse(localStorage.getItem("autosave") ?? "false"));
   };
@@ -732,6 +909,13 @@ export class FoxGame extends Phaser.Scene {
       }
       curHappiness = parseInt(Math.ceil(fox.happiness)); 
       */
+    this.selectedSkin =
+      this.availableSkins.indexOf(fox.skin) >= 0 ? fox.skin : "default";
+    this.foxSprite.play({
+      key: `${this.idleKey}-${this.selectedSkin}`,
+      repeat: -1,
+    });
+    this.styleSkinButtons();
     this.textAge.text = `${Math.floor(age)}`;
     if (!this.cleaning) {
       this.poopCounter = parseInt(fox.dirty);
@@ -750,9 +934,12 @@ export class FoxGame extends Phaser.Scene {
       const snaps = await this.ethereumWallet.request({
         method: "wallet_getSnaps",
       });
-      return Object.values(snaps).find((snap: any) => snap.id === snapId);
+      return Object.values(snaps).find(
+        (snap: any) =>
+          snap.id === snapId && semver.satisfies(snap.version, snapVersion)
+      );
     } catch (e) {
-      console.log("Failed to obtain installed snap", e);
+      console.error("Failed to obtain installed snap", e);
       return undefined;
     }
   };
@@ -790,6 +977,19 @@ export class FoxGame extends Phaser.Scene {
       this.ipfsSnapId,
       this.ipfsSnapVersion
     );
+  };
+
+  changeSkin = async (skin: string) => {
+    this.selectedSkin = skin;
+    this.foxSprite.play({
+      key: `${this.idleKey}-${this.selectedSkin}`,
+      repeat: -1,
+    });
+    await this.foxSkin(this.selectedSkin)
+      .then(this.updateUI)
+      .then(() => this.foxPersist())
+      .catch(console.error);
+    return this.selectedSkin;
   };
 
   foxFeed = () => {
@@ -913,6 +1113,21 @@ export class FoxGame extends Phaser.Scene {
         snapId: this.foxSnapId,
         request: {
           method: "hello",
+        },
+      },
+    });
+  };
+
+  foxSkin = (skin: string) => {
+    return this.ethereumWallet.request({
+      method: "wallet_invokeSnap",
+      params: {
+        snapId: this.foxSnapId,
+        request: {
+          method: "skin",
+          params: {
+            skin,
+          },
         },
       },
     });
