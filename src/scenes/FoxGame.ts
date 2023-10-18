@@ -555,7 +555,7 @@ export class FoxGame extends Phaser.Scene {
       const imgEl = document.createElement("img");
       imgEl.height = 256;
       imgEl.width = 256;
-      imgEl.src = "nyan.gif";
+      imgEl.src = "/nyan.gif";
       if (!picEl) {
         return;
       }

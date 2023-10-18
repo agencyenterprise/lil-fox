@@ -134,30 +134,29 @@ export default function Home() {
             </div>
             <div id="phaser-container" className="h-[600px] w-[800px]"></div>
           </div>
-        </div>
-      )}
-      {initiated && (
-        <div className="window-style w-fit h-[660px] absolute right-10 p-2">
-          <div className="flex box-border w-full h-12 p-1 bg-[#fed5fb] items-center border-2 border-[#9f1bf5] header">
-            <h1 id="title" className="text-2xl font-bold px-2">
-              Choose Skin
-            </h1>
+
+          <div className="window-style w-fit h-[664px] absolute -right-[250px] top-0 p-2">
+            <div className="flex box-border w-full h-12 p-1 bg-[#fed5fb] items-center border-2 border-[#9f1bf5] header">
+              <h1 id="title" className="text-2xl font-bold px-2">
+                Choose Skin
+              </h1>
+            </div>
+            {availableSkins.map((skin) => (
+              <button
+                key={skin}
+                id={skin}
+                className="skin-button button-inactive flex flex-col gap-y-4 mt-4  items-center justify-center w-full"
+                onClick={() => changeSkin(skin)}
+              >
+                <Image
+                  src={`/skin-icons/fox-${skin}-skin.png`}
+                  width="48"
+                  height="48"
+                  alt="fox icon"
+                />
+              </button>
+            ))}
           </div>
-          {availableSkins.map((skin) => (
-            <button
-              key={skin}
-              id={skin}
-              className="skin-button button-inactive flex flex-col gap-y-4 mt-4  items-center justify-center w-full"
-              onClick={() => changeSkin(skin)}
-            >
-              <Image
-                src={`/skin-icons/fox-${skin}-skin.png`}
-                width="48"
-                height="48"
-                alt="fox icon"
-              />
-            </button>
-          ))}
         </div>
       )}
     </main>
