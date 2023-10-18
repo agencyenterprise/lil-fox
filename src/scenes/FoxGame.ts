@@ -68,89 +68,89 @@ export class FoxGame extends Phaser.Scene {
   }
 
   loadAnimations() {
-    const idleAnimationDefault = this.anims.create({
+    this.anims.create({
       key: "idle-default",
       frames: this.anims.generateFrameNumbers("idle-default"),
       frameRate: 8,
     });
-    const crouchAnimationDefault = this.anims.create({
+    this.anims.create({
       key: "crouch-default",
       frames: this.anims.generateFrameNumbers("crouch-default"),
       frameRate: 8,
     });
-    const sitAnimationDefault = this.anims.create({
+    this.anims.create({
       key: "sit-default",
       frames: this.anims.generateFrameNumbers("sit-default"),
       frameRate: 8,
     });
-    const sneakAnimationDefault = this.anims.create({
+    this.anims.create({
       key: "sneak-default",
       frames: this.anims.generateFrameNumbers("sneak-default"),
       frameRate: 8,
     });
-    const walkAnimationDefault = this.anims.create({
+    this.anims.create({
       key: "walk-default",
       frames: this.anims.generateFrameNumbers("walk-default"),
       frameRate: 8,
     });
-    const runAnimationDefault = this.anims.create({
+    this.anims.create({
       key: "run-default",
       frames: this.anims.generateFrameNumbers("run-default"),
       frameRate: 8,
     });
-    const hurtAnimationDefault = this.anims.create({
+    this.anims.create({
       key: "hurt-default",
       frames: this.anims.generateFrameNumbers("hurt-default"),
       frameRate: 8,
     });
-    const dieAnimationDefault = this.anims.create({
+    this.anims.create({
       key: "die-default",
       frames: this.anims.generateFrameNumbers("die-default"),
       frameRate: 8,
     });
 
-    const idleAnimationBlue = this.anims.create({
+    this.anims.create({
       key: "idle-blue",
       frames: this.anims.generateFrameNumbers("idle-blue"),
       frameRate: 8,
     });
-    const crouchAnimationBlue = this.anims.create({
+    this.anims.create({
       key: "crouch-blue",
       frames: this.anims.generateFrameNumbers("crouch-blue"),
       frameRate: 8,
     });
-    const sitAnimationBlue = this.anims.create({
+    this.anims.create({
       key: "sit-blue",
       frames: this.anims.generateFrameNumbers("sit-blue"),
       frameRate: 8,
     });
-    const sneakAnimationBlue = this.anims.create({
+    this.anims.create({
       key: "sneak-blue",
       frames: this.anims.generateFrameNumbers("sneak-blue"),
       frameRate: 8,
     });
-    const walkAnimationBlue = this.anims.create({
+    this.anims.create({
       key: "walk-blue",
       frames: this.anims.generateFrameNumbers("walk-blue"),
       frameRate: 8,
     });
-    const runAnimationBlue = this.anims.create({
+    this.anims.create({
       key: "run-blue",
       frames: this.anims.generateFrameNumbers("run-blue"),
       frameRate: 8,
     });
-    const hurtAnimationBlue = this.anims.create({
+    this.anims.create({
       key: "hurt-blue",
       frames: this.anims.generateFrameNumbers("hurt-blue"),
       frameRate: 8,
     });
-    const dieAnimationBlue = this.anims.create({
+    this.anims.create({
       key: "die-blue",
       frames: this.anims.generateFrameNumbers("die-blue"),
       frameRate: 8,
     });
 
-    const foodAnimation = this.anims.create({
+    this.anims.create({
       key: "food",
       frames: this.anims.generateFrameNumbers("food"),
       frameRate: 2,
@@ -163,7 +163,6 @@ export class FoxGame extends Phaser.Scene {
     graphics.fillStyle(0x6effeb, 1);
     graphics.fillRect(12, 552, 72, 36);
     const feedButton = new Button(48, 572, "Feed", this, () => {
-      console.log(this.interacting);
       if (this.interacting) {
         return;
       }
@@ -1017,7 +1016,6 @@ export class FoxGame extends Phaser.Scene {
         },
       })
       .then((fox: any) => {
-        console.log("voltou");
         this.textHunger.text = "" + parseInt(Math.ceil(fox.hunger));
       });
   };
