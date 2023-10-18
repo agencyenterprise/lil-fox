@@ -67,196 +67,7 @@ export class FoxGame extends Phaser.Scene {
     super();
   }
 
-  preload() {
-    this.load.spritesheet("icons", "/assets/sprites/icons.png", {
-      frameWidth: 16,
-      frameHeight: 16,
-    });
-    this.load.spritesheet(
-      "idle-blue",
-      "/assets/animations/fox/blue/lilfox_idle_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "crouch-blue",
-      "/assets/animations/fox/blue/lilfox_crouch_strip8.png",
-      { frameWidth: 32, frameHeight: 32 }
-    );
-    this.load.spritesheet(
-      "sit-blue",
-      "/assets/animations/fox/blue/lilfox_sit_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "sneak-blue",
-      "/assets/animations/fox/blue/lilfox_sneak_strip4.png",
-      { frameWidth: 32, frameHeight: 32 }
-    );
-    this.load.spritesheet(
-      "run-blue",
-      "/assets/animations/fox/blue/lilfox_run_strip4.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "walk-blue",
-      "/assets/animations/fox/blue/lilfox_walk_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "hurt-blue",
-      "/assets/animations/fox/blue/lilfox_hurt_strip5.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "die-blue",
-      "/assets/animations/fox/blue/lilfox_die_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-
-    this.load.spritesheet(
-      "idle-default",
-      "/assets/animations/fox/default/lilfox_idle_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "crouch-default",
-      "/assets/animations/fox/default/lilfox_crouch_strip8.png",
-      { frameWidth: 32, frameHeight: 32 }
-    );
-    this.load.spritesheet(
-      "sit-default",
-      "/assets/animations/fox/default/lilfox_sit_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "sneak-default",
-      "/assets/animations/fox/default/lilfox_sneak_strip4.png",
-      { frameWidth: 32, frameHeight: 32 }
-    );
-    this.load.spritesheet(
-      "run-default",
-      "/assets/animations/fox/default/lilfox_run_strip4.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "walk-default",
-      "/assets/animations/fox/default/lilfox_walk_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "hurt-default",
-      "/assets/animations/fox/default/lilfox_hurt_strip5.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "die-default",
-      "/assets/animations/fox/default/lilfox_die_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet("food", "/assets/sprites/food.png", {
-      frameWidth: 16,
-      frameHeight: 16,
-    });
-    this.load.spritesheet("flora", "/assets/sprites/flora.png", {
-      frameWidth: 16,
-      frameHeight: 16,
-    });
-    this.load.bitmapFont(
-      "pixelfont",
-      "/assets/fonts/minogram_6x10.png",
-      "/assets/fonts/minogram_6x10.xml"
-    );
-  }
-
-  create() {
-    if (window.ethereum !== undefined) {
-      this.ethereumWallet = window.ethereum;
-    }
-    let graphics = this.add.graphics();
-    // Set the fill color to e4761b
-    graphics.fillStyle(this.bgColor, 1);
-    // Draw a rectangle at position 0,0 with a width of 800 and a height of 60
-    graphics.fillRect(0, 0, this.rectWidth, 60);
-
-    for (var i = 0; i < 40; i++) {
-      let shouldBother = Phaser.Math.RND.between(0, 1);
-      if (shouldBother) {
-        let spriteIndex = Phaser.Math.RND.between(0, 5);
-        let col = i % 8;
-        let row = Math.floor(i / 8);
-        let x = 64 + col * 96 + Phaser.Math.RND.between(-36, 36);
-        let y = 120 + row * 88 + Phaser.Math.RND.between(-24, 24);
-        this.add.image(x, y, "flora", spriteIndex).setScale(3);
-      }
-    }
-
-    graphics.fillStyle(this.fgColor, 1);
-    graphics.fillRoundedRect(12, 12, 300, 36, 10);
-    this.textName = this.add.bitmapText(25, 21, "pixelfont", "Fox", 20);
-
-    graphics.fillRoundedRect(336, 12, 88, 36, 10);
-    this.add.image(342, 15, "icons", 0).setOrigin(0, 0).setScale(2);
-    this.textHealth = this.add
-      .bitmapText(416, 21, "pixelfont", "100", 20)
-      .setOrigin(1, 0);
-
-    graphics.fillRoundedRect(448, 12, 88, 36, 10);
-    this.add.image(454, 15, "icons", 1).setOrigin(0, 0).setScale(2);
-    this.textHunger = this.add
-      .bitmapText(528, 21, "pixelfont", "100", 20)
-      .setOrigin(1, 0);
-
-    graphics.fillRoundedRect(560, 12, 88, 36, 10);
-    this.add.image(566, 14, "icons", 2).setOrigin(0, 0).setScale(2);
-    this.textHappiness = this.add
-      .bitmapText(640, 21, "pixelfont", "100", 20)
-      .setOrigin(1, 0);
-
-    graphics.fillRoundedRect(672, 12, 88, 36, 10);
-    this.add.image(678, 14, "icons", 3).setOrigin(0, 0).setScale(2);
-    this.textAge = this.add
-      .bitmapText(752, 21, "pixelfont", "0", 20)
-      .setOrigin(1, 0);
-
-    graphics.fillStyle(this.bgColor, 1);
-    graphics.fillRect(0, 540, this.rectWidth, 60);
-
+  loadAnimations() {
     const idleAnimationDefault = this.anims.create({
       key: "idle-default",
       frames: this.anims.generateFrameNumbers("idle-default"),
@@ -344,30 +155,15 @@ export class FoxGame extends Phaser.Scene {
       frames: this.anims.generateFrameNumbers("food"),
       frameRate: 2,
     });
+  }
 
-    this.poops = this.add.group();
-    this.foxSprite = this.add
-      .sprite(
-        Phaser.Math.RND.between(64, this.rectWidth - 64),
-        Phaser.Math.RND.between(94, 506),
-        `idle-${this.selectedSkin}`
-      )
-      .setScale(this.xFoxScale, this.yFoxScale);
-    if (this.foxSprite.x > 500) {
-      this.xFoxScale = -this.xFoxScale;
-      this.foxSprite.setScale(this.xFoxScale, this.yFoxScale);
-    }
-
-    this.foxSprite.play({
-      key: `${this.idleKey}-${this.selectedSkin}`,
-      repeat: -1,
-    });
-
+  setInterface(graphics: Phaser.GameObjects.Graphics) {
     graphics.fillStyle(0xffffff, 0.5);
     graphics.fillRect(16, 556, 72, 36);
     graphics.fillStyle(0x6effeb, 1);
     graphics.fillRect(12, 552, 72, 36);
     const feedButton = new Button(48, 572, "Feed", this, () => {
+      console.log(this.interacting);
       if (this.interacting) {
         return;
       }
@@ -393,6 +189,7 @@ export class FoxGame extends Phaser.Scene {
           repeat: 3,
         })
         .once("animationcomplete", () => {
+          console.log("completed");
           this.foxFeed();
           this.foxSprite.play({
             key: `${this.idleKey}-${this.selectedSkin}`,
@@ -639,6 +436,221 @@ export class FoxGame extends Phaser.Scene {
         })
         .catch(console.error);
     });
+  }
+
+  setEnvironment() {
+    let graphics = this.add.graphics();
+    // Set the fill color to e4761b
+    graphics.fillStyle(this.bgColor, 1);
+    // Draw a rectangle at position 0,0 with a width of 800 and a height of 60
+    graphics.fillRect(0, 0, this.rectWidth, 60);
+
+    for (var i = 0; i < 40; i++) {
+      let shouldBother = Phaser.Math.RND.between(0, 1);
+      if (shouldBother) {
+        let spriteIndex = Phaser.Math.RND.between(0, 5);
+        let col = i % 8;
+        let row = Math.floor(i / 8);
+        let x = 64 + col * 96 + Phaser.Math.RND.between(-36, 36);
+        let y = 120 + row * 88 + Phaser.Math.RND.between(-24, 24);
+        this.add.image(x, y, "flora", spriteIndex).setScale(3);
+      }
+    }
+
+    graphics.fillStyle(this.fgColor, 1);
+    graphics.fillRoundedRect(12, 12, 300, 36, 10);
+    this.textName = this.add.bitmapText(25, 21, "pixelfont", "Fox", 20);
+
+    graphics.fillRoundedRect(336, 12, 88, 36, 10);
+    this.add.image(342, 15, "icons", 0).setOrigin(0, 0).setScale(2);
+    this.textHealth = this.add
+      .bitmapText(416, 21, "pixelfont", "100", 20)
+      .setOrigin(1, 0);
+
+    graphics.fillRoundedRect(448, 12, 88, 36, 10);
+    this.add.image(454, 15, "icons", 1).setOrigin(0, 0).setScale(2);
+    this.textHunger = this.add
+      .bitmapText(528, 21, "pixelfont", "100", 20)
+      .setOrigin(1, 0);
+
+    graphics.fillRoundedRect(560, 12, 88, 36, 10);
+    this.add.image(566, 14, "icons", 2).setOrigin(0, 0).setScale(2);
+    this.textHappiness = this.add
+      .bitmapText(640, 21, "pixelfont", "100", 20)
+      .setOrigin(1, 0);
+
+    graphics.fillRoundedRect(672, 12, 88, 36, 10);
+    this.add.image(678, 14, "icons", 3).setOrigin(0, 0).setScale(2);
+    this.textAge = this.add
+      .bitmapText(752, 21, "pixelfont", "0", 20)
+      .setOrigin(1, 0);
+
+    graphics.fillStyle(this.bgColor, 1);
+    graphics.fillRect(0, 540, this.rectWidth, 60);
+
+    this.loadAnimations();
+    this.poops = this.add.group();
+    this.setInterface(graphics);
+  }
+
+  preload() {
+    this.load.spritesheet("icons", "/assets/sprites/icons.png", {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
+    this.load.spritesheet(
+      "idle-blue",
+      "/assets/animations/fox/blue/lilfox_idle_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "crouch-blue",
+      "/assets/animations/fox/blue/lilfox_crouch_strip8.png",
+      { frameWidth: 32, frameHeight: 32 }
+    );
+    this.load.spritesheet(
+      "sit-blue",
+      "/assets/animations/fox/blue/lilfox_sit_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "sneak-blue",
+      "/assets/animations/fox/blue/lilfox_sneak_strip4.png",
+      { frameWidth: 32, frameHeight: 32 }
+    );
+    this.load.spritesheet(
+      "run-blue",
+      "/assets/animations/fox/blue/lilfox_run_strip4.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "walk-blue",
+      "/assets/animations/fox/blue/lilfox_walk_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "hurt-blue",
+      "/assets/animations/fox/blue/lilfox_hurt_strip5.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "die-blue",
+      "/assets/animations/fox/blue/lilfox_die_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+
+    this.load.spritesheet(
+      "idle-default",
+      "/assets/animations/fox/default/lilfox_idle_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "crouch-default",
+      "/assets/animations/fox/default/lilfox_crouch_strip8.png",
+      { frameWidth: 32, frameHeight: 32 }
+    );
+    this.load.spritesheet(
+      "sit-default",
+      "/assets/animations/fox/default/lilfox_sit_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "sneak-default",
+      "/assets/animations/fox/default/lilfox_sneak_strip4.png",
+      { frameWidth: 32, frameHeight: 32 }
+    );
+    this.load.spritesheet(
+      "run-default",
+      "/assets/animations/fox/default/lilfox_run_strip4.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "walk-default",
+      "/assets/animations/fox/default/lilfox_walk_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "hurt-default",
+      "/assets/animations/fox/default/lilfox_hurt_strip5.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "die-default",
+      "/assets/animations/fox/default/lilfox_die_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet("food", "/assets/sprites/food.png", {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
+    this.load.spritesheet("flora", "/assets/sprites/flora.png", {
+      frameWidth: 16,
+      frameHeight: 16,
+    });
+    this.load.bitmapFont(
+      "pixelfont",
+      "/assets/fonts/minogram_6x10.png",
+      "/assets/fonts/minogram_6x10.xml"
+    );
+  }
+
+  create() {
+    if (window.ethereum !== undefined) {
+      this.ethereumWallet = window.ethereum;
+    }
+    this.setEnvironment();
+    this.foxSprite = this.add
+      .sprite(
+        Phaser.Math.RND.between(64, this.rectWidth - 64),
+        Phaser.Math.RND.between(94, 506),
+        `idle-${this.selectedSkin}`
+      )
+      .setScale(this.xFoxScale, this.yFoxScale);
+    if (this.foxSprite.x > 500) {
+      this.xFoxScale = -this.xFoxScale;
+      this.foxSprite.setScale(this.xFoxScale, this.yFoxScale);
+    }
+
+    this.foxSprite.play({
+      key: `${this.idleKey}-${this.selectedSkin}`,
+      repeat: -1,
+    });
     this.connectSnap();
   }
 
@@ -746,6 +758,7 @@ export class FoxGame extends Phaser.Scene {
       }
     } catch {}
   }
+
   initializeState = async () => {
     if (this.hasInitialized) return;
     this.hasInitialized = true;
@@ -911,10 +924,10 @@ export class FoxGame extends Phaser.Scene {
       */
     this.selectedSkin =
       this.availableSkins.indexOf(fox.skin) >= 0 ? fox.skin : "default";
-    this.foxSprite.play({
-      key: `${this.idleKey}-${this.selectedSkin}`,
-      repeat: -1,
-    });
+    // this.foxSprite.play({
+    //   key: `${this.idleKey}-${this.selectedSkin}`,
+    //   repeat: -1,
+    // });
     this.styleSkinButtons();
     this.textAge.text = `${Math.floor(age)}`;
     if (!this.cleaning) {
@@ -1004,6 +1017,7 @@ export class FoxGame extends Phaser.Scene {
         },
       })
       .then((fox: any) => {
+        console.log("voltou");
         this.textHunger.text = "" + parseInt(Math.ceil(fox.hunger));
       });
   };
