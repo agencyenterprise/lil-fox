@@ -764,7 +764,7 @@ export class FoxGame extends Phaser.Scene {
 
     try {
       const fox = await this.foxLoad();
-      this.selectedSkin = fox.skin;
+      this.selectedSkin = fox.skin ?? "default";
     } catch (error) {
       this.hasInitialized = false;
       throw error;
@@ -921,12 +921,7 @@ export class FoxGame extends Phaser.Scene {
       }
       curHappiness = parseInt(Math.ceil(fox.happiness)); 
       */
-    this.selectedSkin =
-      this.availableSkins.indexOf(fox.skin) >= 0 ? fox.skin : "default";
-    // this.foxSprite.play({
-    //   key: `${this.idleKey}-${this.selectedSkin}`,
-    //   repeat: -1,
-    // });
+    this.selectedSkin = fox.skin ?? "default";
     this.styleSkinButtons();
     this.textAge.text = `${Math.floor(age)}`;
     if (!this.cleaning) {
