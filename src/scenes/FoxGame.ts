@@ -904,9 +904,9 @@ export class FoxGame extends Phaser.Scene {
     const age = fox.age / (1000 * 3600 * 24);
     this.textName.text = fox.name;
 
-    this.textHealth.text = "" + parseInt(Math.ceil(fox.health));
-    this.textHunger.text = "" + parseInt(Math.ceil(fox.hunger));
-    this.textHappiness.text = "" + parseInt(Math.ceil(fox.happiness));
+    this.textHealth.text = `${Math.ceil(fox.health ?? 0)}`;
+    this.textHunger.text = `${Math.ceil(fox.hunger ?? 0)}`;
+    this.textHappiness.text = `${Math.ceil(fox.happiness ?? 0)}`;
     /*
       if(curHealth==null) { 
         textHealth.text = ''+parseInt(Math.ceil(fox.health)); 
@@ -1016,7 +1016,7 @@ export class FoxGame extends Phaser.Scene {
         },
       })
       .then((fox: any) => {
-        this.textHunger.text = "" + parseInt(Math.ceil(fox.hunger));
+        this.textHunger.text = `${Math.ceil(fox.hunger ?? 0)}`;
       });
   };
 
@@ -1058,7 +1058,7 @@ export class FoxGame extends Phaser.Scene {
         },
       })
       .then((fox: any) => {
-        this.textHappiness.text = "" + parseInt(Math.ceil(fox.happiness));
+        this.textHappiness.text = `${Math.ceil(fox.happiness ?? 0)}`;
       });
   };
 
@@ -1074,7 +1074,7 @@ export class FoxGame extends Phaser.Scene {
         },
       })
       .then((fox: any) => {
-        this.textHealth.text = "" + parseInt(Math.ceil(fox.health));
+        this.textHealth.text = `${Math.ceil(fox.health ?? 0)}`;
       });
   };
 
