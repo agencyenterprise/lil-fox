@@ -47,7 +47,7 @@ export class FoxGame extends Phaser.Scene {
   public ethereumWallet: any;
   public interval: any;
   public foxSnapId: string = "npm:@ae-studio/pet-fox";
-  public foxSnapVersion = "^0.2.5";
+  public foxSnapVersion = "^0.2.6";
   public ipfsSnapId = "npm:@ae-studio/snapsync";
   public ipfsSnapVersion = "^0.2.4";
   public autosaveInterval = 60;
