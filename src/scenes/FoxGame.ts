@@ -987,16 +987,20 @@ export class FoxGame extends Phaser.Scene {
   };
 
   changeSkin = async (skin: string) => {
-    this.selectedSkin = skin;
     this.foxSprite.play({
       key: `${this.idleKey}-${this.selectedSkin}`,
       repeat: -1,
     });
-    await this.foxSkin(this.selectedSkin)
-      .then(this.updateUI)
+    let newSkin = "default"
+    await this.foxSkin(skin)
+      .then((fox: any) => {
+        newSkin = fox.skin
+        this.selectedSkin = newSkin;
+        this.updateUI(fox)
+      })
       .then(() => this.foxPersist())
       .catch(console.error);
-    return this.selectedSkin;
+    return newSkin
   };
 
   foxFeed = () => {
