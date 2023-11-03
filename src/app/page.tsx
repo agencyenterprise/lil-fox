@@ -1,9 +1,8 @@
 "use client";
 
-import classNames from "classnames";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ContractInterface, ethers } from "ethers";
+import { BigNumber, ContractInterface, ethers } from "ethers";
 import config from "@/config/index";
 
 declare global {
@@ -12,8 +11,9 @@ declare global {
   }
 }
 
-const tokenIdToSkin = new Map([
+const tokenIdToSkin = new Map<number | string, number | string>([
   [0, "blue"],
+  ["blue", 0],
 ]);
 
 export default function Home() {
@@ -41,6 +41,7 @@ export default function Home() {
         'function balanceOf(address account, uint256 id) external view returns (uint256)',
         'function balanceOfBatch(address[] calldata accounts, uint256[] calldata ids) external view returns (uint256[] memory)'
       ]
+
       const provider = new ethers.providers.JsonRpcProvider(config.lineaRpcUrl)
       const lilFoxSkinsContract = new ethers.Contract(config.foxSkinContractAddress, erc1155Interface, provider)
       
@@ -48,11 +49,12 @@ export default function Home() {
       const addressesArray = Array(config.maxNftSkinId + 1).fill(address)
 
       const balanceOfBatch = await lilFoxSkinsContract.balanceOfBatch(addressesArray, tokenIdsArray)
-
       const ownedSkins: string[] = ["default"]
-      balanceOfBatch.entries().forEach((entry: [number, ethers.BigNumber]) => {
-        if (entry[1].gt(0)) {
-          const skin = tokenIdToSkin.get(entry[0])
+
+      const entries: [string, BigNumber][] = Object.entries(balanceOfBatch);
+      entries.forEach(([key, value]) => {
+        if (value.gt(0)) {
+          const skin = tokenIdToSkin.get(Number(key))
           if (!skin) return
           ownedSkins.push(skin)
         }
@@ -125,12 +127,14 @@ export default function Home() {
     if (typeof window !== "undefined") {
       const FoxGame = require("@/scenes").FoxGame;
       const gameScene = game.current?.scene.scenes[0] as typeof FoxGame;
-      const skinChanged = await gameScene.changeSkin(skin);
+
+      const skinId = tokenIdToSkin.get(skin)
+      console.log({skinId, skin})
+      const skinChanged = await gameScene.changeSkin(skinId, skin);
       setSelectedSkin(skinChanged);
     }
   };
 
-  console.log(ownedSkins)
 
   return (
     <main className="flex items-center min-h-screen justify-center ">

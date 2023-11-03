@@ -986,13 +986,13 @@ export class FoxGame extends Phaser.Scene {
     );
   };
 
-  changeSkin = async (skin: string) => {
+  changeSkin = async (skinId: number, skin: string) => {
     this.foxSprite.play({
       key: `${this.idleKey}-${this.selectedSkin}`,
       repeat: -1,
     });
     let newSkin = "default"
-    await this.foxSkin(skin)
+    await this.foxSkin(skinId, skin)
       .then((fox: any) => {
         newSkin = fox.skin
         this.selectedSkin = newSkin;
@@ -1129,7 +1129,7 @@ export class FoxGame extends Phaser.Scene {
     });
   };
 
-  foxSkin = (skin: string) => {
+  foxSkin = (skinId: number, skin: string) => {
     return this.ethereumWallet.request({
       method: "wallet_invokeSnap",
       params: {
@@ -1137,6 +1137,7 @@ export class FoxGame extends Phaser.Scene {
         request: {
           method: "skin",
           params: {
+            skinId,
             skin,
           },
         },
