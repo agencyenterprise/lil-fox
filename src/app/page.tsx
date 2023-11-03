@@ -31,6 +31,23 @@ export default function Home() {
 
   useEffect(() => {
     const setUserSkins = async () => {
+      if (config.chainId != window.ethereum.networkVersion) {
+        await window.ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [{
+            chainId: "0xE704",
+            rpcUrls: ["https://rpc.goerli.linea.build/"],
+            chainName: "Linea Testnet",
+            nativeCurrency: {
+              name: "Ether",
+              symbol: "ETH",
+              decimals: 18
+            },
+            blockExplorerUrls: ["https://goerli.lineascan.build/"]
+          }]
+        });
+      }
+
       await window.ethereum.request({ method: 'eth_requestAccounts' });
 
       const windowProvider = new ethers.providers.Web3Provider(window.ethereum);
@@ -44,7 +61,7 @@ export default function Home() {
 
       const provider = new ethers.providers.JsonRpcProvider(config.lineaRpcUrl)
       const lilFoxSkinsContract = new ethers.Contract(config.foxSkinContractAddress, erc1155Interface, provider)
-      
+
       const tokenIdsArray = Array.from({ length: config.maxNftSkinId + 1 }, (_, i) => i);
       const addressesArray = Array(config.maxNftSkinId + 1).fill(address)
 
@@ -129,7 +146,7 @@ export default function Home() {
       const gameScene = game.current?.scene.scenes[0] as typeof FoxGame;
 
       const skinId = tokenIdToSkin.get(skin)
-      console.log({skinId, skin})
+      console.log({ skinId, skin })
       const skinChanged = await gameScene.changeSkin(skinId, skin);
       setSelectedSkin(skinChanged);
     }
