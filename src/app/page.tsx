@@ -1,8 +1,9 @@
 "use client";
 
-import classNames from "classnames";
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { BigNumber, ContractInterface, ethers } from "ethers";
+import config from "@/config/index";
 
 declare global {
   interface Window {
@@ -10,11 +11,16 @@ declare global {
   }
 }
 
+const tokenIdToSkin = new Map<number | string, number | string>([
+  [0, "blue"],
+  ["blue", 0],
+]);
+
 export default function Home() {
   const [hasFlask, setHasFlask] = useState(false);
   const [initiated, setInitiated] = useState(false);
+  const [ownedSkins, setOwnedSkins] = useState<string[]>([]);
   const [selectedSkin, setSelectedSkin] = useState("default");
-  const availableSkins = ["default", "blue"];
   let game = useRef<Phaser.Game | null>(null);
 
   useEffect(() => {
@@ -22,6 +28,41 @@ export default function Home() {
       setHasFlask(result);
     });
   });
+
+  useEffect(() => {
+    const setUserSkins = async () => {
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+      const windowProvider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = windowProvider.getSigner();
+      const address = await signer.getAddress();
+
+      const erc1155Interface: ContractInterface = [
+        'function balanceOf(address account, uint256 id) external view returns (uint256)',
+        'function balanceOfBatch(address[] calldata accounts, uint256[] calldata ids) external view returns (uint256[] memory)'
+      ]
+
+      const provider = new ethers.providers.JsonRpcProvider(config.lineaRpcUrl)
+      const lilFoxSkinsContract = new ethers.Contract(config.foxSkinContractAddress, erc1155Interface, provider)
+      
+      const tokenIdsArray = Array.from({ length: config.maxNftSkinId + 1 }, (_, i) => i);
+      const addressesArray = Array(config.maxNftSkinId + 1).fill(address)
+
+      const balanceOfBatch = await lilFoxSkinsContract.balanceOfBatch(addressesArray, tokenIdsArray)
+      const ownedSkins: string[] = ["default"]
+
+      const entries: [string, BigNumber][] = Object.entries(balanceOfBatch);
+      entries.forEach(([key, value]) => {
+        if (value.gt(0)) {
+          const skin = tokenIdToSkin.get(Number(key))
+          if (!skin) return
+          ownedSkins.push(skin)
+        }
+      })
+      setOwnedSkins(ownedSkins)
+    }
+    setUserSkins()
+  }, [])
 
   const isFlask = async () => {
     const provider = window.ethereum;
@@ -86,10 +127,14 @@ export default function Home() {
     if (typeof window !== "undefined") {
       const FoxGame = require("@/scenes").FoxGame;
       const gameScene = game.current?.scene.scenes[0] as typeof FoxGame;
-      const skinChanged = await gameScene.changeSkin(skin);
+
+      const skinId = tokenIdToSkin.get(skin)
+      console.log({skinId, skin})
+      const skinChanged = await gameScene.changeSkin(skinId, skin);
       setSelectedSkin(skinChanged);
     }
   };
+
 
   return (
     <main className="flex items-center min-h-screen justify-center ">
@@ -141,7 +186,7 @@ export default function Home() {
                 Choose Skin
               </h1>
             </div>
-            {availableSkins.map((skin) => (
+            {ownedSkins.map((skin) => (
               <button
                 key={skin}
                 id={skin}

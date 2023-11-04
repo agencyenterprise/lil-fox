@@ -986,17 +986,21 @@ export class FoxGame extends Phaser.Scene {
     );
   };
 
-  changeSkin = async (skin: string) => {
-    this.selectedSkin = skin;
+  changeSkin = async (skinId: number, skin: string) => {
     this.foxSprite.play({
       key: `${this.idleKey}-${this.selectedSkin}`,
       repeat: -1,
     });
-    await this.foxSkin(this.selectedSkin)
-      .then(this.updateUI)
+    let newSkin = "default"
+    await this.foxSkin(skinId, skin)
+      .then((fox: any) => {
+        newSkin = fox.skin
+        this.selectedSkin = newSkin;
+        this.updateUI(fox)
+      })
       .then(() => this.foxPersist())
       .catch(console.error);
-    return this.selectedSkin;
+    return newSkin
   };
 
   foxFeed = () => {
@@ -1125,7 +1129,7 @@ export class FoxGame extends Phaser.Scene {
     });
   };
 
-  foxSkin = (skin: string) => {
+  foxSkin = (skinId: number, skin: string) => {
     return this.ethereumWallet.request({
       method: "wallet_invokeSnap",
       params: {
@@ -1133,6 +1137,7 @@ export class FoxGame extends Phaser.Scene {
         request: {
           method: "skin",
           params: {
+            skinId,
             skin,
           },
         },
