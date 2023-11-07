@@ -56,7 +56,7 @@ export default function Home() {
         if (value.gt(0)) {
           const skin = tokenIdToSkin.get(Number(key))
           if (!skin) return
-          ownedSkins.push(skin)
+          ownedSkins.push(String(skin))
         }
       })
       setOwnedSkins(ownedSkins)
