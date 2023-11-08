@@ -926,6 +926,7 @@ export class FoxGame extends Phaser.Scene {
       key: `${this.idleKey}-${this.selectedSkin}`,
       repeat: -1,
     });
+    this.interacting = false;
     this.styleSkinButtons();
     this.textAge.text = `${Math.floor(age)}`;
     if (!this.cleaning) {
