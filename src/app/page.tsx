@@ -20,7 +20,6 @@ export default function Home() {
   const [hasFlask, setHasFlask] = useState(false);
   const [initiated, setInitiated] = useState(false);
   const [ownedSkins, setOwnedSkins] = useState<string[]>([]);
-  const [selectedSkin, setSelectedSkin] = useState("default");
   let game = useRef<Phaser.Game | null>(null);
 
   useEffect(() => {
@@ -148,7 +147,6 @@ export default function Home() {
       const skinId = tokenIdToSkin.get(skin)
       console.log({ skinId, skin })
       const skinChanged = await gameScene.changeSkin(skinId, skin);
-      setSelectedSkin(skinChanged);
     }
   };
 

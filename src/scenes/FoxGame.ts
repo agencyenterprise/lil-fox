@@ -922,6 +922,10 @@ export class FoxGame extends Phaser.Scene {
       curHappiness = parseInt(Math.ceil(fox.happiness)); 
       */
     this.selectedSkin = fox.skin ?? "default";
+    this.foxSprite.play({
+      key: `${this.idleKey}-${this.selectedSkin}`,
+      repeat: -1,
+    });
     this.styleSkinButtons();
     this.textAge.text = `${Math.floor(age)}`;
     if (!this.cleaning) {
@@ -998,7 +1002,6 @@ export class FoxGame extends Phaser.Scene {
         this.selectedSkin = newSkin;
         this.updateUI(fox)
       })
-      .then(() => this.foxPersist())
       .catch(console.error);
     return newSkin
   };
