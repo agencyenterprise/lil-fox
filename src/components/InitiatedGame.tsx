@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { MutableRefObject, useEffect, useState } from "react";
 import { ConnectWalletComponent } from "./ConnectWalletComponent";
 import config from "@/config/index";
 import { BigNumber, ContractInterface, ethers } from "ethers";
@@ -7,7 +7,7 @@ import { useAccount } from 'wagmi'
 
 type InitiatedGameProps = {
   setInitiated: (initiated: boolean) => void;
-  game: any;
+  game: MutableRefObject<Phaser.Game | null>;
 }
 
 const tokenIdToSkin = new Map<number | string, number | string>([
@@ -18,7 +18,6 @@ const tokenIdToSkin = new Map<number | string, number | string>([
 export function InitiatedGame({ setInitiated, game }: InitiatedGameProps) {
   const [ownedSkins, setOwnedSkins] = useState<string[]>([]);
   const { address } = useAccount()
-
 
   useEffect(() => {
     const setUserSkins = async () => {

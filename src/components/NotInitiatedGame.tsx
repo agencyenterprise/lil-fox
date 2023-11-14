@@ -2,10 +2,11 @@ import { useNetwork, useAccount, useConnect, useSwitchNetwork } from 'wagmi'
 import Image from "next/image";
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { lineaTestnet } from '@wagmi/core/chains'
+import { MutableRefObject } from 'react';
 
 type NotInitiatedGameProps = {
   setInitiated: (initiated: boolean) => void;
-  game: any;
+  game: MutableRefObject<Phaser.Game | null>;
 }
 
 export function NotInitiatedGame({ setInitiated, game }: NotInitiatedGameProps) {
