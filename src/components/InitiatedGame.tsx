@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { ConnectWalletComponent } from "./ConnectWalletComponent";
 import config from "@/config/index";
 import { BigNumber, ContractInterface, ethers } from "ethers";
 import Image from "next/image";
 import { useAccount } from 'wagmi'
 
-
 type InitiatedGameProps = {
   setInitiated: (initiated: boolean) => void;
+  game: any;
 }
 
 const tokenIdToSkin = new Map<number | string, number | string>([
@@ -15,8 +15,7 @@ const tokenIdToSkin = new Map<number | string, number | string>([
   ["blue", 0],
 ]);
 
-export function InitiatedGame({ setInitiated }: InitiatedGameProps) {
-  let game = useRef<Phaser.Game | null>(null);
+export function InitiatedGame({ setInitiated, game }: InitiatedGameProps) {
   const [ownedSkins, setOwnedSkins] = useState<string[]>([]);
   const { address } = useAccount()
 
@@ -65,15 +64,10 @@ export function InitiatedGame({ setInitiated }: InitiatedGameProps) {
 
   const changeSkin = async (skin: string) => {
     if (typeof window !== "undefined") {
-      console.log("CHANGE SKIN")
       const FoxGame = require("@/scenes").FoxGame;
-      console.log({FoxGame})
       const gameScene = game.current?.scene.scenes[0] as typeof FoxGame;
-      console.log({gameScene})
-      
       const skinId = tokenIdToSkin.get(skin)
-      console.log({ skinId, skin })
-      const skinChanged = await gameScene.changeSkin(skinId, skin);
+      await gameScene.changeSkin(skinId, skin);
     }
   };
 

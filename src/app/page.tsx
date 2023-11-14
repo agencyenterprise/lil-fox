@@ -26,6 +26,7 @@ const wagmiConfig = createConfig({
 })
 
 export default function Home() {
+  let game = useRef<Phaser.Game | null>(null);
   const [hasFlask, setHasFlask] = useState(false);
   const [initiated, setInitiated] = useState(false);
 
@@ -55,15 +56,11 @@ export default function Home() {
     }
   };
 
-  const [ownedSkins, setOwnedSkins] = useState<string[]>([]);
-
-
-
   return (
     <WagmiConfig config={wagmiConfig}>
       <main className="flex items-center min-h-screen justify-center ">
         {hasFlask && !initiated && (
-          <NotInitiatedGame setInitiated={setInitiated} />
+          <NotInitiatedGame game={game} setInitiated={setInitiated} />
         )}
 
         {!hasFlask && !initiated && (
@@ -80,7 +77,7 @@ export default function Home() {
         )}
 
         {initiated && (
-          <InitiatedGame setInitiated={setInitiated} />
+          <InitiatedGame setInitiated={setInitiated} game={game} />
         )}
       </main>
     </WagmiConfig>

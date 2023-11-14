@@ -1,15 +1,14 @@
 import { useNetwork, useAccount, useConnect, useSwitchNetwork } from 'wagmi'
-import { useRef } from "react"; 0
 import Image from "next/image";
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { lineaTestnet } from '@wagmi/core/chains'
 
 type NotInitiatedGameProps = {
   setInitiated: (initiated: boolean) => void;
+  game: any;
 }
 
-export function NotInitiatedGame({ setInitiated }: NotInitiatedGameProps) {
-  let game = useRef<Phaser.Game | null>(null);
+export function NotInitiatedGame({ setInitiated, game }: NotInitiatedGameProps) {
   const { connect } = useConnect()
   const { chain } = useNetwork()
   const { isConnected } = useAccount()
