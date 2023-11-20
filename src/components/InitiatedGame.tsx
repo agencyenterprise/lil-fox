@@ -20,33 +20,39 @@ export function InitiatedGame({ setInitiated, game }: InitiatedGameProps) {
   const { address } = useAccount()
 
   useEffect(() => {
-    const setUserSkins = async () => {
-      const erc1155Interface: ContractInterface = [
-        'function balanceOf(address account, uint256 id) external view returns (uint256)',
-        'function balanceOfBatch(address[] calldata accounts, uint256[] calldata ids) external view returns (uint256[] memory)'
-      ]
-
-      const provider = new ethers.providers.JsonRpcProvider(config.lineaRpcUrl)
-      const lilFoxSkinsContract = new ethers.Contract(config.foxSkinContractAddress, erc1155Interface, provider)
-
-      const tokenIdsArray = Array.from({ length: config.maxNftSkinId + 1 }, (_, i) => i);
-      const addressesArray = Array(config.maxNftSkinId + 1).fill(address)
-
-      const balanceOfBatch = await lilFoxSkinsContract.balanceOfBatch(addressesArray, tokenIdsArray)
-      const ownedSkins: string[] = ["default"]
-
-      const entries: [string, BigNumber][] = Object.entries(balanceOfBatch);
-      entries.forEach(([key, value]) => {
-        if (value.gt(0)) {
-          const skin = tokenIdToSkin.get(Number(key))
-          if (!skin) return
-          ownedSkins.push(String(skin))
-        }
-      })
-      setOwnedSkins(ownedSkins)
-    }
     setUserSkins()
-  }, [])
+    if (typeof window !== "undefined" && game.current) {
+      const FoxGame = require("@/scenes").FoxGame;
+      const gameScene = game.current?.scene.scenes[0] as typeof FoxGame;
+      gameScene.initializeState();
+    }
+  }, [address])
+
+  const setUserSkins = async () => {
+    const erc1155Interface: ContractInterface = [
+      'function balanceOf(address account, uint256 id) external view returns (uint256)',
+      'function balanceOfBatch(address[] calldata accounts, uint256[] calldata ids) external view returns (uint256[] memory)'
+    ]
+
+    const provider = new ethers.providers.JsonRpcProvider(config.lineaRpcUrl)
+    const lilFoxSkinsContract = new ethers.Contract(config.foxSkinContractAddress, erc1155Interface, provider)
+
+    const tokenIdsArray = Array.from({ length: config.maxNftSkinId + 1 }, (_, i) => i);
+    const addressesArray = Array(config.maxNftSkinId + 1).fill(address)
+
+    const balanceOfBatch = await lilFoxSkinsContract.balanceOfBatch(addressesArray, tokenIdsArray)
+    const ownedSkins: string[] = ["default"]
+
+    const entries: [string, BigNumber][] = Object.entries(balanceOfBatch);
+    entries.forEach(([key, value]) => {
+      if (value.gt(0)) {
+        const skin = tokenIdToSkin.get(Number(key))
+        if (!skin) return
+        ownedSkins.push(String(skin))
+      }
+    })
+    setOwnedSkins(ownedSkins)
+  }
 
   const autosave = () => {
     if (typeof window !== "undefined") {
