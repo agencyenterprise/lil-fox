@@ -20,6 +20,7 @@ export function InitiatedGame({ setInitiated, game }: InitiatedGameProps) {
   const { address } = useAccount()
 
   useEffect(() => {
+    reload()
     setUserSkins()
     if (typeof window !== "undefined" && game.current) {
       const FoxGame = require("@/scenes").FoxGame;
@@ -73,6 +74,15 @@ export function InitiatedGame({ setInitiated, game }: InitiatedGameProps) {
       const gameScene = game.current?.scene.scenes[0] as typeof FoxGame;
       const skinId = tokenIdToSkin.get(skin)
       await gameScene.changeSkin(skinId, skin);
+    }
+  };
+
+  const reload = async () => {
+    if (typeof window !== "undefined") {
+      const FoxGame = require("@/scenes").FoxGame;
+      const gameScene = game.current?.scene.scenes[0] as typeof FoxGame;
+      if (!gameScene) return
+      await gameScene.foxLoad();
     }
   };
 

@@ -785,6 +785,9 @@ export class FoxGame extends Phaser.Scene {
             snapId: this.foxSnapId,
             request: {
               method: "check",
+              params: {
+                ownerAddress: await this.getUserAddress(),
+              },
             },
           },
         });
