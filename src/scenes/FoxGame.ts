@@ -2,6 +2,7 @@ import semver from "semver";
 import * as Math from "mathjs";
 import { Button } from "@/components";
 import Error from "next/error";
+import { ethers } from "ethers";
 
 export class FoxGame extends Phaser.Scene {
   public tips = [
@@ -784,6 +785,9 @@ export class FoxGame extends Phaser.Scene {
             snapId: this.foxSnapId,
             request: {
               method: "check",
+              params: {
+                ownerAddress: await this.getUserAddress(),
+              },
             },
           },
         });
@@ -1030,6 +1034,9 @@ export class FoxGame extends Phaser.Scene {
         snapId: this.foxSnapId,
         request: {
           method: "persist",
+          params: {
+            ownerAddress: await this.getUserAddress(),
+          },
         },
       },
     });
@@ -1043,6 +1050,9 @@ export class FoxGame extends Phaser.Scene {
         snapId: this.foxSnapId,
         request: {
           method: "load",
+          params: {
+            ownerAddress: await this.getUserAddress(),
+          },
         },
       },
     });
@@ -1147,4 +1157,10 @@ export class FoxGame extends Phaser.Scene {
       },
     });
   };
+
+  getUserAddress = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    return await signer.getAddress()
+  }
 }
