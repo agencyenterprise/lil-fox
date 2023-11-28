@@ -53,7 +53,7 @@ export class FoxGame extends Phaser.Scene {
   public ipfsSnapVersion = "^0.2.4";
   public autosaveInterval = 60;
   public hasInitialized = false;
-  public availableSkins = ["default", "blue"];
+  public availableSkins = ["default", "blue", "flask"];
   public selectedSkin = "default";
   public textName: Phaser.GameObjects.BitmapText;
   public textHealth: Phaser.GameObjects.BitmapText;
@@ -148,6 +148,47 @@ export class FoxGame extends Phaser.Scene {
     this.anims.create({
       key: "die-blue",
       frames: this.anims.generateFrameNumbers("die-blue"),
+      frameRate: 8,
+    });
+
+    this.anims.create({
+      key: "idle-flask",
+      frames: this.anims.generateFrameNumbers("idle-flask"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "crouch-flask",
+      frames: this.anims.generateFrameNumbers("crouch-flask"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "sit-flask",
+      frames: this.anims.generateFrameNumbers("sit-flask"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "sneak-flask",
+      frames: this.anims.generateFrameNumbers("sneak-flask"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "walk-flask",
+      frames: this.anims.generateFrameNumbers("walk-flask"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "run-flask",
+      frames: this.anims.generateFrameNumbers("run-flask"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "hurt-flask",
+      frames: this.anims.generateFrameNumbers("hurt-flask"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "die-flask",
+      frames: this.anims.generateFrameNumbers("die-flask"),
       frameRate: 8,
     });
 
@@ -498,6 +539,66 @@ export class FoxGame extends Phaser.Scene {
       frameWidth: 16,
       frameHeight: 16,
     });
+
+    this.load.spritesheet(
+      "idle-flask",
+      "/assets/animations/fox/flask/lilfox_idle_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "crouch-flask",
+      "/assets/animations/fox/flask/lilfox_crouch_strip8.png",
+      { frameWidth: 32, frameHeight: 32 }
+    );
+    this.load.spritesheet(
+      "sit-flask",
+      "/assets/animations/fox/flask/lilfox_sit_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "sneak-flask",
+      "/assets/animations/fox/flask/lilfox_sneak_strip4.png",
+      { frameWidth: 32, frameHeight: 32 }
+    );
+    this.load.spritesheet(
+      "run-flask",
+      "/assets/animations/fox/flask/lilfox_run_strip4.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "walk-flask",
+      "/assets/animations/fox/flask/lilfox_walk_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "hurt-flask",
+      "/assets/animations/fox/flask/lilfox_hurt_strip5.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "die-flask",
+      "/assets/animations/fox/flask/lilfox_die_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+
     this.load.spritesheet(
       "idle-blue",
       "/assets/animations/fox/blue/lilfox_idle_strip8.png",
