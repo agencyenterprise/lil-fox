@@ -192,6 +192,48 @@ export class FoxGame extends Phaser.Scene {
       frameRate: 8,
     });
 
+
+    this.anims.create({
+      key: "idle-kumamon",
+      frames: this.anims.generateFrameNumbers("idle-kumamon"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "crouch-kumamon",
+      frames: this.anims.generateFrameNumbers("crouch-kumamon"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "sit-kumamon",
+      frames: this.anims.generateFrameNumbers("sit-kumamon"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "sneak-kumamon",
+      frames: this.anims.generateFrameNumbers("sneak-kumamon"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "walk-kumamon",
+      frames: this.anims.generateFrameNumbers("walk-kumamon"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "run-kumamon",
+      frames: this.anims.generateFrameNumbers("run-kumamon"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "hurt-kumamon",
+      frames: this.anims.generateFrameNumbers("hurt-kumamon"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "die-kumamon",
+      frames: this.anims.generateFrameNumbers("die-kumamon"),
+      frameRate: 8,
+    });
+
     this.anims.create({
       key: "food",
       frames: this.anims.generateFrameNumbers("food"),
@@ -539,6 +581,65 @@ export class FoxGame extends Phaser.Scene {
       frameWidth: 16,
       frameHeight: 16,
     });
+
+    this.load.spritesheet(
+      "idle-kumamon",
+      "/assets/animations/fox/kumamon/lilfox_idle_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "crouch-kumamon",
+      "/assets/animations/fox/kumamon/lilfox_crouch_strip8.png",
+      { frameWidth: 32, frameHeight: 32 }
+    );
+    this.load.spritesheet(
+      "sit-kumamon",
+      "/assets/animations/fox/kumamon/lilfox_sit_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "sneak-kumamon",
+      "/assets/animations/fox/kumamon/lilfox_sneak_strip4.png",
+      { frameWidth: 32, frameHeight: 32 }
+    );
+    this.load.spritesheet(
+      "run-kumamon",
+      "/assets/animations/fox/kumamon/lilfox_run_strip4.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "walk-kumamon",
+      "/assets/animations/fox/kumamon/lilfox_walk_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "hurt-kumamon",
+      "/assets/animations/fox/kumamon/lilfox_hurt_strip5.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "die-kumamon",
+      "/assets/animations/fox/kumamon/lilfox_die_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
 
     this.load.spritesheet(
       "idle-flask",
