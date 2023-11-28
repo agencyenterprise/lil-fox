@@ -234,6 +234,49 @@ export class FoxGame extends Phaser.Scene {
       frameRate: 8,
     });
 
+
+    this.anims.create({
+      key: "idle-sunglasses",
+      frames: this.anims.generateFrameNumbers("idle-sunglasses"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "crouch-sunglasses",
+      frames: this.anims.generateFrameNumbers("crouch-sunglasses"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "sit-sunglasses",
+      frames: this.anims.generateFrameNumbers("sit-sunglasses"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "sneak-sunglasses",
+      frames: this.anims.generateFrameNumbers("sneak-sunglasses"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "walk-sunglasses",
+      frames: this.anims.generateFrameNumbers("walk-sunglasses"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "run-sunglasses",
+      frames: this.anims.generateFrameNumbers("run-sunglasses"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "hurt-sunglasses",
+      frames: this.anims.generateFrameNumbers("hurt-sunglasses"),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: "die-sunglasses",
+      frames: this.anims.generateFrameNumbers("die-sunglasses"),
+      frameRate: 8,
+    });
+
+
     this.anims.create({
       key: "food",
       frames: this.anims.generateFrameNumbers("food"),
@@ -581,6 +624,65 @@ export class FoxGame extends Phaser.Scene {
       frameWidth: 16,
       frameHeight: 16,
     });
+
+    this.load.spritesheet(
+      "idle-sunglasses",
+      "/assets/animations/fox/sunglasses/lilfox_idle_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "crouch-sunglasses",
+      "/assets/animations/fox/sunglasses/lilfox_crouch_strip8.png",
+      { frameWidth: 32, frameHeight: 32 }
+    );
+    this.load.spritesheet(
+      "sit-sunglasses",
+      "/assets/animations/fox/sunglasses/lilfox_sit_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "sneak-sunglasses",
+      "/assets/animations/fox/sunglasses/lilfox_sneak_strip4.png",
+      { frameWidth: 32, frameHeight: 32 }
+    );
+    this.load.spritesheet(
+      "run-sunglasses",
+      "/assets/animations/fox/sunglasses/lilfox_run_strip4.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "walk-sunglasses",
+      "/assets/animations/fox/sunglasses/lilfox_walk_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "hurt-sunglasses",
+      "/assets/animations/fox/sunglasses/lilfox_hurt_strip5.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      "die-sunglasses",
+      "/assets/animations/fox/sunglasses/lilfox_die_strip8.png",
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
 
     this.load.spritesheet(
       "idle-kumamon",
