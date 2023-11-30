@@ -13,8 +13,8 @@ type InitiatedGameProps = {
 const tokenIdToSkin = new Map<number | string, number | string>([
   [0, "blue"],
   ["blue", 0],
-  [1, "flask"],
-  ["flask", 1],
+  // [1, "flask"],
+  // ["flask", 1],
   [2, "kumamon"],
   ["kumamon", 2],
   [3, "sunglasses"],
