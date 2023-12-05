@@ -562,6 +562,71 @@ export class FoxGame extends Phaser.Scene {
         })
         .catch(console.error);
     });
+
+    let rX = Phaser.Math.RND.between(36, 766);
+    let rY = Phaser.Math.RND.between(106, 504);
+
+    graphics.fillStyle(0xffffff, 0.5);
+    graphics.fillRect(menuPosition, 556, 72, 36);
+    graphics.fillStyle(0x6effeb, 1);
+    graphics.fillRect(menuPosition - 4, 552, 72, 36);
+    const walkButton1 = new Button(rX, rY, "W1", this, () => {
+      this.walk(rX, rY)
+    });
+
+    const rX2 = Phaser.Math.RND.between(36, 766);
+    const rY2 = Phaser.Math.RND.between(106, 504);
+
+    graphics.fillStyle(0xffffff, 0.5);
+    graphics.fillRect(menuPosition, 556, 72, 36);
+    graphics.fillStyle(0x6effeb, 1);
+    graphics.fillRect(menuPosition - 4, 552, 72, 36);
+    const walkButton2 = new Button(rX2, rY2, "W2", this, () => {
+      this.walk(rX2, rY2)
+    });
+  }
+
+  walk(newX: number, newY: number) {
+    console.log("walking")
+    this.walking = true;
+    // let's walk
+    if (
+      (this.xFoxScale > 0 && newX < this.foxSprite.x) ||
+      (this.xFoxScale < 0 && newX > this.foxSprite.x)
+    ) {
+      this.xFoxScale = -this.xFoxScale;
+    }
+    const distance = Phaser.Math.Distance.Between(
+      this.foxSprite.x,
+      this.foxSprite.y,
+      newX,
+      newY
+    );
+    let key = "walk";
+    let duration = 10 * distance;
+    if (distance > 300) {
+      key = "run";
+      duration = 6 * distance;
+    }
+    this.foxSprite.setScale(this.xFoxScale, this.yFoxScale).play({
+      key: `${key}-${this.selectedSkin}`,
+      repeat: -1,
+    });
+    // tween the sprite to the new position
+    this.moveTween = this.tweens.add({
+      targets: this.foxSprite,
+      x: newX,
+      y: newY,
+      duration: duration,
+      onComplete: () => {
+        // destroy the sprite when the tween is complete
+        this.foxSprite.play({
+          key: `${this.idleKey}-${this.selectedSkin}`,
+          repeat: -1,
+        });
+        this.walking = false;
+      },
+    });
   }
 
   setEnvironment() {
@@ -965,47 +1030,10 @@ export class FoxGame extends Phaser.Scene {
       if (this.delayCounter > 60) {
         const shouldWalk = Phaser.Math.RND.between(1, 10);
         if (shouldWalk > 9) {
-          this.walking = true;
           // let's walk
           let newX = Phaser.Math.RND.between(50, 750);
           let newY = Phaser.Math.RND.between(100, 500);
-          if (
-            (this.xFoxScale > 0 && newX < this.foxSprite.x) ||
-            (this.xFoxScale < 0 && newX > this.foxSprite.x)
-          ) {
-            this.xFoxScale = -this.xFoxScale;
-          }
-          const distance = Phaser.Math.Distance.Between(
-            this.foxSprite.x,
-            this.foxSprite.y,
-            newX,
-            newY
-          );
-          let key = "walk";
-          let duration = 10 * distance;
-          if (distance > 300) {
-            key = "run";
-            duration = 6 * distance;
-          }
-          this.foxSprite.setScale(this.xFoxScale, this.yFoxScale).play({
-            key: `${key}-${this.selectedSkin}`,
-            repeat: -1,
-          });
-          // tween the sprite to the new position
-          this.moveTween = this.tweens.add({
-            targets: this.foxSprite,
-            x: newX,
-            y: newY,
-            duration: duration,
-            onComplete: () => {
-              // destroy the sprite when the tween is complete
-              this.foxSprite.play({
-                key: `${this.idleKey}-${this.selectedSkin}`,
-                repeat: -1,
-              });
-              this.walking = false;
-            },
-          });
+          this.walk(newX, newY);
         }
         this.delayCounter = 0;
       }
