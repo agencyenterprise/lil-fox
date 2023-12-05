@@ -68,214 +68,55 @@ export class FoxGame extends Phaser.Scene {
     super();
   }
 
+  loadAnimation(skinName: string) {
+    this.anims.create({
+      key: `idle-${skinName}`,
+      frames: this.anims.generateFrameNumbers(`idle-${skinName}`),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: `crouch-${skinName}`,
+      frames: this.anims.generateFrameNumbers(`crouch-${skinName}`),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: `sit-${skinName}`,
+      frames: this.anims.generateFrameNumbers(`sit-${skinName}`),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: `sneak-${skinName}`,
+      frames: this.anims.generateFrameNumbers(`sneak-${skinName}`),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: `walk-${skinName}`,
+      frames: this.anims.generateFrameNumbers(`walk-${skinName}`),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: `run-${skinName}`,
+      frames: this.anims.generateFrameNumbers(`run-${skinName}`),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: `hurt-${skinName}`,
+      frames: this.anims.generateFrameNumbers(`hurt-${skinName}`),
+      frameRate: 8,
+    });
+    this.anims.create({
+      key: `die-${skinName}`,
+      frames: this.anims.generateFrameNumbers(`die-${skinName}`),
+      frameRate: 8,
+    });
+  }
+
   loadAnimations() {
-    this.anims.create({
-      key: "idle-default",
-      frames: this.anims.generateFrameNumbers("idle-default"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "crouch-default",
-      frames: this.anims.generateFrameNumbers("crouch-default"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "sit-default",
-      frames: this.anims.generateFrameNumbers("sit-default"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "sneak-default",
-      frames: this.anims.generateFrameNumbers("sneak-default"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "walk-default",
-      frames: this.anims.generateFrameNumbers("walk-default"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "run-default",
-      frames: this.anims.generateFrameNumbers("run-default"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "hurt-default",
-      frames: this.anims.generateFrameNumbers("hurt-default"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "die-default",
-      frames: this.anims.generateFrameNumbers("die-default"),
-      frameRate: 8,
-    });
-
-    this.anims.create({
-      key: "idle-blue",
-      frames: this.anims.generateFrameNumbers("idle-blue"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "crouch-blue",
-      frames: this.anims.generateFrameNumbers("crouch-blue"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "sit-blue",
-      frames: this.anims.generateFrameNumbers("sit-blue"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "sneak-blue",
-      frames: this.anims.generateFrameNumbers("sneak-blue"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "walk-blue",
-      frames: this.anims.generateFrameNumbers("walk-blue"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "run-blue",
-      frames: this.anims.generateFrameNumbers("run-blue"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "hurt-blue",
-      frames: this.anims.generateFrameNumbers("hurt-blue"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "die-blue",
-      frames: this.anims.generateFrameNumbers("die-blue"),
-      frameRate: 8,
-    });
-
-    this.anims.create({
-      key: "idle-flask",
-      frames: this.anims.generateFrameNumbers("idle-flask"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "crouch-flask",
-      frames: this.anims.generateFrameNumbers("crouch-flask"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "sit-flask",
-      frames: this.anims.generateFrameNumbers("sit-flask"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "sneak-flask",
-      frames: this.anims.generateFrameNumbers("sneak-flask"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "walk-flask",
-      frames: this.anims.generateFrameNumbers("walk-flask"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "run-flask",
-      frames: this.anims.generateFrameNumbers("run-flask"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "hurt-flask",
-      frames: this.anims.generateFrameNumbers("hurt-flask"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "die-flask",
-      frames: this.anims.generateFrameNumbers("die-flask"),
-      frameRate: 8,
-    });
-
-
-    this.anims.create({
-      key: "idle-kumamon",
-      frames: this.anims.generateFrameNumbers("idle-kumamon"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "crouch-kumamon",
-      frames: this.anims.generateFrameNumbers("crouch-kumamon"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "sit-kumamon",
-      frames: this.anims.generateFrameNumbers("sit-kumamon"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "sneak-kumamon",
-      frames: this.anims.generateFrameNumbers("sneak-kumamon"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "walk-kumamon",
-      frames: this.anims.generateFrameNumbers("walk-kumamon"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "run-kumamon",
-      frames: this.anims.generateFrameNumbers("run-kumamon"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "hurt-kumamon",
-      frames: this.anims.generateFrameNumbers("hurt-kumamon"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "die-kumamon",
-      frames: this.anims.generateFrameNumbers("die-kumamon"),
-      frameRate: 8,
-    });
-
-
-    this.anims.create({
-      key: "idle-sunglasses",
-      frames: this.anims.generateFrameNumbers("idle-sunglasses"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "crouch-sunglasses",
-      frames: this.anims.generateFrameNumbers("crouch-sunglasses"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "sit-sunglasses",
-      frames: this.anims.generateFrameNumbers("sit-sunglasses"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "sneak-sunglasses",
-      frames: this.anims.generateFrameNumbers("sneak-sunglasses"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "walk-sunglasses",
-      frames: this.anims.generateFrameNumbers("walk-sunglasses"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "run-sunglasses",
-      frames: this.anims.generateFrameNumbers("run-sunglasses"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "hurt-sunglasses",
-      frames: this.anims.generateFrameNumbers("hurt-sunglasses"),
-      frameRate: 8,
-    });
-    this.anims.create({
-      key: "die-sunglasses",
-      frames: this.anims.generateFrameNumbers("die-sunglasses"),
-      frameRate: 8,
-    });
-
+    this.loadAnimation("default");
+    this.loadAnimation("blue");
+    this.loadAnimation("flask");
+    this.loadAnimation("kumamon");
+    this.loadAnimation("sunglasses");
 
     this.anims.create({
       key: "food",
@@ -298,7 +139,7 @@ export class FoxGame extends Phaser.Scene {
         this.foxSprite.anims.stop();
         try {
           this.moveTween.stop();
-        } catch {}
+        } catch { }
         this.walking = false;
       }
       const xModifier = this.xFoxScale > 0 ? 45 : -45;
@@ -338,7 +179,7 @@ export class FoxGame extends Phaser.Scene {
         this.foxSprite.anims.stop();
         try {
           this.moveTween.stop();
-        } catch {}
+        } catch { }
         this.walking = false;
       }
       const xModifier = this.xFoxScale > 0 ? 12 : -12;
@@ -385,7 +226,7 @@ export class FoxGame extends Phaser.Scene {
         this.foxSprite.anims.stop();
         try {
           this.moveTween.stop();
-        } catch {}
+        } catch { }
         this.walking = false;
       }
       const xModifier = this.xFoxScale > 0 ? 12 : -12;
@@ -431,7 +272,7 @@ export class FoxGame extends Phaser.Scene {
         this.foxSprite.anims.stop();
         try {
           this.moveTween.stop();
-        } catch {}
+        } catch { }
         this.walking = false;
       }
       const xModifier = this.xFoxScale > 0 ? 12 : -12;
@@ -619,306 +460,87 @@ export class FoxGame extends Phaser.Scene {
     this.setInterface(graphics);
   }
 
+
+  preLoadSkin(skinName: string) {
+    this.load.spritesheet(
+      `idle-${skinName}`,
+      `/assets/animations/fox/${skinName}/lilfox_idle_strip8.png`,
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+
+    this.load.spritesheet(
+      `crouch-${skinName}`,
+      `/assets/animations/fox/${skinName}/lilfox_crouch_strip8.png`,
+      { frameWidth: 32, frameHeight: 32 }
+    );
+
+    this.load.spritesheet(
+      `sit-${skinName}`,
+      `/assets/animations/fox/${skinName}/lilfox_sit_strip8.png`,
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+
+    this.load.spritesheet(
+      `sneak-${skinName}`,
+      `/assets/animations/fox/${skinName}/lilfox_sneak_strip4.png`,
+      { frameWidth: 32, frameHeight: 32 }
+    );
+
+    this.load.spritesheet(
+      `run-${skinName}`,
+      `/assets/animations/fox/${skinName}/lilfox_run_strip4.png`,
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+
+    this.load.spritesheet(
+      `walk-${skinName}`,
+      `/assets/animations/fox/${skinName}/lilfox_walk_strip8.png`,
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+
+    this.load.spritesheet(
+      `hurt-${skinName}`,
+      `/assets/animations/fox/${skinName}/lilfox_hurt_strip5.png`,
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+
+    this.load.spritesheet(
+      `die-${skinName}`,
+      `/assets/animations/fox/${skinName}/lilfox_die_strip8.png`,
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+  }
+
   preload() {
+    this.preLoadSkin("sunglasses")
+    this.preLoadSkin("kumamon")
+    this.preLoadSkin("flask")
+    this.preLoadSkin("blue")
+    this.preLoadSkin("default")
+
     this.load.spritesheet("icons", "/assets/sprites/icons.png", {
       frameWidth: 16,
       frameHeight: 16,
     });
 
-    this.load.spritesheet(
-      "idle-sunglasses",
-      "/assets/animations/fox/sunglasses/lilfox_idle_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "crouch-sunglasses",
-      "/assets/animations/fox/sunglasses/lilfox_crouch_strip8.png",
-      { frameWidth: 32, frameHeight: 32 }
-    );
-    this.load.spritesheet(
-      "sit-sunglasses",
-      "/assets/animations/fox/sunglasses/lilfox_sit_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "sneak-sunglasses",
-      "/assets/animations/fox/sunglasses/lilfox_sneak_strip4.png",
-      { frameWidth: 32, frameHeight: 32 }
-    );
-    this.load.spritesheet(
-      "run-sunglasses",
-      "/assets/animations/fox/sunglasses/lilfox_run_strip4.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "walk-sunglasses",
-      "/assets/animations/fox/sunglasses/lilfox_walk_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "hurt-sunglasses",
-      "/assets/animations/fox/sunglasses/lilfox_hurt_strip5.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "die-sunglasses",
-      "/assets/animations/fox/sunglasses/lilfox_die_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-
-    this.load.spritesheet(
-      "idle-kumamon",
-      "/assets/animations/fox/kumamon/lilfox_idle_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "crouch-kumamon",
-      "/assets/animations/fox/kumamon/lilfox_crouch_strip8.png",
-      { frameWidth: 32, frameHeight: 32 }
-    );
-    this.load.spritesheet(
-      "sit-kumamon",
-      "/assets/animations/fox/kumamon/lilfox_sit_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "sneak-kumamon",
-      "/assets/animations/fox/kumamon/lilfox_sneak_strip4.png",
-      { frameWidth: 32, frameHeight: 32 }
-    );
-    this.load.spritesheet(
-      "run-kumamon",
-      "/assets/animations/fox/kumamon/lilfox_run_strip4.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "walk-kumamon",
-      "/assets/animations/fox/kumamon/lilfox_walk_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "hurt-kumamon",
-      "/assets/animations/fox/kumamon/lilfox_hurt_strip5.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "die-kumamon",
-      "/assets/animations/fox/kumamon/lilfox_die_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-
-    this.load.spritesheet(
-      "idle-flask",
-      "/assets/animations/fox/flask/lilfox_idle_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "crouch-flask",
-      "/assets/animations/fox/flask/lilfox_crouch_strip8.png",
-      { frameWidth: 32, frameHeight: 32 }
-    );
-    this.load.spritesheet(
-      "sit-flask",
-      "/assets/animations/fox/flask/lilfox_sit_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "sneak-flask",
-      "/assets/animations/fox/flask/lilfox_sneak_strip4.png",
-      { frameWidth: 32, frameHeight: 32 }
-    );
-    this.load.spritesheet(
-      "run-flask",
-      "/assets/animations/fox/flask/lilfox_run_strip4.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "walk-flask",
-      "/assets/animations/fox/flask/lilfox_walk_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "hurt-flask",
-      "/assets/animations/fox/flask/lilfox_hurt_strip5.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "die-flask",
-      "/assets/animations/fox/flask/lilfox_die_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-
-    this.load.spritesheet(
-      "idle-blue",
-      "/assets/animations/fox/blue/lilfox_idle_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "crouch-blue",
-      "/assets/animations/fox/blue/lilfox_crouch_strip8.png",
-      { frameWidth: 32, frameHeight: 32 }
-    );
-    this.load.spritesheet(
-      "sit-blue",
-      "/assets/animations/fox/blue/lilfox_sit_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "sneak-blue",
-      "/assets/animations/fox/blue/lilfox_sneak_strip4.png",
-      { frameWidth: 32, frameHeight: 32 }
-    );
-    this.load.spritesheet(
-      "run-blue",
-      "/assets/animations/fox/blue/lilfox_run_strip4.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "walk-blue",
-      "/assets/animations/fox/blue/lilfox_walk_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "hurt-blue",
-      "/assets/animations/fox/blue/lilfox_hurt_strip5.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "die-blue",
-      "/assets/animations/fox/blue/lilfox_die_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-
-    this.load.spritesheet(
-      "idle-default",
-      "/assets/animations/fox/default/lilfox_idle_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "crouch-default",
-      "/assets/animations/fox/default/lilfox_crouch_strip8.png",
-      { frameWidth: 32, frameHeight: 32 }
-    );
-    this.load.spritesheet(
-      "sit-default",
-      "/assets/animations/fox/default/lilfox_sit_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "sneak-default",
-      "/assets/animations/fox/default/lilfox_sneak_strip4.png",
-      { frameWidth: 32, frameHeight: 32 }
-    );
-    this.load.spritesheet(
-      "run-default",
-      "/assets/animations/fox/default/lilfox_run_strip4.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "walk-default",
-      "/assets/animations/fox/default/lilfox_walk_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "hurt-default",
-      "/assets/animations/fox/default/lilfox_hurt_strip5.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "die-default",
-      "/assets/animations/fox/default/lilfox_die_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
     this.load.spritesheet("food", "/assets/sprites/food.png", {
       frameWidth: 16,
       frameHeight: 16,
@@ -1048,7 +670,7 @@ export class FoxGame extends Phaser.Scene {
         this.foxSprite.anims.stop();
         try {
           this.moveTween.stop();
-        } catch {}
+        } catch { }
         this.foxSprite.play({
           key: `${this.idleKey}-${this.selectedSkin}`,
           repeat: -1,
@@ -1060,7 +682,7 @@ export class FoxGame extends Phaser.Scene {
         });
         this.interacting = true;
       }
-    } catch {}
+    } catch { }
   }
 
   initializeState = async () => {
@@ -1119,7 +741,7 @@ export class FoxGame extends Phaser.Scene {
             });
         }
       }
-    } catch {}
+    } catch { }
     return false;
   };
 
@@ -1157,7 +779,7 @@ export class FoxGame extends Phaser.Scene {
   closeGame = async (event?: any) => {
     try {
       event.preventDefault();
-    } catch (error) {}
+    } catch (error) { }
     clearInterval(this.interval);
     this.interacting = false;
     this.walking = false;
