@@ -3,6 +3,7 @@ import Image from "next/image";
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { lineaTestnet } from '@wagmi/core/chains'
 import { MutableRefObject } from 'react';
+import Preloader from '@/scenes/Preloader';
 
 type NotInitiatedGameProps = {
   setInitiated: (initiated: boolean) => void;
@@ -27,19 +28,33 @@ export function NotInitiatedGame({ setInitiated, game }: NotInitiatedGameProps) 
       setTimeout(() => {
         game.current = new Phaser.Game({
           type: Phaser.AUTO,
-          parent: "phaser-container",
-          backgroundColor: "rgba(129,186,68,1)",
-          width: 800,
-          height: 600,
-          pixelArt: true,
+          parent: 'phaser-container',
+          width: 400,
+          height: 250,
           physics: {
-            default: "arcade",
+            default: 'arcade',
             arcade: {
               gravity: { y: 0 },
-              debug: true,
+              // debug: true
             },
           },
-          scene: FoxGame,
+          // type: Phaser.AUTO,
+          // parent: "phaser-container",
+          // backgroundColor: "rgba(129,186,68,1)",
+          // width: 800,
+          // height: 600,
+          // pixelArt: true,
+          // physics: {
+          //   default: "arcade",
+          //   arcade: {
+          //     gravity: { y: 0 },
+          //     debug: true,
+          //   },
+          // },
+          scene: [Preloader, FoxGame],
+          scale: {
+            zoom: 2,
+          },
         });
       });
     }
