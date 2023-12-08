@@ -19,24 +19,38 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     super(scene, x, y, texture, frame)
 
     this.anims.play("idle-default");
+    scene.physics.add.existing(this, false);
+
+  }
+
+  update(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
+    if (!cursors) return;
+
+    const speed = 100
+
+    if (cursors.left?.isDown) {
+      this.anims.play("run-default", true);
+      this.setVelocity(-speed, 0);
+      this.scaleX = -1;
+      this.body?.offset.setTo(24, 8);
+
+    } else if (cursors.right?.isDown) {
+      this.anims.play("run-default", true);
+      this.setVelocity(speed, 0);
+      this.scaleX = 1;
+      this.body?.offset.setTo(8, 8);
+
+    } else if (cursors.up?.isDown) {
+      this.anims.play("run-default");
+      this.setVelocity(0, -speed);
+
+    } else if (cursors.down?.isDown) {
+      this.anims.play("run-default");
+      this.setVelocity(0, speed);
+
+    } else {
+      this.anims.play("idle-default");
+      this.setVelocity(0, 0);
+    }
   }
 }
-
-// Phaser.GameObjects.GameObjectFactory.register("character", function (
-//   this: Phaser.GameObjects.GameObjectFactory,
-//   x: number,
-//   y: number,
-//   texture: string,
-//   frame?: string | number
-// ) {
-//   var sprite = new Character(this.scene, x, y, texture, frame);
-
-//   this.displayList.add(sprite);
-//   this.updateList.add(sprite);
-
-//   this.scene.physics.world.enableBody(sprite, Phaser.Physics.Arcade.DYNAMIC_BODY);
-
-//   sprite.body?.setSize(sprite.width * 0.5, sprite.height * 0.5);
-
-//   return sprite;
-// }) 

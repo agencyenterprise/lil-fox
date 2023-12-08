@@ -1,17 +1,17 @@
 import { createLizardAnims } from "@/anims/EnemyAnims";
 import { createCharacterAnims } from "@/anims/CharacterAnims";
 import Lizard from "@/enemies/Lizard";
-import Character from "../characters/Character";
+import Character from "@/characters/Character";
 export class FoxGame extends Phaser.Scene {
   constructor() {
     super('LilFox')
   }
 
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys | undefined
-  private character:Phaser.Physics.Arcade.Sprite
+  private character: Character
   private hit = 0
 
-  preload() { 
+  preload() {
     this.load.spritesheet(
       "idle-default",
       "/assets/animations/fox/default/lilfox_idle_strip8.png",
@@ -72,14 +72,16 @@ export class FoxGame extends Phaser.Scene {
 
     objectsLayer?.setCollisionByProperty({ colides: true });
 
-    // const debugGraphics = this.add.graphics().setAlpha(0.75);
-    // objectsLayer?.renderDebug(debugGraphics, {
-    //   tileColor: null,
-    //   collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
-    //   faceColor: new Phaser.Display.Color(40, 39, 37, 255)
-    // });
-    this.character = this.add.character(128, 128, 'idle-default')
-    // this.character.body?.setSize(this.character.width * 0.5, this.character.height * 0.5);
+    const debugGraphics = this.add.graphics().setAlpha(0.75);
+    objectsLayer?.renderDebug(debugGraphics, {
+      tileColor: null,
+      collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
+      faceColor: new Phaser.Display.Color(40, 39, 37, 255)
+    });
+    
+    this.character = new Character(this, 100, 100, "character");
+    this.add.existing(this.character);
+
 
     if (objectsLayer === null) return
 
@@ -119,7 +121,7 @@ export class FoxGame extends Phaser.Scene {
 
   update(t: number, dt: number) {
     if (!this.cursors || !this.character) return;
-
+  
     if (this.hit > 0) {
       ++this.hit
       if (this.hit > 10) {
@@ -128,31 +130,6 @@ export class FoxGame extends Phaser.Scene {
       return
     }
 
-    const speed = 100
-
-    if (this.cursors.left?.isDown) {
-      this.character.anims.play("run-default", true);
-      this.character.setVelocity(-speed, 0);
-      this.character.scaleX = -1;
-      this.character.body?.offset.setTo(24, 8);
-
-    } else if (this.cursors.right?.isDown) {
-      this.character.anims.play("run-default", true);
-      this.character.setVelocity(speed, 0);
-      this.character.scaleX = 1;
-      this.character.body?.offset.setTo(8, 8);
-
-    } else if (this.cursors.up?.isDown) {
-      this.character.anims.play("run-default");
-      this.character.setVelocity(0, -speed);
-
-    } else if (this.cursors.down?.isDown) {
-      this.character.anims.play("run-default");
-      this.character.setVelocity(0, speed);
-
-    } else {
-      this.character.anims.play("idle-default");
-      this.character.setVelocity(0, 0);
-    }
+    this.character.update(this.cursors)
   }
 }
