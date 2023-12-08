@@ -32,6 +32,8 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
   }
 
   protected preUpdate(time: number, delta: number): void {
+    super.preUpdate(time, delta)
+
     switch (this.healthState) {
       case HealthState.IDLE:
         break;

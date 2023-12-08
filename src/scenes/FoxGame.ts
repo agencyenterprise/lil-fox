@@ -79,6 +79,7 @@ export class FoxGame extends Phaser.Scene {
     });
     
     this.character = new Character(this, 100, 100, "character");
+    this.character.setSize(this.character.width * 0.5, this.character.height * 0.8)
     this.add.existing(this.character);
 
 
@@ -114,8 +115,6 @@ export class FoxGame extends Phaser.Scene {
     const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(200)
   
     this.character.handleDamage(dir)
-
-    this.hit = 1
   }
 
   update(t: number, dt: number) {
