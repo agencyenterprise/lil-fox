@@ -9,8 +9,7 @@ export class FoxGame extends Phaser.Scene {
 
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys | undefined
   private character: Character
-  private hit = 0
-
+  
   preload() {
     this.load.spritesheet(
       "idle-default",
@@ -114,21 +113,13 @@ export class FoxGame extends Phaser.Scene {
 
     const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(200)
   
-    this.character.setVelocity(dir.x, dir.y)
+    this.character.handleDamage(dir)
 
     this.hit = 1
   }
 
   update(t: number, dt: number) {
     if (!this.cursors || !this.character) return;
-  
-    if (this.hit > 0) {
-      ++this.hit
-      if (this.hit > 10) {
-        this.hit = 0
-      }
-      return
-    }
 
     this.character.update(this.cursors)
   }
