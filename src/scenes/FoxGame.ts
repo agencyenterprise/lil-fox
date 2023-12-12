@@ -1,5 +1,6 @@
 import { createLizardAnims } from "@/anims/EnemyAnims";
 import { createCharacterAnims } from "@/anims/CharacterAnims";
+import { createChestAnims } from "@/anims/TreasureAnims";
 import Lizard from "@/enemies/Lizard";
 import Character from "@/characters/Character";
 import { sceneEvents } from "@/events/EventsCenter";
@@ -68,6 +69,7 @@ export class FoxGame extends Phaser.Scene {
 
     createCharacterAnims(this.anims)
     createLizardAnims(this.anims)
+    createChestAnims(this.anims)
 
     const map = this.make.tilemap({ key: 'map' });
     const tileset1 = map.addTilesetImage('Tileset 1', 'tiles1');
@@ -85,6 +87,13 @@ export class FoxGame extends Phaser.Scene {
     //   faceColor: new Phaser.Display.Color(40, 39, 37, 255)
     // });
     
+
+    const chest = this.add.sprite(850, 850, 'treasure', 'chest_empty_open_anim_f0.png')
+    this.time.delayedCall(1000, () => {
+      chest.play('chest-open')
+    })
+
+
     this.character = new Character(this, 920, 920, "character");
     this.character.setSize(this.character.width * 0.5, this.character.height * 0.8)
     this.physics.add.existing(this.character, false);
@@ -121,7 +130,7 @@ export class FoxGame extends Phaser.Scene {
     const dx = this.character.x - lizard.x
     const dy = this.character.y - lizard.y
 
-    const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(200)
+    const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(80)
   
     this.character.handleDamage(dir)
 

@@ -11,6 +11,7 @@ export default class Preloader extends Phaser.Scene {
 
     this.load.atlas('lizard_idle', 'enemies/lizard_idle.png', 'enemies/lizard_idle.json')
     this.load.atlas('lizard_run', 'enemies/lizard_run.png', 'enemies/lizard_run.json')
+    this.load.atlas('treasure', 'items/treasure.png', 'items/treasure.json')
 
     this.load.image('ui-heart-empty', 'ui/ui_heart_empty.png')
     this.load.image('ui-heart-full', 'ui/ui_heart_full.png')
