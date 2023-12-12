@@ -4,6 +4,7 @@ import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { lineaTestnet } from '@wagmi/core/chains'
 import { MutableRefObject } from 'react';
 import Preloader from '@/scenes/Preloader';
+import GameUI from '@/scenes/GameUI';
 
 type NotInitiatedGameProps = {
   setInitiated: (initiated: boolean) => void;
@@ -51,7 +52,7 @@ export function NotInitiatedGame({ setInitiated, game }: NotInitiatedGameProps) 
           //     debug: true,
           //   },
           // },
-          scene: [Preloader, FoxGame],
+          scene: [Preloader, FoxGame, GameUI],
           scale: {
             zoom: 2,
           },

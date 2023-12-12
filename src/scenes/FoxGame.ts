@@ -2,13 +2,18 @@ import { createLizardAnims } from "@/anims/EnemyAnims";
 import { createCharacterAnims } from "@/anims/CharacterAnims";
 import Lizard from "@/enemies/Lizard";
 import Character from "@/characters/Character";
+import { sceneEvents } from "@/events/EventsCenter";
+
+
 export class FoxGame extends Phaser.Scene {
   constructor() {
     super('LilFox')
   }
 
-  private cursors: Phaser.Types.Input.Keyboard.CursorKeys | undefined
-  private character: Character
+  private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
+  private character!: Character
+  
+  private playerLizardsCollider?: Phaser.Physics.Arcade.Collider
   
   preload() {
     this.load.spritesheet(
@@ -59,6 +64,8 @@ export class FoxGame extends Phaser.Scene {
   }
 
   create() {
+    this.scene.run('game-ui')
+
     createCharacterAnims(this.anims)
     createLizardAnims(this.anims)
 
@@ -71,16 +78,18 @@ export class FoxGame extends Phaser.Scene {
 
     objectsLayer?.setCollisionByProperty({ colides: true });
 
-    const debugGraphics = this.add.graphics().setAlpha(0.75);
-    objectsLayer?.renderDebug(debugGraphics, {
-      tileColor: null,
-      collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
-      faceColor: new Phaser.Display.Color(40, 39, 37, 255)
-    });
+    // const debugGraphics = this.add.graphics().setAlpha(0.75);
+    // objectsLayer?.renderDebug(debugGraphics, {
+    //   tileColor: null,
+    //   collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
+    //   faceColor: new Phaser.Display.Color(40, 39, 37, 255)
+    // });
     
-    this.character = new Character(this, 100, 100, "character");
+    this.character = new Character(this, 920, 920, "character");
     this.character.setSize(this.character.width * 0.5, this.character.height * 0.8)
+    this.physics.add.existing(this.character, false);
     this.add.existing(this.character);
+    this.physics.world.enableBody(this.character, Phaser.Physics.Arcade.DYNAMIC_BODY)
 
 
     if (objectsLayer === null) return
@@ -96,12 +105,12 @@ export class FoxGame extends Phaser.Scene {
       }
     })
 
-    lizards.get(256, 128, 'lizard')
+    lizards.get(950, 950, 'lizard')
 
     this.physics.add.collider(this.character, objectsLayer);
     this.physics.add.collider(lizards, objectsLayer);
 
-    this.physics.add.collider(lizards, this.character, this.handleCharacterLizardCollision, undefined, this);
+    this.playerLizardsCollider = this.physics.add.collider(lizards, this.character, this.handleCharacterLizardCollision, undefined, this);
   }
 
   private handleCharacterLizardCollision(
@@ -110,16 +119,20 @@ export class FoxGame extends Phaser.Scene {
   ) {
     const lizard = obj2 as Lizard
     const dx = this.character.x - lizard.x
-    const dy = this.character.y - lizard.y  
+    const dy = this.character.y - lizard.y
 
     const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(200)
   
     this.character.handleDamage(dir)
+
+    sceneEvents.emit('player-health-changed', this.character.health)
+
+    if (this.character.health <= 0) {
+      this.playerLizardsCollider?.destroy()
+    }
   }
 
   update(t: number, dt: number) {
-    if (!this.cursors || !this.character) return;
-
     this.character.update(this.cursors)
   }
 }

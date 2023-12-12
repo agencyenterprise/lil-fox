@@ -3,6 +3,7 @@
 import Phaser from "phaser";
 
 import { FoxGame } from "./scenes";
+import GameUI from "./scenes/GameUI";
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -23,7 +24,7 @@ const config: Phaser.Types.Core.GameConfig = {
       debug: true,
     },
   },
-  scene: FoxGame,
+  scene: [FoxGame, GameUI],
 };
 // eslint-disable-next-line import/no-anonymous-default-export
 export default config;
