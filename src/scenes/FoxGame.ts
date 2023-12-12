@@ -73,10 +73,12 @@ export class FoxGame extends Phaser.Scene {
 
     const map = this.make.tilemap({ key: 'map' });
     const tileset1 = map.addTilesetImage('Tileset 1', 'tiles1');
+    const tileset2 = map.addTilesetImage('DungeonTileset', 'tiles2');
 
-    if (tileset1 === null) return
+    if (!tileset1 ) return
     map.createLayer('Terrain', tileset1);
     const objectsLayer = map.createLayer('Objects', tileset1);
+    const treasuresLayer = map.createLayer('Treasures', tileset2!);
 
     objectsLayer?.setCollisionByProperty({ colides: true });
 
