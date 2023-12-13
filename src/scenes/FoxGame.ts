@@ -75,12 +75,18 @@ export class FoxGame extends Phaser.Scene {
     const tileset1 = map.addTilesetImage('Tileset 1', 'tiles1');
     const tileset2 = map.addTilesetImage('DungeonTileset', 'tiles2');
 
-    if (!tileset1 ) return
-    map.createLayer('Terrain', tileset1);
-    const objectsLayer = map.createLayer('Objects', tileset1);
-    const treasuresLayer = map.createLayer('Treasures', tileset2!);
-
+    map.createLayer('Terrain', tileset1!);
+    map.createLayer('Treasures', tileset2!);
+    const objectsLayer = map.createLayer('Objects', tileset1!);
+    
     objectsLayer?.setCollisionByProperty({ colides: true });
+
+    const chests = this.physics.add.staticGroup()
+    const chestsLayer = map.getObjectLayer('Treasures')
+    chestsLayer?.objects.forEach(chestObj => {
+      chests.get(chestObj.x! + chestObj.width! * 0.5, chestObj.y! + chestObj.height! * 0.5, 'treasure', 'chest_empty_open_anim_f0.png')
+    })
+
 
     // const debugGraphics = this.add.graphics().setAlpha(0.75);
     // objectsLayer?.renderDebug(debugGraphics, {
@@ -88,12 +94,6 @@ export class FoxGame extends Phaser.Scene {
     //   collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
     //   faceColor: new Phaser.Display.Color(40, 39, 37, 255)
     // });
-    
-
-    const chest = this.add.sprite(850, 850, 'treasure', 'chest_empty_open_anim_f0.png')
-    this.time.delayedCall(1000, () => {
-      chest.play('chest-open')
-    })
 
 
     this.character = new Character(this, 920, 920, "character");
@@ -120,6 +120,8 @@ export class FoxGame extends Phaser.Scene {
 
     this.physics.add.collider(this.character, objectsLayer);
     this.physics.add.collider(lizards, objectsLayer);
+    this.physics.add.collider(this.character, chests)
+    this.physics.add.collider(lizards, chests)
 
     this.playerLizardsCollider = this.physics.add.collider(lizards, this.character, this.handleCharacterLizardCollision, undefined, this);
   }
@@ -132,7 +134,7 @@ export class FoxGame extends Phaser.Scene {
     const dx = this.character.x - lizard.x
     const dy = this.character.y - lizard.y
 
-    const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(80)
+    const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(150)
   
     this.character.handleDamage(dir)
 
