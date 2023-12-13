@@ -2,9 +2,9 @@ import { createLizardAnims } from "@/anims/EnemyAnims";
 import { createCharacterAnims } from "@/anims/CharacterAnims";
 import { createChestAnims } from "@/anims/TreasureAnims";
 import Lizard from "@/enemies/Lizard";
-import Character from "@/characters/Character";
+import Character, { Skin } from "@/characters/Character";
 import { sceneEvents } from "@/events/EventsCenter";
-
+import Chest from "@/items/Chest";
 
 export class FoxGame extends Phaser.Scene {
   constructor() {
@@ -13,55 +13,14 @@ export class FoxGame extends Phaser.Scene {
 
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
   private character!: Character
-  
+
   private playerLizardsCollider?: Phaser.Physics.Arcade.Collider
-  
+
   preload() {
-    this.load.spritesheet(
-      "idle-default",
-      "/assets/animations/fox/default/lilfox_idle_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "crouch-default",
-      "/assets/animations/fox/default/lilfox_crouch_strip8.png",
-      { frameWidth: 32, frameHeight: 32 }
-    );
-    this.load.spritesheet(
-      "sit-default",
-      "/assets/animations/fox/default/lilfox_sit_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "sneak-default",
-      "/assets/animations/fox/default/lilfox_sneak_strip4.png",
-      { frameWidth: 32, frameHeight: 32 }
-    );
-    this.load.spritesheet(
-      "run-default",
-      "/assets/animations/fox/default/lilfox_run_strip4.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      "walk-default",
-      "/assets/animations/fox/default/lilfox_walk_strip8.png",
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
+    this.loadSkinSpriteSheet(Skin.DEFAULT)
+    this.loadSkinSpriteSheet(Skin.BLUE)
 
-    this.cursors = this.input.keyboard?.createCursorKeys();
-
+    this.cursors = this.input.keyboard?.createCursorKeys()!;
   }
 
   create() {
@@ -78,13 +37,15 @@ export class FoxGame extends Phaser.Scene {
     map.createLayer('Terrain', tileset1!);
     map.createLayer('Treasures', tileset2!);
     const objectsLayer = map.createLayer('Objects', tileset1!);
-    
+
     objectsLayer?.setCollisionByProperty({ colides: true });
 
-    const chests = this.physics.add.staticGroup()
+    const chests = this.physics.add.staticGroup({
+      classType: Chest
+    })
     const chestsLayer = map.getObjectLayer('Treasures')
     chestsLayer?.objects.forEach(chestObj => {
-      chests.get(chestObj.x! + chestObj.width! * 0.5, chestObj.y! + chestObj.height! * 0.5, 'treasure', 'chest_empty_open_anim_f0.png')
+      chests.get(chestObj.x! + chestObj.width! * 0.5, chestObj.y! + chestObj.height! * 0.5, 'treasure')
     })
 
 
@@ -120,10 +81,18 @@ export class FoxGame extends Phaser.Scene {
 
     this.physics.add.collider(this.character, objectsLayer);
     this.physics.add.collider(lizards, objectsLayer);
-    this.physics.add.collider(this.character, chests)
+    this.physics.add.collider(this.character, chests, this.handleCharacterChestCollision, undefined, this)
     this.physics.add.collider(lizards, chests)
 
     this.playerLizardsCollider = this.physics.add.collider(lizards, this.character, this.handleCharacterLizardCollision, undefined, this);
+  }
+
+  private handleCharacterChestCollision(
+    obj1: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile,
+    obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile
+  ) {
+    const chest = obj2 as Chest
+    this.character.setChest(chest)
   }
 
   private handleCharacterLizardCollision(
@@ -135,7 +104,7 @@ export class FoxGame extends Phaser.Scene {
     const dy = this.character.y - lizard.y
 
     const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(150)
-  
+
     this.character.handleDamage(dir)
 
     sceneEvents.emit('player-health-changed', this.character.health)
@@ -147,5 +116,50 @@ export class FoxGame extends Phaser.Scene {
 
   update(t: number, dt: number) {
     this.character.update(this.cursors)
+  }
+
+  loadSkinSpriteSheet(skinName: string) {
+    this.load.spritesheet(
+      `idle-${skinName}`,
+      `/assets/animations/fox/${skinName}/lilfox_idle_strip8.png`,
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      `crouch-${skinName}`,
+      `/assets/animations/fox/${skinName}/lilfox_crouch_strip8.png`,
+      { frameWidth: 32, frameHeight: 32 }
+    );
+    this.load.spritesheet(
+      `sit-${skinName}`,
+      `/assets/animations/fox/${skinName}/lilfox_sit_strip8.png`,
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      `sneak-${skinName}`,
+      `/assets/animations/fox/${skinName}/lilfox_sneak_strip4.png`,
+      { frameWidth: 32, frameHeight: 32 }
+    );
+    this.load.spritesheet(
+      `run-${skinName}`,
+      `/assets/animations/fox/${skinName}/lilfox_run_strip4.png`,
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      `walk-${skinName}`,
+      `/assets/animations/fox/${skinName}/lilfox_walk_strip8.png`,
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
   }
 }

@@ -1,3 +1,4 @@
+import Chest from "@/items/Chest";
 import Phaser from "phaser";
 
 declare global {
@@ -13,6 +14,14 @@ declare global {
   }
 }
 
+export enum Skin {
+  DEFAULT = "default",
+  BLUE = "blue",
+  FLASK = "flask",
+  KUMAMON = "kumamon",
+  SUNGLASSES = "sunglasses"
+}
+
 enum HealthState {
   IDLE,
   DAMAGE,
@@ -21,10 +30,13 @@ enum HealthState {
 
 export default class Character extends Phaser.Physics.Arcade.Sprite {
 
+  private selectedSkin: Skin = Skin.BLUE
   private healthState = HealthState.IDLE
   private damageTime = 0
 
   private _health = 5
+
+  private activeChest?: Chest
 
   get health() {
     return this._health
@@ -33,7 +45,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
     super(scene, x, y, texture, frame)
 
-    this.anims.play("idle-default");
+    this.anims.play(`idle-${this.selectedSkin}`);
     scene.physics.add.existing(this, false);
 
   }
@@ -62,29 +74,42 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
     const speed = 100
 
-    if (cursors.left?.isDown) {
-      this.anims.play("run-default", true);
+    const leftDown = cursors.left?.isDown
+    const rightDown = cursors.right?.isDown
+    const upDown = cursors.up?.isDown
+    const downDown = cursors.down?.isDown
+
+
+    if (leftDown) {
+      this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(-speed, 0);
       this.scaleX = -1;
       this.body?.offset.setTo(24, 8);
 
-    } else if (cursors.right?.isDown) {
-      this.anims.play("run-default", true);
+    } else if (rightDown) {
+      this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(speed, 0);
       this.scaleX = 1;
       this.body?.offset.setTo(8, 8);
 
-    } else if (cursors.up?.isDown) {
-      this.anims.play("run-default");
+    } else if (upDown) {
+      this.anims.play(`run-${this.selectedSkin}`);
       this.setVelocity(0, -speed);
 
-    } else if (cursors.down?.isDown) {
-      this.anims.play("run-default");
+    } else if (downDown) {
+      this.anims.play(`run-${this.selectedSkin}`);
       this.setVelocity(0, speed);
 
+    } else if (cursors.space?.isDown && this.activeChest) {
+      this.activeChest.open()
+
     } else {
-      this.anims.play("idle-default");
+      this.anims.play(`idle-${this.selectedSkin}`);
       this.setVelocity(0, 0);
+    }
+
+    if (leftDown || rightDown || upDown || downDown) {
+      this.activeChest = undefined
     }
   }
 
@@ -97,7 +122,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
     if (this._health <= 0) {
       this.healthState = HealthState.DEAD
-      this.anims.play("idle-default");
+      this.anims.play(`idle-${this.selectedSkin}`);
       this.setVelocity(0, 0)
     } else {
       this.setVelocity(dir.x, dir.y)
@@ -105,5 +130,9 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       this.healthState = HealthState.DAMAGE
       this.damageTime = 0
     }
+  }
+
+  setChest(chest: Chest) {
+    this.activeChest = chest
   }
 }
