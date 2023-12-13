@@ -19,6 +19,8 @@ export class FoxGame extends Phaser.Scene {
   preload() {
     this.loadSkinSpriteSheet(Skin.DEFAULT)
     this.loadSkinSpriteSheet(Skin.BLUE)
+    this.loadSkinSpriteSheet(Skin.KUMAMON)
+    this.loadSkinSpriteSheet(Skin.SUNGLASSES)
 
     this.cursors = this.input.keyboard?.createCursorKeys()!;
   }
@@ -116,6 +118,10 @@ export class FoxGame extends Phaser.Scene {
 
   update(t: number, dt: number) {
     this.character.update(this.cursors)
+  }
+
+  changeSkin(skin: Skin) {
+    this.character.skin = skin
   }
 
   loadSkinSpriteSheet(skinName: string) {

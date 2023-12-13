@@ -4,6 +4,8 @@ import { Skin } from "@/characters/Character";
 const createCharacterAnims = (anims: Phaser.Animations.AnimationManager) => {
   createSkinAnimation(anims, Skin.DEFAULT)
   createSkinAnimation(anims, Skin.BLUE)
+  createSkinAnimation(anims, Skin.KUMAMON)
+  createSkinAnimation(anims, Skin.SUNGLASSES)
 }
 
 const createSkinAnimation = (anims: Phaser.Animations.AnimationManager, skinName: string) => {

@@ -42,12 +42,15 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     return this._health
   }
 
+  set skin(skin: Skin) {
+    this.selectedSkin = skin
+  }
+
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
     super(scene, x, y, texture, frame)
 
     this.anims.play(`idle-${this.selectedSkin}`);
     scene.physics.add.existing(this, false);
-
   }
 
   protected preUpdate(time: number, delta: number): void {

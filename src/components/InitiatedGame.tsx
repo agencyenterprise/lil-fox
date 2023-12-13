@@ -30,7 +30,7 @@ export function InitiatedGame({ setInitiated, game }: InitiatedGameProps) {
     setUserSkins()
     if (typeof window !== "undefined" && game.current) {
       const FoxGame = require("@/scenes").FoxGame;
-      const gameScene = game.current?.scene.scenes[0] as typeof FoxGame;
+      const gameScene = game.current?.scene.scenes[1] as typeof FoxGame;
       gameScene.initializeState();
     }
   }, [address])
@@ -64,7 +64,7 @@ export function InitiatedGame({ setInitiated, game }: InitiatedGameProps) {
   const autosave = () => {
     if (typeof window !== "undefined") {
       const FoxGame = require("@/scenes").FoxGame;
-      const gameScene = game.current?.scene.scenes[0] as typeof FoxGame;
+      const gameScene = game.current?.scene.scenes[1] as typeof FoxGame;
       gameScene.setAutosave();
     }
   };
@@ -77,16 +77,15 @@ export function InitiatedGame({ setInitiated, game }: InitiatedGameProps) {
   const changeSkin = async (skin: string) => {
     if (typeof window !== "undefined") {
       const FoxGame = require("@/scenes").FoxGame;
-      const gameScene = game.current?.scene.scenes[0] as typeof FoxGame;
-      const skinId = tokenIdToSkin.get(skin)
-      await gameScene.changeSkin(skinId, skin);
+      const gameScene = game.current?.scene.scenes[1] as typeof FoxGame;
+      await gameScene.changeSkin(skin);
     }
   };
 
   const reload = async () => {
     if (typeof window !== "undefined") {
       const FoxGame = require("@/scenes").FoxGame;
-      const gameScene = game.current?.scene.scenes[0] as typeof FoxGame;
+      const gameScene = game.current?.scene.scenes[1] as typeof FoxGame;
       if (!gameScene) return
       await gameScene.foxLoad();
     }
