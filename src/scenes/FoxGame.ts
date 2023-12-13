@@ -14,6 +14,15 @@ export class FoxGame extends Phaser.Scene {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
   private character!: Character
 
+  private terrainLayer: Phaser.Tilemaps.TilemapLayer
+  private treasuresLayer: Phaser.Tilemaps.TilemapLayer
+  private objectsLayer: Phaser.Tilemaps.TilemapLayer
+
+  private foods: Phaser.GameObjects.Group
+
+  private tileToWorldXY: Function
+
+
   private playerLizardsCollider?: Phaser.Physics.Arcade.Collider
 
   preload() {
@@ -36,11 +45,17 @@ export class FoxGame extends Phaser.Scene {
     const tileset1 = map.addTilesetImage('Tileset 1', 'tiles1');
     const tileset2 = map.addTilesetImage('DungeonTileset', 'tiles2');
 
-    map.createLayer('Terrain', tileset1!);
-    map.createLayer('Treasures', tileset2!);
-    const objectsLayer = map.createLayer('Objects', tileset1!);
+    this.tileToWorldXY = (x: number, y: number) => {
+      return map.tileToWorldXY(x, y)
+    }
+    // this.map.heightInPixels
+    // this.map.heightInPixels
 
-    objectsLayer?.setCollisionByProperty({ colides: true });
+    this.terrainLayer = map.createLayer('Terrain', tileset1!)!;
+    this.treasuresLayer = map.createLayer('Treasures', tileset2!)!;
+    this.objectsLayer = map.createLayer('Objects', tileset1!)!;
+
+    this.objectsLayer?.setCollisionByProperty({ colides: true });
 
     const chests = this.physics.add.staticGroup({
       classType: Chest
@@ -66,8 +81,6 @@ export class FoxGame extends Phaser.Scene {
     this.physics.world.enableBody(this.character, Phaser.Physics.Arcade.DYNAMIC_BODY)
 
 
-    if (objectsLayer === null) return
-
     this.cameras.main.startFollow(this.character, true, 0.05, 0.05);
 
     const lizards = this.physics.add.group({
@@ -76,17 +89,71 @@ export class FoxGame extends Phaser.Scene {
         const lizGo = go as Lizard
         if (!lizGo.body) return
         lizGo.body.onCollide = true
+        lizGo.setDepth(2);
       }
     })
-
     lizards.get(950, 950, 'lizard')
 
-    this.physics.add.collider(this.character, objectsLayer);
-    this.physics.add.collider(lizards, objectsLayer);
+    this.physics.add.collider(this.character, this.objectsLayer);
+    this.physics.add.collider(lizards, this.objectsLayer);
     this.physics.add.collider(this.character, chests, this.handleCharacterChestCollision, undefined, this)
     this.physics.add.collider(lizards, chests)
 
     this.playerLizardsCollider = this.physics.add.collider(lizards, this.character, this.handleCharacterLizardCollision, undefined, this);
+
+    this.foods = this.add.group({
+      classType: Phaser.GameObjects.Image,
+      createCallback: (go) => {
+        this.physics.world.enable(go)
+      }
+    })
+
+    console.log("xxxxx", this.objectsLayer.getTileAt(50, 50))
+    // const food = this.foods.get(980, 950, 'berry')
+
+    
+
+
+    this.physics.add.collider(this.character, this.foods, this.handleCollectFood, undefined, this);
+    this.spawnFood()
+  }
+
+  private spawnFood() {
+    let foodQuantityToSpawn = 200
+    const map = this.cache.tilemap.get("map");
+
+    console.log("map", map)
+
+    while (foodQuantityToSpawn > 0) {
+      console.log("this.scale.width", this.scale.width)
+      console.log("this.scale.height", this.scale.height)
+      const x = Phaser.Math.Between(1, this.scale.width - 1)
+      const y = Phaser.Math.Between(1, this.scale.height - 1)
+      console.log({ x, y })
+
+      if (this.objectsLayer.getTileAt(x, y) !== null)
+        break
+
+
+      const pixelPosition = this.tileToWorldXY(x, y)!
+      console.log({ pixelPosition })
+      // const centerX = pixelPosition.x;
+      // const centerY = pixelPosition.y + map.tileHeight * 0.5;
+
+      // console.log({ centerX, centerY })
+
+      const food = this.foods.get(pixelPosition.x, pixelPosition.y, 'berry')
+      foodQuantityToSpawn--
+    }
+
+
+  }
+
+  private handleCollectFood(obj1: any, obj2: any) {
+    console.log({
+      obj1, obj2
+    })
+    obj2.destroy()
   }
 
   private handleCharacterChestCollision(

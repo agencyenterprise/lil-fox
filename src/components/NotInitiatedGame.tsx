@@ -30,8 +30,8 @@ export function NotInitiatedGame({ setInitiated, game }: NotInitiatedGameProps) 
         game.current = new Phaser.Game({
           type: Phaser.AUTO,
           parent: 'phaser-container',
-          width: 400,
-          height: 250,
+          // width: 400,
+          // height: 250,
           physics: {
             default: 'arcade',
             arcade: {
@@ -42,8 +42,8 @@ export function NotInitiatedGame({ setInitiated, game }: NotInitiatedGameProps) 
           // type: Phaser.AUTO,
           // parent: "phaser-container",
           // backgroundColor: "rgba(129,186,68,1)",
-          // width: 800,
-          // height: 600,
+          width: 800,
+          height: 600,
           // pixelArt: true,
           // physics: {
           //   default: "arcade",
