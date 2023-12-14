@@ -11,6 +11,9 @@ export class FoxGame extends Phaser.Scene {
     super('LilFox')
   }
 
+  private mapHeight: number = 100
+  private mapLength: number = 100
+
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
   private character!: Character
 
@@ -107,46 +110,34 @@ export class FoxGame extends Phaser.Scene {
         this.physics.world.enable(go)
       }
     })
+    
+    this.physics.add.collider(this.character, this.foods, this.handleCollectFood, undefined, this);
 
-    console.log("xxxxx", this.objectsLayer.getTileAt(50, 50))
-    // const food = this.foods.get(980, 950, 'berry')
+    this.time.addEvent({
+      delay: 5000,
+      callback: this.spawnFood,
+      callbackScope: this,
+      loop: true, // Set to true for the function to repeat
+  });
+
 
     
-
-
-    this.physics.add.collider(this.character, this.foods, this.handleCollectFood, undefined, this);
-    this.spawnFood()
   }
 
   private spawnFood() {
-    let foodQuantityToSpawn = 200
-    const map = this.cache.tilemap.get("map");
-
-    console.log("map", map)
+    let foodQuantityToSpawn = 10
 
     while (foodQuantityToSpawn > 0) {
-      console.log("this.scale.width", this.scale.width)
-      console.log("this.scale.height", this.scale.height)
-      const x = Phaser.Math.Between(1, this.scale.width - 1)
-      const y = Phaser.Math.Between(1, this.scale.height - 1)
-      console.log({ x, y })
+      const x = Phaser.Math.Between(1, this.mapLength - 1)
+      const y = Phaser.Math.Between(1, this.mapHeight - 1)
 
       if (this.objectsLayer.getTileAt(x, y) !== null)
         break
 
-
-      const pixelPosition = this.tileToWorldXY(x, y)!
-      console.log({ pixelPosition })
-      // const centerX = pixelPosition.x;
-      // const centerY = pixelPosition.y + map.tileHeight * 0.5;
-
-      // console.log({ centerX, centerY })
-
-      const food = this.foods.get(pixelPosition.x, pixelPosition.y, 'berry')
+      const tileToReceiveFood = this.terrainLayer.getTileAt(x, y)
+      this.foods.get(tileToReceiveFood.pixelX, tileToReceiveFood.pixelY, 'berry')
       foodQuantityToSpawn--
     }
-
-
   }
 
   private handleCollectFood(obj1: any, obj2: any) {
