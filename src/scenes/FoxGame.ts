@@ -105,7 +105,7 @@ export class FoxGame extends Phaser.Scene {
     this.physics.add.collider(this.character, this.foods, this.handleCollectFood, undefined, this);
 
     this.time.addEvent({
-      delay: 3 * 1 * 1000,
+      delay: 15 * 60 * 1000,
       callback: this.spawnFood,
       callbackScope: this,
       loop: true,

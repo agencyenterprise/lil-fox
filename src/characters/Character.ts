@@ -59,7 +59,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     scene.physics.add.existing(this, false);
 
     this.scene.time.addEvent({
-      delay: 3 * 1 * 1000,
+      delay: 5 * 60 * 1000,
       callback: this.getHungry,
       callbackScope: this,
       loop: true,
