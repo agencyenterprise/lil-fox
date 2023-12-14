@@ -5,6 +5,8 @@ import { lineaTestnet } from '@wagmi/core/chains'
 import { MutableRefObject } from 'react';
 import Preloader from '@/scenes/Preloader';
 import GameUI from '@/scenes/GameUI';
+import NineSlicePlugin from 'phaser3-nineslice'
+
 
 type NotInitiatedGameProps = {
   setInitiated: (initiated: boolean) => void;
@@ -39,19 +41,9 @@ export function NotInitiatedGame({ setInitiated, game }: NotInitiatedGameProps) 
               // debug: true
             },
           },
-          // type: Phaser.AUTO,
-          // parent: "phaser-container",
-          // backgroundColor: "rgba(129,186,68,1)",
-          // width: 800,
-          // height: 600,
-          // pixelArt: true,
-          // physics: {
-          //   default: "arcade",
-          //   arcade: {
-          //     gravity: { y: 0 },
-          //     debug: true,
-          //   },
-          // },
+          plugins: {
+            global: [NineSlicePlugin.Plugin.DefaultCfg]
+          },
           scene: [Preloader, FoxGame, GameUI],
           scale: {
             zoom: 2,
