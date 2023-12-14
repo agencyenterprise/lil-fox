@@ -129,9 +129,12 @@ export class FoxGame extends Phaser.Scene {
   }
 
   private handleCollectFood(obj1: any, obj2: any) {
-    this.character.eat()
     const food = obj2 as Phaser.GameObjects.Image
     food.destroy()
+
+    if (this.character.hunger >= 5) return
+
+    this.character.eat()
   }
 
   private handleCharacterChestCollision(

@@ -154,7 +154,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
   }
 
   getHungry() {
-    console.log("geHungry")
+    if (this._hunger <= 0) return
     this._hunger -= 1
     sceneEvents.emit('player-hunger-changed', this._hunger)
   }
