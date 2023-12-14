@@ -35,11 +35,16 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
   private damageTime = 0
 
   private _health = 5
+  private _hunger = 5
 
   private activeChest?: Chest
 
   get health() {
     return this._health
+  }
+
+  get hunger() {
+    return this._hunger
   }
 
   set skin(skin: Skin) {
@@ -51,6 +56,15 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
     this.anims.play(`idle-${this.selectedSkin}`);
     scene.physics.add.existing(this, false);
+  }
+
+  create() {
+    this.scene.time.addEvent({
+      delay: 3 * 1 * 1000,
+      callback: this.getHungry,
+      callbackScope: this,
+      loop: true,
+    });
   }
 
   protected preUpdate(time: number, delta: number): void {
@@ -133,6 +147,14 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       this.healthState = HealthState.DAMAGE
       this.damageTime = 0
     }
+  }
+
+  eat() {
+    this._hunger += 1
+  }
+
+  getHungry() {
+    this._hunger -= 1
   }
 
   setChest(chest: Chest) {

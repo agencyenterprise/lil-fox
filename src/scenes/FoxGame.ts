@@ -23,9 +23,6 @@ export class FoxGame extends Phaser.Scene {
 
   private foods: Phaser.GameObjects.Group
 
-  private tileToWorldXY: Function
-
-
   private playerLizardsCollider?: Phaser.Physics.Arcade.Collider
 
   preload() {
@@ -47,12 +44,6 @@ export class FoxGame extends Phaser.Scene {
     const map = this.make.tilemap({ key: 'map' });
     const tileset1 = map.addTilesetImage('Tileset 1', 'tiles1');
     const tileset2 = map.addTilesetImage('DungeonTileset', 'tiles2');
-
-    this.tileToWorldXY = (x: number, y: number) => {
-      return map.tileToWorldXY(x, y)
-    }
-    // this.map.heightInPixels
-    // this.map.heightInPixels
 
     this.terrainLayer = map.createLayer('Terrain', tileset1!)!;
     this.treasuresLayer = map.createLayer('Treasures', tileset2!)!;
@@ -110,22 +101,19 @@ export class FoxGame extends Phaser.Scene {
         this.physics.world.enable(go)
       }
     })
-    
+
     this.physics.add.collider(this.character, this.foods, this.handleCollectFood, undefined, this);
 
     this.time.addEvent({
-      delay: 5000,
+      delay: 3 * 1 * 1000,
       callback: this.spawnFood,
       callbackScope: this,
-      loop: true, // Set to true for the function to repeat
-  });
-
-
-    
+      loop: true,
+    });
   }
 
   private spawnFood() {
-    let foodQuantityToSpawn = 10
+    let foodQuantityToSpawn = 210
 
     while (foodQuantityToSpawn > 0) {
       const x = Phaser.Math.Between(1, this.mapLength - 1)
@@ -141,10 +129,9 @@ export class FoxGame extends Phaser.Scene {
   }
 
   private handleCollectFood(obj1: any, obj2: any) {
-    console.log({
-      obj1, obj2
-    })
-    obj2.destroy()
+    this.character.eat()
+    const food = obj2 as Phaser.GameObjects.Image
+    food.destroy()
   }
 
   private handleCharacterChestCollision(
