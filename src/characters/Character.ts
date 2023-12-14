@@ -1,5 +1,6 @@
 import Chest from "@/items/Chest";
 import Phaser from "phaser";
+import { sceneEvents } from "@/events/EventsCenter";
 
 declare global {
   namespace Phaser.GameObjects {
@@ -56,9 +57,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
     this.anims.play(`idle-${this.selectedSkin}`);
     scene.physics.add.existing(this, false);
-  }
 
-  create() {
     this.scene.time.addEvent({
       delay: 3 * 1 * 1000,
       callback: this.getHungry,
@@ -151,10 +150,13 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
   eat() {
     this._hunger += 1
+    sceneEvents.emit('player-hunger-changed', this._hunger)
   }
 
   getHungry() {
+    console.log("geHungry")
     this._hunger -= 1
+    sceneEvents.emit('player-hunger-changed', this._hunger)
   }
 
   setChest(chest: Chest) {

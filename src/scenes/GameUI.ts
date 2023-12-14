@@ -5,6 +5,7 @@ import { sceneEvents } from "../events/EventsCenter";
 export default class GameUI extends Phaser.Scene {
 
   private hearts: Phaser.GameObjects.Group
+  private berries: Phaser.GameObjects.Group
 
   constructor() {
     super("game-ui");
@@ -12,6 +13,9 @@ export default class GameUI extends Phaser.Scene {
 
   create() {
     this.hearts = this.add.group({
+      classType: Phaser.GameObjects.Image,
+    })
+    this.berries = this.add.group({
       classType: Phaser.GameObjects.Image,
     })
 
@@ -25,10 +29,25 @@ export default class GameUI extends Phaser.Scene {
       quantity: 5
     })
 
-    sceneEvents.on('player-health-changed', this.handlePlayerHealthChanged, this)
+    this.berries.createMultiple({
+      key: 'berry',
+      setXY: {
+        x: 10,
+        y: 25,
+        stepX: 16
+      },
+      quantity: 5
+    })
 
+
+    sceneEvents.on('player-health-changed', this.handlePlayerHealthChanged, this)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       sceneEvents.off('player-health-changed', this.handlePlayerHealthChanged, this)
+    })
+    
+    sceneEvents.on('player-hunger-changed', this.handlePlayerHungerChanged, this)
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      sceneEvents.off('player-hunger-changed', this.handlePlayerHungerChanged, this)
     })
   }
 
@@ -41,6 +60,19 @@ export default class GameUI extends Phaser.Scene {
         heart.setTexture('ui-heart-full')
       } else {
         heart.setTexture('ui-heart-empty')
+      }
+    })
+  }
+
+  handlePlayerHungerChanged(hunger: number) {
+    // @ts-ignore
+    this.berries.children.each((go, idx) => {
+      const berry = go as Phaser.GameObjects.Image
+
+      if (idx < hunger) {
+        berry.setTexture('berry')
+      } else {
+        berry.setTexture('berry-empty')
       }
     })
   }
