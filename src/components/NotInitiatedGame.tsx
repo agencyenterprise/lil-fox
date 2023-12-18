@@ -5,8 +5,7 @@ import { lineaTestnet } from '@wagmi/core/chains'
 import { MutableRefObject } from 'react';
 import Preloader from '@/scenes/Preloader';
 import GameUI from '@/scenes/GameUI';
-import NineSlicePlugin from 'phaser3-nineslice'
-
+import { Plugin as NineSlicePlugin } from 'phaser3-nineslice'
 
 type NotInitiatedGameProps = {
   setInitiated: (initiated: boolean) => void;
@@ -42,7 +41,7 @@ export function NotInitiatedGame({ setInitiated, game }: NotInitiatedGameProps) 
             },
           },
           plugins: {
-            global: [NineSlicePlugin.Plugin.DefaultCfg]
+            global: [NineSlicePlugin.DefaultCfg]
           },
           scene: [Preloader, FoxGame, GameUI],
           scale: {

@@ -36,6 +36,7 @@ export class FoxGame extends Phaser.Scene {
 
   create() {
     this.scene.run('game-ui')
+    this.scene.launch('settings-ui')
 
     createCharacterAnims(this.anims)
     createLizardAnims(this.anims)
