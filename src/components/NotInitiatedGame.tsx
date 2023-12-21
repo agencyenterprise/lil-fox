@@ -37,7 +37,7 @@ export function NotInitiatedGame({ setInitiated, game }: NotInitiatedGameProps) 
             default: 'arcade',
             arcade: {
               gravity: { y: 0 },
-              // debug: true
+              debug: true
             },
           },
           plugins: {

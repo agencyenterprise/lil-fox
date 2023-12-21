@@ -5,6 +5,8 @@ import Lizard from "@/enemies/Lizard";
 import Character, { Skin } from "@/characters/Character";
 import { sceneEvents } from "@/events/EventsCenter";
 import Chest from "@/items/Chest";
+import GreenArcher from "@/enemies/GreenArcher";
+import { createArcherAnims } from "@/anims/GreenArcherAnims";
 
 export class FoxGame extends Phaser.Scene {
   constructor() {
@@ -18,6 +20,8 @@ export class FoxGame extends Phaser.Scene {
   private character!: Character
 
   private terrainLayer: Phaser.Tilemaps.TilemapLayer
+  private sandPathsLayer: Phaser.Tilemaps.TilemapLayer
+  private treesLayer: Phaser.Tilemaps.TilemapLayer
   private treasuresLayer: Phaser.Tilemaps.TilemapLayer
   private objectsLayer: Phaser.Tilemaps.TilemapLayer
 
@@ -39,18 +43,22 @@ export class FoxGame extends Phaser.Scene {
     this.scene.launch('settings-ui')
 
     createCharacterAnims(this.anims)
+    createArcherAnims(this.anims)
     createLizardAnims(this.anims)
     createChestAnims(this.anims)
 
     const map = this.make.tilemap({ key: 'map' });
+    const tileset0 = map.addTilesetImage('punyworld-overworld-tileset', 'tiles0');
     const tileset1 = map.addTilesetImage('Tileset 1', 'tiles1');
     const tileset2 = map.addTilesetImage('DungeonTileset', 'tiles2');
 
-    this.terrainLayer = map.createLayer('Terrain', tileset1!)!;
-    this.treasuresLayer = map.createLayer('Treasures', tileset2!)!;
+    this.terrainLayer = map.createLayer('Terrain', tileset0!)!;
+    this.sandPathsLayer = map.createLayer('SandPaths', tileset0!)!;
+    this.treesLayer = map.createLayer('Trees', tileset0!)!;
+    // this.treasuresLayer = map.createLayer('Treasures', tileset2!)!;
     this.objectsLayer = map.createLayer('Objects', tileset1!)!;
 
-    this.objectsLayer?.setCollisionByProperty({ colides: true });
+    this.treesLayer?.setCollisionByProperty({ collides: true });
 
     const chests = this.physics.add.staticGroup({
       classType: Chest
@@ -61,20 +69,19 @@ export class FoxGame extends Phaser.Scene {
     })
 
 
-    // const debugGraphics = this.add.graphics().setAlpha(0.75);
-    // objectsLayer?.renderDebug(debugGraphics, {
-    //   tileColor: null,
-    //   collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
-    //   faceColor: new Phaser.Display.Color(40, 39, 37, 255)
-    // });
+    const debugGraphics = this.add.graphics().setAlpha(0.75);
+    this.treesLayer?.renderDebug(debugGraphics, {
+      tileColor: null,
+      collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
+      faceColor: new Phaser.Display.Color(40, 39, 37, 255)
+    });
 
 
-    this.character = new Character(this, 920, 920, "character");
-    this.character.setSize(this.character.width * 0.5, this.character.height * 0.8)
+    this.character = new Character(this, 850, 740, "character");
+    this.character.setSize(this.character.width * 0.5, this.character.height * 0.5)
     this.physics.add.existing(this.character, false);
     this.add.existing(this.character);
     this.physics.world.enableBody(this.character, Phaser.Physics.Arcade.DYNAMIC_BODY)
-
 
     this.cameras.main.startFollow(this.character, true, 0.05, 0.05);
 
@@ -87,8 +94,28 @@ export class FoxGame extends Phaser.Scene {
         lizGo.setDepth(2);
       }
     })
-    lizards.get(950, 950, 'lizard')
+    lizards.get(900, 800, 'lizard')
 
+
+
+
+    const greenArcher = this.physics.add.group({
+      classType: GreenArcher,
+      createCallback: (go) => {
+        // const lizGo = go as Lizard
+        // if (!lizGo.body) return
+        // lizGo.body.onCollide = true
+        // lizGo.setDepth(2);
+      }
+    })
+    greenArcher.get(750, 800, 'greenArcher')
+
+
+
+
+
+    this.physics.add.collider(this.character, this.treesLayer);
+    this.physics.add.collider(lizards, this.treesLayer);
     this.physics.add.collider(this.character, this.objectsLayer);
     this.physics.add.collider(lizards, this.objectsLayer);
     this.physics.add.collider(this.character, chests, this.handleCharacterChestCollision, undefined, this)

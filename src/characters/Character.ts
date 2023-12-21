@@ -64,6 +64,8 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       callbackScope: this,
       loop: true,
     });
+
+    // this.setScale(0.9)
   }
 
   protected preUpdate(time: number, delta: number): void {
