@@ -98,16 +98,13 @@ export class FoxGame extends Phaser.Scene {
     lizards.get(900, 800, 'lizard')
 
 
-
-
-
     const greenArcher = this.physics.add.group({
       classType: GreenArcher
     })
     const arrows = this.physics.add.group({
       classType: Phaser.Physics.Arcade.Image,
     })
-    const greenArcher01 = greenArcher.get(750, 800, 'greenArcher')
+    const greenArcher01 = greenArcher.get(1200, 600, 'greenArcher')
     greenArcher01.setArrows(arrows)
 
     this.physics.add.collider(this.character, this.treesLayer);
