@@ -7,12 +7,6 @@ export default class GreenArcher extends Phaser.Physics.Arcade.Sprite {
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
     super(scene, x, y, texture, frame)
 
-    // this.anims.play('green_archer_shooting')
-
-    this.arrows = scene.physics.add.group({
-      classType: Phaser.Physics.Arcade.Image,
-    })
-
     this.scene.time.addEvent({
       delay: 2000,
       callback: this.shootArrow,
@@ -53,5 +47,9 @@ export default class GreenArcher extends Phaser.Physics.Arcade.Sprite {
 
     this.anims.play('green_archer_shooting')
     arrow.setVelocity(vec.x * 250, vec.y * 250)
+  }
+
+  setArrows(arrows: Phaser.Physics.Arcade.Group) {
+    this.arrows = arrows
   }
 }

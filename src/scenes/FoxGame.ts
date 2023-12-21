@@ -28,6 +28,7 @@ export class FoxGame extends Phaser.Scene {
   private foods: Phaser.GameObjects.Group
 
   private playerLizardsCollider?: Phaser.Physics.Arcade.Collider
+  private playerArrowsCollider?: Phaser.Physics.Arcade.Collider
 
   preload() {
     this.loadSkinSpriteSheet(Skin.DEFAULT)
@@ -99,20 +100,15 @@ export class FoxGame extends Phaser.Scene {
 
 
 
+
     const greenArcher = this.physics.add.group({
-      classType: GreenArcher,
-      createCallback: (go) => {
-        // const lizGo = go as Lizard
-        // if (!lizGo.body) return
-        // lizGo.body.onCollide = true
-        // lizGo.setDepth(2);
-      }
+      classType: GreenArcher
     })
-    greenArcher.get(750, 800, 'greenArcher')
-
-
-
-
+    const arrows = this.physics.add.group({
+      classType: Phaser.Physics.Arcade.Image,
+    })
+    const greenArcher01 = greenArcher.get(750, 800, 'greenArcher')
+    greenArcher01.setArrows(arrows)
 
     this.physics.add.collider(this.character, this.treesLayer);
     this.physics.add.collider(lizards, this.treesLayer);
@@ -120,8 +116,10 @@ export class FoxGame extends Phaser.Scene {
     this.physics.add.collider(lizards, this.objectsLayer);
     this.physics.add.collider(this.character, chests, this.handleCharacterChestCollision, undefined, this)
     this.physics.add.collider(lizards, chests)
+    
 
     this.playerLizardsCollider = this.physics.add.collider(lizards, this.character, this.handleCharacterLizardCollision, undefined, this);
+    this.playerArrowsCollider = this.physics.add.collider(arrows, this.character, this.handleCharacterArrowCollision, undefined, this);
 
     this.foods = this.add.group({
       classType: Phaser.GameObjects.Image,
@@ -189,7 +187,30 @@ export class FoxGame extends Phaser.Scene {
 
     if (this.character.health <= 0) {
       this.playerLizardsCollider?.destroy()
+      this.playerArrowsCollider?.destroy()
     }
+  }
+
+  private handleCharacterArrowCollision(
+    obj1: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile,
+    obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile
+  ) {
+    const arrow = obj2 as Phaser.Physics.Arcade.Image
+    const dx = this.character.x - arrow.x
+    const dy = this.character.y - arrow.y
+
+    const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(150)
+
+    this.character.handleDamage(dir)
+
+    sceneEvents.emit('player-health-changed', this.character.health)
+
+    if (this.character.health <= 0) {
+      this.playerLizardsCollider?.destroy()
+      this.playerArrowsCollider?.destroy()
+    }
+
+    arrow.destroy()
   }
 
   update(t: number, dt: number) {
