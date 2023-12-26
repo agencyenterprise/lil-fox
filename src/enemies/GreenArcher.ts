@@ -13,20 +13,9 @@ export default class GreenArcher extends Phaser.Physics.Arcade.Sprite {
       callbackScope: this,
       loop: true,
     });
-
-  }
-
-  destroy(fromScene?: boolean | undefined) {
-    super.destroy(fromScene)
-  }
-
-  update(t: number, dt: number) {
-    super.update(t, dt)
-    console.log("updating")
   }
 
   private shootArrow() {
-    console.log('shooting arrow')
     if (!this.arrows) return
 
     const arrow = this.arrows.get(this.x, this.y, 'green_arrow') as Phaser.Physics.Arcade.Image

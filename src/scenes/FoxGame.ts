@@ -20,12 +20,14 @@ export class FoxGame extends Phaser.Scene {
   private character!: Character
 
   private terrainLayer: Phaser.Tilemaps.TilemapLayer
-  private sandPathsLayer: Phaser.Tilemaps.TilemapLayer
+  private constructionsLayer: Phaser.Tilemaps.TilemapLayer
   private treesLayer: Phaser.Tilemaps.TilemapLayer
   private treasuresLayer: Phaser.Tilemaps.TilemapLayer
   private objectsLayer: Phaser.Tilemaps.TilemapLayer
 
   private foods: Phaser.GameObjects.Group
+  private lizards: Phaser.GameObjects.Group
+  private arrows: Phaser.GameObjects.Group
 
   private playerLizardsCollider?: Phaser.Physics.Arcade.Collider
   private playerArrowsCollider?: Phaser.Physics.Arcade.Collider
@@ -54,12 +56,10 @@ export class FoxGame extends Phaser.Scene {
     const tileset2 = map.addTilesetImage('DungeonTileset', 'tiles2');
 
     this.terrainLayer = map.createLayer('Terrain', tileset0!)!;
-    this.sandPathsLayer = map.createLayer('SandPaths', tileset0!)!;
     this.treesLayer = map.createLayer('Trees', tileset0!)!;
+    this.constructionsLayer = map.createLayer('Constructions', tileset0!)!;
     // this.treasuresLayer = map.createLayer('Treasures', tileset2!)!;
     this.objectsLayer = map.createLayer('Objects', tileset1!)!;
-
-    this.treesLayer?.setCollisionByProperty({ collides: true });
 
     const chests = this.physics.add.staticGroup({
       classType: Chest
@@ -68,6 +68,9 @@ export class FoxGame extends Phaser.Scene {
     chestsLayer?.objects.forEach(chestObj => {
       chests.get(chestObj.x! + chestObj.width! * 0.5, chestObj.y! + chestObj.height! * 0.5, 'treasure')
     })
+
+
+
 
 
     // const debugGraphics = this.add.graphics().setAlpha(0.75);
@@ -86,7 +89,7 @@ export class FoxGame extends Phaser.Scene {
 
     this.cameras.main.startFollow(this.character, true, 0.05, 0.05);
 
-    const lizards = this.physics.add.group({
+    this.lizards = this.physics.add.group({
       classType: Lizard,
       createCallback: (go) => {
         const lizGo = go as Lizard
@@ -95,28 +98,23 @@ export class FoxGame extends Phaser.Scene {
         lizGo.setDepth(2);
       }
     })
-    lizards.get(900, 800, 'lizard')
+    map.getObjectLayer('Enemies')!.objects.forEach(chestObj => {
+      console.log(chestObj)
+      this.lizards.get(chestObj.x! + chestObj.width! * 0.5, chestObj.y! + chestObj.height! * 0.5, 'lizard')
+    })
 
 
     const greenArcher = this.physics.add.group({
       classType: GreenArcher
     })
-    const arrows = this.physics.add.group({
+    this.arrows = this.physics.add.group({
       classType: Phaser.Physics.Arcade.Image,
     })
-    const greenArcher01 = greenArcher.get(1200, 600, 'greenArcher')
-    greenArcher01.setArrows(arrows)
+    const greenArcher01 = greenArcher.get(1300, 600, 'greenArcher')
+    greenArcher01.setArrows(this.arrows)
 
-    this.physics.add.collider(this.character, this.treesLayer);
-    this.physics.add.collider(lizards, this.treesLayer);
-    this.physics.add.collider(this.character, this.objectsLayer);
-    this.physics.add.collider(lizards, this.objectsLayer);
-    this.physics.add.collider(this.character, chests, this.handleCharacterChestCollision, undefined, this)
-    this.physics.add.collider(lizards, chests)
-    
 
-    this.playerLizardsCollider = this.physics.add.collider(lizards, this.character, this.handleCharacterLizardCollision, undefined, this);
-    this.playerArrowsCollider = this.physics.add.collider(arrows, this.character, this.handleCharacterArrowCollision, undefined, this);
+    this.addColliders()
 
     this.foods = this.add.group({
       classType: Phaser.GameObjects.Image,
@@ -212,6 +210,25 @@ export class FoxGame extends Phaser.Scene {
 
   update(t: number, dt: number) {
     this.character.update(this.cursors)
+  }
+
+  addColliders() {
+    this.treesLayer?.setCollisionByProperty({ collides: true });
+    this.constructionsLayer?.setCollisionByProperty({ collides: true });
+
+    this.physics.add.collider(this.character, this.treesLayer);
+    this.physics.add.collider(this.lizards, this.treesLayer);
+    this.physics.add.collider(this.character, this.constructionsLayer);
+    this.physics.add.collider(this.lizards, this.constructionsLayer);
+    this.physics.add.collider(this.character, this.objectsLayer);
+    // this.physics.add.collider(this.lizards, this.objectsLayer);
+
+    // this.physics.add.collider(this.character, chests, this.handleCharacterChestCollision, undefined, this)
+    // this.physics.add.collider(this.lizards, chests)
+
+
+    this.playerLizardsCollider = this.physics.add.collider(this.lizards, this.character, this.handleCharacterLizardCollision, undefined, this);
+    this.playerArrowsCollider = this.physics.add.collider(this.arrows, this.character, this.handleCharacterArrowCollision, undefined, this);
   }
 
   changeSkin(skin: Skin) {
