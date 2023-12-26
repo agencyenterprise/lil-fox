@@ -24,6 +24,7 @@ export class FoxGame extends Phaser.Scene {
   private treesLayer: Phaser.Tilemaps.TilemapLayer
   private treasuresLayer: Phaser.Tilemaps.TilemapLayer
   private objectsLayer: Phaser.Tilemaps.TilemapLayer
+  private signsLayer: Phaser.Tilemaps.ObjectLayer
 
   private foods: Phaser.GameObjects.Group
   private lizards: Phaser.GameObjects.Group
@@ -58,8 +59,12 @@ export class FoxGame extends Phaser.Scene {
     this.terrainLayer = map.createLayer('Terrain', tileset0!)!;
     this.treesLayer = map.createLayer('Trees', tileset0!)!;
     this.constructionsLayer = map.createLayer('Constructions', tileset0!)!;
+    map.createLayer('Signs', tileset0!)!;
     // this.treasuresLayer = map.createLayer('Treasures', tileset2!)!;
     this.objectsLayer = map.createLayer('Objects', tileset1!)!;
+
+    this.signsLayer = map.getObjectLayer('Signs')!
+
 
     const chests = this.physics.add.staticGroup({
       classType: Chest
@@ -98,11 +103,6 @@ export class FoxGame extends Phaser.Scene {
         lizGo.setDepth(2);
       }
     })
-    map.getObjectLayer('Enemies')!.objects.forEach(chestObj => {
-      console.log(chestObj)
-      this.lizards.get(chestObj.x! + chestObj.width! * 0.5, chestObj.y! + chestObj.height! * 0.5, 'lizard')
-    })
-
 
     const greenArcher = this.physics.add.group({
       classType: GreenArcher
@@ -110,8 +110,23 @@ export class FoxGame extends Phaser.Scene {
     this.arrows = this.physics.add.group({
       classType: Phaser.Physics.Arcade.Image,
     })
-    const greenArcher01 = greenArcher.get(1300, 600, 'greenArcher')
-    greenArcher01.setArrows(this.arrows)
+
+    map.getObjectLayer('Enemies')!.objects.forEach(enemy => {
+      const x = enemy.x! + enemy.width! * 0.5
+      const y = enemy.y! + enemy.height! * 0.5
+      switch (enemy.name) {
+        case 'lizard':
+          this.lizards.get(x, y, 'lizard')
+          break
+        case 'green_archer':
+          greenArcher.get(x, y, 'greenArcher').setArrows(this.arrows)
+          break
+      }
+    })
+
+    map.getObjectLayer('Signs')!.objects.forEach(sign => {
+      console.log({ sign })
+    })
 
 
     this.addColliders()
@@ -209,7 +224,7 @@ export class FoxGame extends Phaser.Scene {
   }
 
   update(t: number, dt: number) {
-    this.character.update(this.cursors)
+    this.character.update(this.cursors, this.signsLayer)
   }
 
   addColliders() {

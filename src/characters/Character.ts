@@ -1,6 +1,7 @@
 import Chest from "@/items/Chest";
 import Phaser from "phaser";
 import { sceneEvents } from "@/events/EventsCenter";
+import { Direction, TILE_SIZE, getTargetPosition } from "@/utils/gridUtils";
 
 declare global {
   namespace Phaser.GameObjects {
@@ -86,7 +87,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  update(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
+  update(cursors: Phaser.Types.Input.Keyboard.CursorKeys, signsLayer: Phaser.Tilemaps.ObjectLayer) {
     if (this.healthState === HealthState.DAMAGE || this.healthState === HealthState.DEAD) return
     if (!cursors) return;
 
@@ -96,30 +97,33 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     const rightDown = cursors.right?.isDown
     const upDown = cursors.up?.isDown
     const downDown = cursors.down?.isDown
+    const spaceDown = cursors.down?.isDown
 
+    let currentDirection = Direction.NONE
 
     if (leftDown) {
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(-speed, 0);
       this.scaleX = -1;
       this.body?.offset.setTo(24, 8);
+      currentDirection = Direction.LEFT
 
     } else if (rightDown) {
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(speed, 0);
       this.scaleX = 1;
       this.body?.offset.setTo(8, 8);
+      currentDirection = Direction.RIGHT
 
     } else if (upDown) {
       this.anims.play(`run-${this.selectedSkin}`);
       this.setVelocity(0, -speed);
+      currentDirection = Direction.UP
 
     } else if (downDown) {
       this.anims.play(`run-${this.selectedSkin}`);
       this.setVelocity(0, speed);
-
-    } else if (cursors.space?.isDown && this.activeChest) {
-      this.activeChest.open()
+      currentDirection = Direction.DOWN
 
     } else {
       this.anims.play(`idle-${this.selectedSkin}`);
@@ -128,6 +132,19 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
     if (leftDown || rightDown || upDown || downDown) {
       this.activeChest = undefined
+    }
+
+    if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
+      console.log("space just down")
+      const coordinate = { x: this.x, y: this.y }
+      const targetPosition = getTargetPosition(coordinate, currentDirection)
+
+      const nearbySign = signsLayer.objects.filter(sign => {
+        if (!sign.x || !sign.y) return
+
+        return sign.x === targetPosition.x && sign.y - TILE_SIZE === targetPosition.y
+      })
+      console.log(nearbySign)
     }
   }
 

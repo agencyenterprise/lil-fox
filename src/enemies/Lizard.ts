@@ -1,11 +1,5 @@
+import { Direction } from '@/utils/gridUtils'
 import Phaser from 'phaser'
-
-enum Direction {
-  UP,
-  DOWN,
-  LEFT,
-  RIGHT,
-}
 
 const randomDirection = (exclude: Direction) => {
   let newDirection = Phaser.Math.Between(0, 3)
@@ -15,7 +9,6 @@ const randomDirection = (exclude: Direction) => {
   }
 
   return newDirection
-
 }
 
 export default class Lizard extends Phaser.Physics.Arcade.Sprite {
