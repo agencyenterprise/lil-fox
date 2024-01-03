@@ -1,7 +1,7 @@
+import { animateText } from "@/utils/textUtils"
 import Phaser from "phaser"
 
 const UI_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
-  fontFamily: 'Arial',
   color: 'black',
   fontSize: '10px',
   wordWrap: { width: 0 },
@@ -37,7 +37,7 @@ export class Dialog {
       .setStrokeStyle(3, 0x905ac2, 1)
     this.container = this.scene.add.container(0, 0, [panel])
 
-    this.uiText = this.scene.add.text(18, 12, "FALA TU CAMARADA", {
+    this.uiText = this.scene.add.text(18, 12, "", {
       ...UI_TEXT_STYLE,
       ...{ wordWrap: { width: this.width - 18 } },
     })
@@ -48,22 +48,41 @@ export class Dialog {
     this.hideDialogModal()
   }
 
-  showDialogModal(content: string) {
+  showDialogModal(messages: string[]) {
+    this.messagesToShow = [...messages]
+
     this.height - 10
     this.container.setPosition(50, 185)
+    this.userInputCursorTween.restart()
     this.container.setAlpha(1)
     this._isVisible = true
+
+    this.showNextMessage();
+  }
+
+  showNextMessage() {
+    if (this.messagesToShow.length === 0) return
+
+    this.uiText.setText("").setAlpha(1)
+    animateText(this.scene, this.uiText, this.messagesToShow.shift()!, {
+      delay: 50,
+      callback: () => {
+        this.textAnimationPlaying = false
+      }
+    })
+    this.textAnimationPlaying = true
   }
 
   hideDialogModal() {
     this.container.setAlpha(0)
+    this.userInputCursorTween.pause()
     this._isVisible = false
   }
 
   createPlayerInputCursor() {
-    const y = this.height - 24
-    this.userInputCursor = this.scene.add.image(this.width - 16, y, 'cursor')
-    this.userInputCursor.setAngle(90).setScale(3, 1.5)
+    const y = this.height - 12
+    this.userInputCursor = this.scene.add.image(this.width - 8, y, 'cursor')
+    this.userInputCursor.setAngle(90).setScale(3, 1)
 
     this.userInputCursorTween = this.scene.add.tween({
       delay: 0,
@@ -72,7 +91,7 @@ export class Dialog {
       y: {
         from: y,
         start: y,
-        to: y + 6,
+        to: y + 2,
       },
       targets: this.userInputCursor,
     })
@@ -83,5 +102,13 @@ export class Dialog {
 
   get isVisible() {
     return this._isVisible
+  }
+
+  get isAnimationPlaying() {
+    return this.textAnimationPlaying
+  }
+
+  get moreMessagesToShow() {
+    return this.messagesToShow.length > 0
   }
 }

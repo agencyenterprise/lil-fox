@@ -36,6 +36,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
   private selectedSkin: Skin = Skin.BLUE
   private healthState = HealthState.IDLE
   private damageTime = 0
+  private isPlayerMovementLocked = false
 
   private _health = 5
   private _hunger = 5
@@ -67,7 +68,10 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       loop: true,
     });
 
-    // this.setScale(0.9)
+    sceneEvents.on('lock-player-movement', this.handleLockPlayerMovement, this)
+    scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      sceneEvents.off('lock-player-movement', this.handleLockPlayerMovement, this)
+    })
   }
 
   protected preUpdate(time: number, delta: number): void {
@@ -92,12 +96,36 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     if (this.healthState === HealthState.DAMAGE || this.healthState === HealthState.DEAD) return
     if (!cursors) return;
 
+    if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
+      const coordinate = { x: this.x, y: this.y }
+      const targetPosition = getTargetPosition(coordinate, this.currentDirection)
+
+      const nearbySign = signsLayer.objects.find(sign => {
+        if (!sign.x || !sign.y) return
+
+        console.log({
+          signX: sign.x,
+          signY: sign.y,
+        })
+
+        return sign.x >= targetPosition.x - 12 && sign.x <= targetPosition.x + 12 && sign.y >= targetPosition.y - 12 && sign.y <= targetPosition.y + 12
+      })
+
+      if (nearbySign) {
+        const props = nearbySign.properties
+        const msg = props.find((p: any) => p.name === 'message')?.value
+        sceneEvents.emit('show-dialog', msg.split(";"))
+      }
+    }
+
     const speed = 100
 
     const leftDown = cursors.left?.isDown
     const rightDown = cursors.right?.isDown
     const upDown = cursors.up?.isDown
     const downDown = cursors.down?.isDown
+
+    if (this.isPlayerMovementLocked) return
 
     if (leftDown) {
       this.anims.play(`run-${this.selectedSkin}`, true);
@@ -131,35 +159,12 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     if (leftDown || rightDown || upDown || downDown) {
       this.activeChest = undefined
     }
+  }
 
-    if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
-      sceneEvents.emit('show-dialog', "oiii")
-
-      const coordinate = { x: this.x, y: this.y }
-      const targetPosition = getTargetPosition(coordinate, this.currentDirection)
-
-      console.log({ coordinate })
-      console.log({ targetPosition })
-
-      const nearbySign = signsLayer.objects.find(sign => {
-        if (!sign.x || !sign.y) return
-
-        console.log({
-          signX: sign.x,
-          signY: sign.y,
-        })
-
-        return sign.x >= targetPosition.x - 12 && sign.x <= targetPosition.x + 12 && sign.y >= targetPosition.y - 12 && sign.y <= targetPosition.y + 12
-      })
-
-      console.log(nearbySign)
-
-      if (nearbySign) {
-        const props = nearbySign.properties
-        const msg = props.find((p: any) => p.name === 'message')?.value
-        sceneEvents.emit('show-dialog', msg)
-      }
-    }
+  handleLockPlayerMovement(lock: boolean) {
+    console.log("lock player movement")
+    console.log({lock})
+    this.isPlayerMovementLocked = lock
   }
 
   handleDamage(dir: Phaser.Math.Vector2) {

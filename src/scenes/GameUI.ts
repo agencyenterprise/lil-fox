@@ -135,8 +135,23 @@ export default class GameUI extends Phaser.Scene {
     })
   }
 
-  showDialog(content: string) {
+  showDialog(messages: string[]) {
+    if (this.dialogUi.isAnimationPlaying) return
+
+    if (this.dialogUi.isVisible && !this.dialogUi.moreMessagesToShow) {
+      this.dialogUi.hideDialogModal()
+      sceneEvents.emit('lock-player-movement', false)
+      return
+    }
+    
+    if (this.dialogUi.isVisible && this.dialogUi.moreMessagesToShow) {
+      this.dialogUi.showNextMessage()
+      sceneEvents.emit('lock-player-movement', true)
+      return
+    }
+    
     this.dialogUi.hideDialogModal()
-    this.dialogUi.showDialogModal(content)
+    this.dialogUi.showDialogModal(messages)
+    sceneEvents.emit('lock-player-movement', true)
   }
 }

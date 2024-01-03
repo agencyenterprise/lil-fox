@@ -2580,7 +2580,7 @@
  <objectgroup id="21" name="Signs">
   <object id="16" gid="1920" x="1248" y="576" width="16" height="16">
    <properties>
-    <property name="message" value="Oi"/>
+    <property name="message" value="Bem vindo a vila de pescadores!; Aqui temos peixes a venda e também fazemos transporte marítimo."/>
    </properties>
   </object>
  </objectgroup>
