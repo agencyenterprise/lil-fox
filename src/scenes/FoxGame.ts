@@ -7,6 +7,7 @@ import { sceneEvents } from "@/events/EventsCenter";
 import Chest from "@/items/Chest";
 import GreenArcher from "@/enemies/GreenArcher";
 import { createArcherAnims } from "@/anims/GreenArcherAnims";
+import { Dialog } from "@/ui/Dialog";
 
 export class FoxGame extends Phaser.Scene {
   constructor() {
@@ -34,6 +35,9 @@ export class FoxGame extends Phaser.Scene {
 
   private playerLizardsCollider?: Phaser.Physics.Arcade.Collider
   private playerArrowsCollider?: Phaser.Physics.Arcade.Collider
+
+  private dialogUi: Dialog
+
 
   preload() {
     this.loadSkinSpriteSheet(Skin.DEFAULT)
@@ -72,6 +76,7 @@ export class FoxGame extends Phaser.Scene {
     this.physics.world.enableBody(this.character, Phaser.Physics.Arcade.DYNAMIC_BODY)
 
     this.cameras.main.startFollow(this.character, true, 0.05, 0.05);
+    this.dialogUi = new Dialog(this, 1280);
 
     this.lizards = this.physics.add.group({
       classType: Lizard,

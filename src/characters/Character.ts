@@ -133,6 +133,8 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     }
 
     if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
+      sceneEvents.emit('show-dialog', "oiii")
+
       const coordinate = { x: this.x, y: this.y }
       const targetPosition = getTargetPosition(coordinate, this.currentDirection)
 
@@ -150,10 +152,12 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
         return sign.x >= targetPosition.x - 12 && sign.x <= targetPosition.x + 12 && sign.y >= targetPosition.y - 12 && sign.y <= targetPosition.y + 12
       })
 
+      console.log(nearbySign)
+
       if (nearbySign) {
         const props = nearbySign.properties
         const msg = props.find((p: any) => p.name === 'message')?.value
-        console.log({ msg })
+        sceneEvents.emit('show-dialog', msg)
       }
     }
   }

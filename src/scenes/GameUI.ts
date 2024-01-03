@@ -2,6 +2,7 @@ import Phaser from "phaser";
 
 import { sceneEvents } from "../events/EventsCenter";
 import SettingsMenu from "./SettingsMenu";
+import { Dialog } from "@/ui/Dialog";
 
 export default class GameUI extends Phaser.Scene {
 
@@ -9,12 +10,14 @@ export default class GameUI extends Phaser.Scene {
 
   private hearts: Phaser.GameObjects.Group
   private berries: Phaser.GameObjects.Group
+  private dialogUi: Dialog
 
   constructor() {
     super("game-ui");
   }
 
   create() {
+    this.dialogUi = new Dialog(this, 310)
     // this.settingsMenu = new SettingsMenu(this)
 
     this.hearts = this.add.group({
@@ -55,11 +58,33 @@ export default class GameUI extends Phaser.Scene {
       sceneEvents.off('player-hunger-changed', this.handlePlayerHungerChanged, this)
     })
 
+    sceneEvents.on('show-dialog', this.showDialog, this)
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      sceneEvents.off('show-dialog', () => this.dialogUi.hideDialogModal(), this)
+    })
 
-    const width = this.scale.width
+
+    // const padding = 90
+    // const width = 1280 - padding * 2
+    // const height = 124
+
+    // const panel = this.add.rectangle(
+    //   0,
+    //   0,
+    //   width,
+    //   height,
+    //   0xede4f3,
+    //   0.9
+    // ).setOrigin(0)
+    //   .setStrokeStyle(8, 0x905ac2, 1)
+    // const c = this.add.container(0, 0, [panel])
+
+    // c.setPosition(0, 0)
+    // c.setAlpha(1)
 
 
 
+    // const width = this.scale.width
     // const settingsButton = this.add.image(width - 20, 20, 'small-button').setScale(0.7)
     // console.log({
     //   posx: settingsButton.x - settingsButton.width * 0.5,
@@ -108,5 +133,10 @@ export default class GameUI extends Phaser.Scene {
         berry.setTexture('berry-empty')
       }
     })
+  }
+
+  showDialog(content: string) {
+    this.dialogUi.hideDialogModal()
+    this.dialogUi.showDialogModal(content)
   }
 }
