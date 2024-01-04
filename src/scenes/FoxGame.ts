@@ -58,7 +58,6 @@ export class FoxGame extends Phaser.Scene {
     createChestAnims(this.anims)
 
     const map = this.make.tilemap({ key: 'map' });
-    
     this.createLayers(map)
 
     // const debugGraphics = this.add.graphics().setAlpha(0.75);

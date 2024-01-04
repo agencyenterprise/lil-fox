@@ -5,6 +5,7 @@ import { lineaTestnet } from '@wagmi/core/chains'
 import { MutableRefObject } from 'react';
 import Preloader from '@/scenes/Preloader';
 import GameUI from '@/scenes/GameUI';
+import QuizScene from '@/scenes/QuizScene';
 import { Plugin as NineSlicePlugin } from 'phaser3-nineslice'
 
 type NotInitiatedGameProps = {
@@ -37,13 +38,13 @@ export function NotInitiatedGame({ setInitiated, game }: NotInitiatedGameProps) 
             default: 'arcade',
             arcade: {
               gravity: { y: 0 },
-              debug: true
+              // debug: true
             },
           },
           plugins: {
             global: [NineSlicePlugin.DefaultCfg]
           },
-          scene: [Preloader, FoxGame, GameUI],
+          scene: [Preloader, FoxGame, GameUI, QuizScene],
           scale: {
             zoom: 2,
           },
