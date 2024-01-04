@@ -1,11 +1,11 @@
 export const TILE_SIZE = 16
 
 export enum Direction {
-  UP,
-  DOWN,
-  LEFT,
-  RIGHT,
-  NONE,
+  UP = "UP",
+  DOWN = "DOWN",
+  LEFT = "LEFT",
+  RIGHT = "RIGHT",
+  NONE = "NONE",
 }
 
 export type Coordinate = {
@@ -20,7 +20,7 @@ export function getTargetPosition(currentPosition: Coordinate, direction: Direct
   console.log(Direction.UP)
   console.log(Direction.LEFT)
   console.log(Direction.RIGHT)
-  
+
   const targetPosition = { ...currentPosition };
   switch (direction) {
     case Direction.DOWN:
@@ -38,7 +38,7 @@ export function getTargetPosition(currentPosition: Coordinate, direction: Direct
     case Direction.NONE:
       break;
     default:
-      throw("Invalid direction")
+      throw ("Invalid direction")
   }
   return targetPosition;
 }

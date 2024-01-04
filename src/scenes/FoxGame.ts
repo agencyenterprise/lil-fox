@@ -129,6 +129,14 @@ export class FoxGame extends Phaser.Scene {
       callbackScope: this,
       loop: true,
     });
+
+
+
+    this.input.on('pointerup', () => {
+      console.log("yyyy")
+      this.scene.pause();
+      this.scene.launch('QuizScene');
+    }, this);
   }
 
   private spawnFood() {
