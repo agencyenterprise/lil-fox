@@ -22,7 +22,6 @@ export default class QuizScene extends Phaser.Scene {
   }
 
   init(data: any) {
-    console.log('init', data);
     this.messagesToShow = data.messages
   }
 
@@ -77,9 +76,6 @@ export default class QuizScene extends Phaser.Scene {
       targets: this.readMoreInputCursor,
     })
 
-    // this.userInputCursorTween.pause()
-
-
     this.cursorKeys = this.input.keyboard!.createCursorKeys();
 
     this.showNextMessage()
@@ -87,15 +83,15 @@ export default class QuizScene extends Phaser.Scene {
 
   update() {
     const wasSpaceKeyPressed = Phaser.Input.Keyboard.JustDown(this.cursorKeys.space);
-    if (wasSpaceKeyPressed) {
+
+    if (this.messagesToShow.length > 0 && wasSpaceKeyPressed) {
       this.showNextMessage()
       return;
     }
 
-    // if (Phaser.Input.Keyboard.JustDown(this.#cursorKeys.shift)) {
-    //   this.#battleMenu.handlePlayerInput('CANCEL');
-    //   return;
-    // }
+    if (this.messagesToShow.length === 0 && wasSpaceKeyPressed) { 
+      this.chooseOption()
+    }
 
     let selectedDirection: Direction = Direction.NONE;
     if (this.cursorKeys.left.isDown) {
@@ -133,6 +129,10 @@ export default class QuizScene extends Phaser.Scene {
       this.readMoreInputCursor.destroy()
       this.readMoreCursorTween.remove()
     }
+  }
+
+  chooseOption() {
+    console.log("Option chosen: ", this.selectedOption)
   }
 
   handleInput(input: Direction) {
