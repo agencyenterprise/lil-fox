@@ -139,6 +139,9 @@ export default class QuizScene extends Phaser.Scene {
       this.scene.pause()
       this.scene.resume("LilFox")
     } else {
+      this.scene.setVisible(false)
+      this.scene.pause()
+      this.scene.start("LilFox")
     }
   }
 
