@@ -8,8 +8,6 @@ const UI_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
   wordWrap: { width: 0 },
 })
 export default class QuizScene extends Phaser.Scene {
-
-
   private cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys
   private menuCursorImage: Phaser.GameObjects.Image
   private readMoreInputCursor: Phaser.GameObjects.Image
@@ -17,8 +15,7 @@ export default class QuizScene extends Phaser.Scene {
   private textAnimationPlaying: boolean = false
   private uiText: Phaser.GameObjects.Text
   private selectedOption: number = 1;
-  private messagesToShow: string[] = [...texts]
-  test: string = "test"
+  private messagesToShow: string[]
 
   constructor() {
     super({ key: 'QuizScene' });
@@ -26,6 +23,7 @@ export default class QuizScene extends Phaser.Scene {
 
   init(data: any) {
     console.log('init', data);
+    this.messagesToShow = data.messages
   }
 
   create() {
@@ -41,7 +39,7 @@ export default class QuizScene extends Phaser.Scene {
     ).setOrigin(0)
       .setStrokeStyle(3, 0x905ac2, 1)
 
-    this.uiText = this.add.text(18, 12, texts[0], {
+    this.uiText = this.add.text(18, 12, "", {
       ...UI_TEXT_STYLE,
       ...{ wordWrap: { width: width - 18 } },
     })
@@ -223,8 +221,3 @@ export default class QuizScene extends Phaser.Scene {
     }
   }
 }
-
-const texts = [
-  "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.",
-  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sit amet pellentesque mauris, ultricies imperdiet erat. Vestibulum sollicitudin condimentum sapien, et eleifend quam. Donec vitae tellus sed justo vulputate tincidunt. Pellentesque pellentesque elit quis ante mollis, ornare malesuada ipsum ullamcorper. Phasellus luctus purus nec purus porttitor, eu finibus ante fringilla. In posuere sagittis nisl efficitur tempus. Vivamus auctor erat vitae pellentesque consectetur. Praesent et nisi elit. Phasellus dictum ex nec ex tristique molestie. Phasellus ultrices mauris vitae nisi lobortis, a pharetra orci dapibus. Proin in ex et eros porttitor vulputate sed eu metus. Nulla facilisi. Proin ut erat mi."
-]
