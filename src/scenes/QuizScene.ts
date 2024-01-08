@@ -12,11 +12,13 @@ export default class QuizScene extends Phaser.Scene {
   private menuCursorImage: Phaser.GameObjects.Image
   private readMoreInputCursor: Phaser.GameObjects.Image
   private readMoreCursorTween: Phaser.Tweens.Tween
+  private optionsContainer: Phaser.GameObjects.Container
   private textAnimationPlaying: boolean = false
   private uiText: Phaser.GameObjects.Text
   private selectedOption: number = 1;
   private messagesToShow: string[]
   private correctAlternative: number
+  private showingFinalMessage: boolean = false
 
   constructor() {
     super({ key: 'QuizScene' });
@@ -57,10 +59,12 @@ export default class QuizScene extends Phaser.Scene {
 
 
     const halfWidth = width / 2
-    this.add.text(halfWidth - 60, height - 35, "OPTION 1", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5)
-    this.add.text(halfWidth - 60, height - 15, "OPTION 2", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5)
-    this.add.text(halfWidth + 40, height - 35, "OPTION 3", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5)
-    this.add.text(halfWidth + 40, height - 15, "OPTION 4", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5)
+    this.optionsContainer = this.add.container(0, 0, [
+      this.add.text(halfWidth - 60, height - 35, "OPTION 1", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5),
+      this.add.text(halfWidth - 60, height - 15, "OPTION 2", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5),
+      this.add.text(halfWidth + 40, height - 35, "OPTION 3", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5),
+      this.add.text(halfWidth + 40, height - 15, "OPTION 4", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5),
+    ])
 
     const y = height - 63
     this.readMoreInputCursor = this.add.image(width - 14, y, 'cursor')
@@ -85,14 +89,20 @@ export default class QuizScene extends Phaser.Scene {
 
   update() {
     const wasSpaceKeyPressed = Phaser.Input.Keyboard.JustDown(this.cursorKeys.space);
+    
+    if (this.textAnimationPlaying) return
 
     if (this.messagesToShow.length > 0 && wasSpaceKeyPressed) {
       this.showNextMessage()
       return;
     }
 
+    if (this.showingFinalMessage && wasSpaceKeyPressed) {
+      this.handleFinalInput()
+    }
+
     if (this.messagesToShow.length === 0 && wasSpaceKeyPressed) {
-      this.chooseOption()
+      this.showFinalMessage()
     }
 
     let selectedDirection: Direction = Direction.NONE;
@@ -112,7 +122,7 @@ export default class QuizScene extends Phaser.Scene {
   }
 
   showNextMessage() {
-    if (this.messagesToShow.length === 0 || this.textAnimationPlaying) return
+    if (this.messagesToShow.length === 0) return
 
     this.uiText.setText("").setAlpha(1)
     animateText(this, this.uiText, this.messagesToShow.shift()!, {
@@ -133,7 +143,43 @@ export default class QuizScene extends Phaser.Scene {
     }
   }
 
-  chooseOption() {
+  showFinalMessage() {
+    if (this.textAnimationPlaying) return
+
+    const { width, height } = this.scale
+    const halfWidth = width / 2
+
+    this.optionsContainer.destroy()
+    this.add.text(halfWidth, height - 25, "OK", { ...UI_TEXT_STYLE }).setOrigin(0.5, 0.5)
+    this.menuCursorImage.setPosition(halfWidth - 13, height - 25)
+
+    if (this.selectedOption === this.correctAlternative) {
+      this.uiText.setText("").setAlpha(1)
+      animateText(this, this.uiText, "Congratulations you choose the correct answer!", {
+        delay: 10,
+        callback: () => {
+          this.textAnimationPlaying = false
+        }
+      })
+      this.textAnimationPlaying = true
+
+    } else {
+      this.uiText.setText("").setAlpha(1)
+      animateText(this, this.uiText, "You choose the wrong answer :(\nGo back to the beginning and try again.", {
+        delay: 10,
+        callback: () => {
+          this.textAnimationPlaying = false
+        }
+      })
+      this.textAnimationPlaying = true
+    }
+
+    this.showingFinalMessage = true
+  }
+
+  handleFinalInput() {
+    if (this.textAnimationPlaying) return
+
     if (this.selectedOption === this.correctAlternative) {
       this.scene.setVisible(false)
       this.scene.pause()
