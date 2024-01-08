@@ -92,7 +92,11 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  update(cursors: Phaser.Types.Input.Keyboard.CursorKeys, signsLayer: Phaser.Tilemaps.ObjectLayer) {
+  update(
+    cursors: Phaser.Types.Input.Keyboard.CursorKeys,
+    signsLayer: Phaser.Tilemaps.ObjectLayer,
+    scene: Phaser.Scenes.ScenePlugin
+  ) {
     if (this.healthState === HealthState.DAMAGE || this.healthState === HealthState.DEAD) return
     if (!cursors) return;
 
@@ -102,18 +106,21 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
       const nearbySign = signsLayer.objects.find(sign => {
         if (!sign.x || !sign.y) return
-
-        console.log({
-          signX: sign.x,
-          signY: sign.y,
-        })
-
         return sign.x >= targetPosition.x - 12 && sign.x <= targetPosition.x + 12 && sign.y >= targetPosition.y - 12 && sign.y <= targetPosition.y + 12
       })
 
       if (nearbySign) {
         const props = nearbySign.properties
         const msg = props.find((p: any) => p.name === 'message')?.value
+        const isFinishLevelSign = props.find((p: any) => p.name === 'isFinishLevelSign')?.value
+
+        if (isFinishLevelSign) {
+          scene.pause();
+          const quizScene = scene.start('QuizScene', { messages: msg.split(";") });
+
+        }
+
+
         sceneEvents.emit('show-dialog', msg.split(";"))
       }
     }
@@ -162,8 +169,6 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
   }
 
   handleLockPlayerMovement(lock: boolean) {
-    console.log("lock player movement")
-    console.log({lock})
     this.isPlayerMovementLocked = lock
   }
 

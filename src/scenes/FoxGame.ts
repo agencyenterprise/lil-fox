@@ -107,11 +107,6 @@ export class FoxGame extends Phaser.Scene {
       }
     })
 
-    map.getObjectLayer('Signs')!.objects.forEach(sign => {
-      console.log({ sign })
-    })
-
-
     this.addColliders()
 
     this.foods = this.add.group({
@@ -129,14 +124,6 @@ export class FoxGame extends Phaser.Scene {
       callbackScope: this,
       loop: true,
     });
-
-
-
-    this.input.on('pointerup', () => {
-      console.log("yyyy")
-      this.scene.pause();
-      this.scene.launch('QuizScene');
-    }, this);
   }
 
   private spawnFood() {
@@ -215,7 +202,7 @@ export class FoxGame extends Phaser.Scene {
   }
 
   update(t: number, dt: number) {
-    this.character.update(this.cursors, this.signsObjects)
+    this.character.update(this.cursors, this.signsObjects, this.scene)
   }
 
   createLayers(map: Phaser.Tilemaps.Tilemap) {

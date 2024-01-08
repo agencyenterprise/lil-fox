@@ -14,13 +14,6 @@ export type Coordinate = {
 }
 
 export function getTargetPosition(currentPosition: Coordinate, direction: Direction) {
-  console.log("getTargetPosition")
-  console.log({ direction })
-  console.log(Direction.DOWN)
-  console.log(Direction.UP)
-  console.log(Direction.LEFT)
-  console.log(Direction.RIGHT)
-
   const targetPosition = { ...currentPosition };
   switch (direction) {
     case Direction.DOWN:

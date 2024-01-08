@@ -1,4 +1,6 @@
 import { Direction } from "@/utils/gridUtils"
+import { animateText } from "@/utils/textUtils";
+import { text } from "stream/consumers";
 
 const UI_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
   color: 'black',
@@ -10,10 +12,20 @@ export default class QuizScene extends Phaser.Scene {
 
   private cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys
   private menuCursorImage: Phaser.GameObjects.Image
+  private readMoreInputCursor: Phaser.GameObjects.Image
+  private readMoreCursorTween: Phaser.Tweens.Tween
+  private textAnimationPlaying: boolean = false
+  private uiText: Phaser.GameObjects.Text
   private selectedOption: number = 1;
+  private messagesToShow: string[] = [...texts]
+  test: string = "test"
 
   constructor() {
     super({ key: 'QuizScene' });
+  }
+
+  init(data: any) {
+    console.log('init', data);
   }
 
   create() {
@@ -29,7 +41,7 @@ export default class QuizScene extends Phaser.Scene {
     ).setOrigin(0)
       .setStrokeStyle(3, 0x905ac2, 1)
 
-    this.add.text(18, 12, "FALA TU CAMARADINHA", {
+    this.uiText = this.add.text(18, 12, texts[0], {
       ...UI_TEXT_STYLE,
       ...{ wordWrap: { width: width - 18 } },
     })
@@ -45,25 +57,42 @@ export default class QuizScene extends Phaser.Scene {
       .setStrokeStyle(3, 0x905ac2, 1)
 
 
-    const container = this.add.container(0, 0)
-
     const halfWidth = width / 2
     this.add.text(halfWidth - 60, height - 35, "OPTION 1", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5)
     this.add.text(halfWidth - 60, height - 15, "OPTION 2", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5)
     this.add.text(halfWidth + 40, height - 35, "OPTION 3", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5)
     this.add.text(halfWidth + 40, height - 15, "OPTION 4", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5)
 
-    this.menuCursorImage = this.add.image(halfWidth - 90, height - 35, 'cursor', 0).setOrigin(0.5, 0.5)
+    const y = height - 63
+    this.readMoreInputCursor = this.add.image(width - 14, y, 'cursor')
+    this.readMoreInputCursor.setAngle(90).setScale(3, 2)
+
+    this.readMoreCursorTween = this.add.tween({
+      delay: 0,
+      duration: 500,
+      repeat: -1,
+      y: {
+        from: y,
+        start: y,
+        to: y + 2,
+      },
+      targets: this.readMoreInputCursor,
+    })
+
+    // this.userInputCursorTween.pause()
+
 
     this.cursorKeys = this.input.keyboard!.createCursorKeys();
+
+    this.showNextMessage()
   }
 
   update() {
     const wasSpaceKeyPressed = Phaser.Input.Keyboard.JustDown(this.cursorKeys.space);
-    // if (wasSpaceKeyPressed) {
-    //   this.#battleMenu.handlePlayerInput('OK');
-    //   return;
-    // }
+    if (wasSpaceKeyPressed) {
+      this.showNextMessage()
+      return;
+    }
 
     // if (Phaser.Input.Keyboard.JustDown(this.#cursorKeys.shift)) {
     //   this.#battleMenu.handlePlayerInput('CANCEL');
@@ -86,6 +115,27 @@ export default class QuizScene extends Phaser.Scene {
     }
   }
 
+  showNextMessage() {
+    if (this.messagesToShow.length === 0 || this.textAnimationPlaying) return
+
+    this.uiText.setText("").setAlpha(1)
+    animateText(this, this.uiText, this.messagesToShow.shift()!, {
+      delay: 10,
+      callback: () => {
+        this.textAnimationPlaying = false
+      }
+    })
+    this.textAnimationPlaying = true
+
+    if (this.messagesToShow.length === 0) {
+      const { width, height } = this.scale
+      const halfWidth = width / 2
+      this.menuCursorImage = this.add.image(halfWidth - 90, height - 35, 'cursor', 0).setOrigin(0.5, 0.5)
+
+      this.readMoreInputCursor.destroy()
+      this.readMoreCursorTween.remove()
+    }
+  }
 
   handleInput(input: Direction) {
     if (this.selectedOption === 1) {
@@ -173,3 +223,8 @@ export default class QuizScene extends Phaser.Scene {
     }
   }
 }
+
+const texts = [
+  "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur.",
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur sit amet pellentesque mauris, ultricies imperdiet erat. Vestibulum sollicitudin condimentum sapien, et eleifend quam. Donec vitae tellus sed justo vulputate tincidunt. Pellentesque pellentesque elit quis ante mollis, ornare malesuada ipsum ullamcorper. Phasellus luctus purus nec purus porttitor, eu finibus ante fringilla. In posuere sagittis nisl efficitur tempus. Vivamus auctor erat vitae pellentesque consectetur. Praesent et nisi elit. Phasellus dictum ex nec ex tristique molestie. Phasellus ultrices mauris vitae nisi lobortis, a pharetra orci dapibus. Proin in ex et eros porttitor vulputate sed eu metus. Nulla facilisi. Proin ut erat mi."
+]
