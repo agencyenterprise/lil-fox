@@ -234,7 +234,10 @@ export class FoxGame extends Phaser.Scene {
   addColliders() {
     this.treesLayer?.setCollisionByProperty({ collides: true });
     this.constructionsLayer?.setCollisionByProperty({ collides: true });
+    this.terrainLayer?.setCollisionByProperty({ collides: true });
 
+    this.physics.add.collider(this.character, this.terrainLayer);
+    this.physics.add.collider(this.lizards, this.terrainLayer);
     this.physics.add.collider(this.character, this.treesLayer);
     this.physics.add.collider(this.lizards, this.treesLayer);
     this.physics.add.collider(this.character, this.constructionsLayer);
