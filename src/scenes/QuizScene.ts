@@ -16,6 +16,7 @@ export default class QuizScene extends Phaser.Scene {
   private uiText: Phaser.GameObjects.Text
   private selectedOption: number = 1;
   private messagesToShow: string[]
+  private correctAlternative: number
 
   constructor() {
     super({ key: 'QuizScene' });
@@ -23,6 +24,7 @@ export default class QuizScene extends Phaser.Scene {
 
   init(data: any) {
     this.messagesToShow = data.messages
+    this.correctAlternative = data.correctAlternative
   }
 
   create() {
@@ -89,7 +91,7 @@ export default class QuizScene extends Phaser.Scene {
       return;
     }
 
-    if (this.messagesToShow.length === 0 && wasSpaceKeyPressed) { 
+    if (this.messagesToShow.length === 0 && wasSpaceKeyPressed) {
       this.chooseOption()
     }
 
@@ -132,7 +134,12 @@ export default class QuizScene extends Phaser.Scene {
   }
 
   chooseOption() {
-    console.log("Option chosen: ", this.selectedOption)
+    if (this.selectedOption === this.correctAlternative) {
+      this.scene.setVisible(false)
+      this.scene.pause()
+      this.scene.resume("LilFox")
+    } else {
+    }
   }
 
   handleInput(input: Direction) {

@@ -11,7 +11,7 @@ import { Dialog } from "@/ui/Dialog";
 
 export class FoxGame extends Phaser.Scene {
   constructor() {
-    super('LilFox')
+    super({ key: 'LilFox' })
   }
 
   private mapHeight: number = 100
@@ -51,7 +51,7 @@ export class FoxGame extends Phaser.Scene {
   create() {
     this.scene.run('game-ui')
     this.scene.launch('settings-ui')
-
+    
     createCharacterAnims(this.anims)
     createArcherAnims(this.anims)
     createLizardAnims(this.anims)
@@ -202,7 +202,7 @@ export class FoxGame extends Phaser.Scene {
   }
 
   update(t: number, dt: number) {
-    this.character.update(this.cursors, this.signsObjects, this.scene)
+    this.character.update(this.cursors, this.signsObjects)
   }
 
   createLayers(map: Phaser.Tilemaps.Tilemap) {

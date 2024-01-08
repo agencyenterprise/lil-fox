@@ -32,10 +32,10 @@ Remember, the decentralized nature of blockchain provides security, but individu
 
 ;Based on the that, what is a recommended practice to secure your cryptocurrency transactions and protect against phishing attacks?
 
-A) Double-check and verify wallet addresses before initiating transactions.
+1) Double-check and verify wallet addresses before initiating transactions.
 
-B) Share your private keys with trusted friends for backup.
+2) Share your private keys with trusted friends for backup.
 
-C) Participate in ICOs without conducting research.
+3) Ignoring all emails from unknown senders.
 
-D) Keep all cryptocurrency transactions completely anonymous.
+4) Responding immediately to urgent requests in emails.

@@ -95,7 +95,6 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
   update(
     cursors: Phaser.Types.Input.Keyboard.CursorKeys,
     signsLayer: Phaser.Tilemaps.ObjectLayer,
-    scene: Phaser.Scenes.ScenePlugin
   ) {
     if (this.healthState === HealthState.DAMAGE || this.healthState === HealthState.DEAD) return
     if (!cursors) return;
@@ -111,17 +110,17 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
       if (nearbySign) {
         const props = nearbySign.properties
-        const msg = props.find((p: any) => p.name === 'message')?.value
+        const messages = props.find((p: any) => p.name === 'message')?.value.split(";")
         const isFinishLevelSign = props.find((p: any) => p.name === 'isFinishLevelSign')?.value
 
         if (isFinishLevelSign) {
-          scene.pause();
-          const quizScene = scene.start('QuizScene', { messages: msg.split(";") });
+          const correctAlternative = props.find((p: any) => p.name === 'correctAlternative')?.value
 
+          this.scene.scene.pause("LilFox");
+          this.scene.scene.launch('QuizScene', { messages, correctAlternative });
+        } else {
+          sceneEvents.emit('show-dialog', messages)
         }
-
-
-        sceneEvents.emit('show-dialog', msg.split(";"))
       }
     }
 
