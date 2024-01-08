@@ -51,7 +51,7 @@ export class FoxGame extends Phaser.Scene {
   create() {
     this.scene.run('game-ui')
     this.scene.launch('settings-ui')
-    
+
     createCharacterAnims(this.anims)
     createArcherAnims(this.anims)
     createLizardAnims(this.anims)
@@ -240,11 +240,10 @@ export class FoxGame extends Phaser.Scene {
     this.physics.add.collider(this.character, this.constructionsLayer);
     this.physics.add.collider(this.lizards, this.constructionsLayer);
     this.physics.add.collider(this.character, this.objectsLayer);
-    // this.physics.add.collider(this.lizards, this.objectsLayer);
+    this.physics.add.collider(this.lizards, this.objectsLayer);
 
     // this.physics.add.collider(this.character, chests, this.handleCharacterChestCollision, undefined, this)
     // this.physics.add.collider(this.lizards, chests)
-
 
     this.playerLizardsCollider = this.physics.add.collider(this.lizards, this.character, this.handleCharacterLizardCollision, undefined, this);
     this.playerArrowsCollider = this.physics.add.collider(this.arrows, this.character, this.handleCharacterArrowCollision, undefined, this);

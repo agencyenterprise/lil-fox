@@ -1,11 +1,12 @@
 import { Direction } from '@/utils/gridUtils'
 import Phaser from 'phaser'
 
-const randomDirection = (exclude: Direction) => {
-  let newDirection = Phaser.Math.Between(0, 3)
+export const randomDirection = (exclude: Direction): Direction => {
+  const directions = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
+  let newDirection = exclude
 
   while (newDirection === exclude) {
-    newDirection = Phaser.Math.Between(0, 3)
+    newDirection = directions[Math.floor(Math.random() * directions.length)]
   }
 
   return newDirection
