@@ -69,7 +69,7 @@ export class FoxGame extends Phaser.Scene {
 
 
     this.character = new Character(this, 850, 740, "character");
-    this.character.setSize(this.character.width * 0.5, this.character.height * 0.5)
+    this.character.setSize(this.character.width * 0.4, this.character.height * 0.4)
     this.physics.add.existing(this.character, false);
     this.add.existing(this.character);
     this.physics.world.enableBody(this.character, Phaser.Physics.Arcade.DYNAMIC_BODY)

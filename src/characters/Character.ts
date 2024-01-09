@@ -137,14 +137,14 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(-speed, 0);
       this.scaleX = -1;
-      this.body?.offset.setTo(24, 8);
+      this.body?.offset.setTo(24, 12);
       this.currentDirection = Direction.LEFT
 
     } else if (rightDown) {
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(speed, 0);
       this.scaleX = 1;
-      this.body?.offset.setTo(8, 8);
+      this.body?.offset.setTo(8, 12);
       this.currentDirection = Direction.RIGHT
 
     } else if (upDown) {
