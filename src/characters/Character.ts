@@ -108,31 +108,8 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
         return sign.x >= targetPosition.x - 12 && sign.x <= targetPosition.x + 12 && sign.y >= targetPosition.y - 12 && sign.y <= targetPosition.y + 12
       })
 
-
       if (nearbySign) {
-        const wonLevels = getWonLevels()
-        const props = nearbySign.properties
-        const messages = props.find((p: any) => p.name === 'message')?.value.split(";")
-        const isFinishLevelSign = props.find((p: any) => p.name === 'isFinishLevelSign')?.value
-        const levelNumber = props.find((p: any) => p.name === 'levelNumber')?.value
-
-        if (isFinishLevelSign) {
-          const correctAlternative = props.find((p: any) => p.name === 'correctAlternative')?.value
-
-          if (wonLevels.includes(levelNumber)) {
-            sceneEvents.emit(Events.SHOW_DIALOG, ["You already won this level!"])
-          } else {
-            this.scene.scene.pause("LilFox");
-            this.scene.scene.launch('QuizScene', { messages, correctAlternative });
-          }
-        } else {
-          console.log(levelNumber)
-          if (levelNumber && wonLevels.includes(levelNumber)) {
-            sceneEvents.emit(Events.SHOW_DIALOG, ["You already won this level!"])
-          } else {
-            sceneEvents.emit(Events.SHOW_DIALOG, messages)
-          }
-        }
+        this.handleSignInteraction(nearbySign)
       }
     }
 
@@ -176,6 +153,32 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
     if (leftDown || rightDown || upDown || downDown) {
       this.activeChest = undefined
+    }
+  }
+
+  handleSignInteraction(sign: Phaser.Types.Tilemaps.TiledObject) {
+    const wonLevels = getWonLevels()
+    const props = sign.properties
+    const messages = props.find((p: any) => p.name === 'message')?.value.split(";")
+    const isFinishLevelSign = props.find((p: any) => p.name === 'isFinishLevelSign')?.value
+    const levelNumber = props.find((p: any) => p.name === 'levelNumber')?.value
+
+    if (isFinishLevelSign) {
+      const correctAlternative = props.find((p: any) => p.name === 'correctAlternative')?.value
+
+      if (wonLevels.includes(levelNumber)) {
+        sceneEvents.emit(Events.SHOW_DIALOG, ["You already won this level!"])
+      } else {
+        this.scene.scene.pause("LilFox");
+        this.scene.scene.launch('QuizScene', { messages, correctAlternative });
+      }
+    } else {
+      console.log(levelNumber)
+      if (levelNumber && wonLevels.includes(levelNumber)) {
+        sceneEvents.emit(Events.SHOW_DIALOG, ["You already won this level!"])
+      } else {
+        sceneEvents.emit(Events.SHOW_DIALOG, messages)
+      }
     }
   }
 
