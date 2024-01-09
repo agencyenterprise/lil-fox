@@ -1,3 +1,4 @@
+import { Events, sceneEvents } from "@/events/EventsCenter";
 import { Direction } from "@/utils/gridUtils"
 import { animateText } from "@/utils/textUtils";
 import { text } from "stream/consumers";
@@ -32,30 +33,14 @@ export default class QuizScene extends Phaser.Scene {
   create() {
     const { width, height } = this.scale
 
-    this.add.rectangle(
-      0,
-      0,
-      width,
-      height,
-      0xede4f3,
-      // 0.9
-    ).setOrigin(0)
-      .setStrokeStyle(3, 0x905ac2, 1)
+    this.add.rectangle(0, 0, width, height, 0xede4f3).setOrigin(0).setStrokeStyle(3, 0x905ac2, 1)
 
     this.uiText = this.add.text(18, 12, "", {
       ...UI_TEXT_STYLE,
       ...{ wordWrap: { width: width - 18 } },
     })
 
-    this.add.rectangle(
-      0,
-      height - 50,
-      width,
-      47,
-      0x42f572,
-      // 0.9
-    ).setOrigin(0)
-      .setStrokeStyle(3, 0x905ac2, 1)
+    this.add.rectangle(0, height - 50, width, 47, 0xede4f3).setOrigin(0).setStrokeStyle(3, 0x905ac2, 1)
 
 
     const halfWidth = width / 2
@@ -184,6 +169,8 @@ export default class QuizScene extends Phaser.Scene {
       this.scene.setVisible(false)
       this.scene.pause()
       this.scene.resume("LilFox")
+      
+      sceneEvents.emit(Events.WON_LEVEL_1)
     } else {
       this.scene.setVisible(false)
       this.scene.pause()

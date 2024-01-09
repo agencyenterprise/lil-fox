@@ -1,7 +1,8 @@
 import Chest from "@/items/Chest";
 import Phaser from "phaser";
-import { sceneEvents } from "@/events/EventsCenter";
+import { Events, sceneEvents } from "@/events/EventsCenter";
 import { Direction, TILE_SIZE, getTargetPosition } from "@/utils/gridUtils";
+import { getWonLevels } from "@/utils/localStorageUtils";
 
 declare global {
   namespace Phaser.GameObjects {
@@ -31,7 +32,6 @@ enum HealthState {
 }
 
 export default class Character extends Phaser.Physics.Arcade.Sprite {
-
   private currentDirection = Direction.NONE
   private selectedSkin: Skin = Skin.BLUE
   private healthState = HealthState.IDLE
@@ -68,9 +68,9 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       loop: true,
     });
 
-    sceneEvents.on('lock-player-movement', this.handleLockPlayerMovement, this)
+    sceneEvents.on(Events.LOCK_PLAYER_MOVEMENT, this.handleLockPlayerMovement, this)
     scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      sceneEvents.off('lock-player-movement', this.handleLockPlayerMovement, this)
+      sceneEvents.off(Events.LOCK_PLAYER_MOVEMENT, this.handleLockPlayerMovement, this)
     })
   }
 
@@ -115,11 +115,16 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
         if (isFinishLevelSign) {
           const correctAlternative = props.find((p: any) => p.name === 'correctAlternative')?.value
+          const levelNumber = props.find((p: any) => p.name === 'levelNumber')?.value
 
-          this.scene.scene.pause("LilFox");
-          this.scene.scene.launch('QuizScene', { messages, correctAlternative });
+          if (getWonLevels().includes(levelNumber)) {
+            sceneEvents.emit(Events.SHOW_DIALOG, ["You already won this level!"])
+          } else {
+            this.scene.scene.pause("LilFox");
+            this.scene.scene.launch('QuizScene', { messages, correctAlternative });
+          }
         } else {
-          sceneEvents.emit('show-dialog', messages)
+          sceneEvents.emit(Events.SHOW_DIALOG, messages)
         }
       }
     }
@@ -192,13 +197,13 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
   eat() {
     this._hunger += 1
-    sceneEvents.emit('player-hunger-changed', this._hunger)
+    sceneEvents.emit(Events.PLAYER_HUNGER_CHANGED, this._hunger)
   }
 
   getHungry() {
     if (this._hunger <= 0) return
     this._hunger -= 1
-    sceneEvents.emit('player-hunger-changed', this._hunger)
+    sceneEvents.emit(Events.PLAYER_HUNGER_CHANGED, this._hunger)
   }
 
   setChest(chest: Chest) {

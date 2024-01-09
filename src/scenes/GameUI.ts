@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-import { sceneEvents } from "../events/EventsCenter";
+import { Events, sceneEvents } from "../events/EventsCenter";
 import SettingsMenu from "./SettingsMenu";
 import { Dialog } from "@/ui/Dialog";
 
@@ -48,19 +48,14 @@ export default class GameUI extends Phaser.Scene {
     })
 
 
-    sceneEvents.on('player-health-changed', this.handlePlayerHealthChanged, this)
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      sceneEvents.off('player-health-changed', this.handlePlayerHealthChanged, this)
-    })
+    sceneEvents.on(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
+    sceneEvents.on(Events.PLAYER_HUNGER_CHANGED, this.handlePlayerHungerChanged, this)
+    sceneEvents.on(Events.SHOW_DIALOG, this.showDialog, this)
 
-    sceneEvents.on('player-hunger-changed', this.handlePlayerHungerChanged, this)
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      sceneEvents.off('player-hunger-changed', this.handlePlayerHungerChanged, this)
-    })
-
-    sceneEvents.on('show-dialog', this.showDialog, this)
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      sceneEvents.off('show-dialog', () => this.dialogUi.hideDialogModal(), this)
+      sceneEvents.off(Events.PLAYER_HUNGER_CHANGED, this.handlePlayerHungerChanged, this)
+      sceneEvents.off(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
+      sceneEvents.off(Events.SHOW_DIALOG, () => this.dialogUi.hideDialogModal(), this)
     })
 
 
@@ -140,18 +135,18 @@ export default class GameUI extends Phaser.Scene {
 
     if (this.dialogUi.isVisible && !this.dialogUi.moreMessagesToShow) {
       this.dialogUi.hideDialogModal()
-      sceneEvents.emit('lock-player-movement', false)
+      sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, false)
       return
     }
-    
+
     if (this.dialogUi.isVisible && this.dialogUi.moreMessagesToShow) {
       this.dialogUi.showNextMessage()
-      sceneEvents.emit('lock-player-movement', true)
+      sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, true)
       return
     }
-    
+
     this.dialogUi.hideDialogModal()
     this.dialogUi.showDialogModal(messages)
-    sceneEvents.emit('lock-player-movement', true)
+    sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, true)
   }
 }

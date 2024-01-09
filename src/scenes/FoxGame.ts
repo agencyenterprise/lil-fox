@@ -3,11 +3,12 @@ import { createCharacterAnims } from "@/anims/CharacterAnims";
 import { createChestAnims } from "@/anims/TreasureAnims";
 import Lizard from "@/enemies/Lizard";
 import Character, { Skin } from "@/characters/Character";
-import { sceneEvents } from "@/events/EventsCenter";
+import { Events, sceneEvents } from "@/events/EventsCenter";
 import Chest from "@/items/Chest";
 import GreenArcher from "@/enemies/GreenArcher";
 import { createArcherAnims } from "@/anims/GreenArcherAnims";
 import { Dialog } from "@/ui/Dialog";
+import { getWonLevels } from "@/utils/localStorageUtils";
 
 export class FoxGame extends Phaser.Scene {
   constructor() {
@@ -49,6 +50,8 @@ export class FoxGame extends Phaser.Scene {
   }
 
   create() {
+    const wonLevels = getWonLevels()
+
     this.scene.run('game-ui')
     this.scene.launch('settings-ui')
 
@@ -99,6 +102,7 @@ export class FoxGame extends Phaser.Scene {
       const y = enemy.y! + enemy.height! * 0.5
       switch (enemy.name) {
         case 'lizard':
+          if (wonLevels.includes(1)) break
           this.lizards.get(x, y, 'lizard')
           break
         case 'green_archer':
@@ -124,6 +128,8 @@ export class FoxGame extends Phaser.Scene {
       callbackScope: this,
       loop: true,
     });
+
+    this.createEventListeners()
   }
 
   private spawnFood() {
@@ -171,7 +177,7 @@ export class FoxGame extends Phaser.Scene {
 
     this.character.handleDamage(dir)
 
-    sceneEvents.emit('player-health-changed', this.character.health)
+    sceneEvents.emit(Events.PLAYER_HEALTH_CHANGED, this.character.health)
 
     if (this.character.health <= 0) {
       this.playerLizardsCollider?.destroy()
@@ -191,7 +197,7 @@ export class FoxGame extends Phaser.Scene {
 
     this.character.handleDamage(dir)
 
-    sceneEvents.emit('player-health-changed', this.character.health)
+    sceneEvents.emit(Events.PLAYER_HEALTH_CHANGED, this.character.health)
 
     if (this.character.health <= 0) {
       this.playerLizardsCollider?.destroy()
@@ -218,9 +224,6 @@ export class FoxGame extends Phaser.Scene {
     this.objectsLayer = map.createLayer('Objects', tileset1!)!;
 
     this.signsObjects = map.getObjectLayer('Signs')!
-
-
-
 
     const chests = this.physics.add.staticGroup({
       classType: Chest
@@ -254,6 +257,32 @@ export class FoxGame extends Phaser.Scene {
 
   changeSkin(skin: Skin) {
     this.character.skin = skin
+  }
+
+  createEventListeners() {
+    sceneEvents.on(Events.WON_LEVEL_1, this.handleWinLevel1, this)
+
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      sceneEvents.off(Events.WON_LEVEL_1, this.handleWinLevel1, this)
+    })
+  }
+
+  createLevel1() {
+    this.lizards = this.physics.add.group({
+      classType: Lizard,
+      createCallback: (go) => {
+        const lizGo = go as Lizard
+        if (!lizGo.body) return
+        lizGo.body.onCollide = true
+        lizGo.setDepth(2);
+      }
+    })
+  }
+
+  handleWinLevel1() {
+    this.lizards.clear(true, true) 
+    const wonLevels = getWonLevels()
+    localStorage.setItem("wonLevels", JSON.stringify([...wonLevels, 1]));
   }
 
   loadSkinSpriteSheet(skinName: string) {
