@@ -47,6 +47,9 @@ export default class Lizard extends Phaser.Physics.Arcade.Sprite {
   protected preUpdate(time: number, delta: number): void {
     super.preUpdate(time, delta)
 
+    this.setSize(this.width, this.height * 0.6)
+    this.body?.offset.setTo(0, 12);
+
     const speed = 50
 
     switch(this.direction) { 
