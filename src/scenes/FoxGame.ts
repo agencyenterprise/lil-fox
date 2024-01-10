@@ -124,7 +124,7 @@ export class FoxGame extends Phaser.Scene {
     this.createEventListeners()
 
     // const debugGraphics = this.add.graphics().setAlpha(0.75);
-    // this.terrainLayer?.renderDebug(debugGraphics, {
+    // this.treesLayer?.renderDebug(debugGraphics, {
     //   tileColor: null,
     //   collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
     //   faceColor: new Phaser.Display.Color(40, 39, 37, 255)
