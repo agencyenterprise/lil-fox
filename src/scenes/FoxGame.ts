@@ -63,14 +63,6 @@ export class FoxGame extends Phaser.Scene {
     const map = this.make.tilemap({ key: 'map' });
     this.createLayers(map)
 
-    // const debugGraphics = this.add.graphics().setAlpha(0.75);
-    // this.treesLayer?.renderDebug(debugGraphics, {
-    //   tileColor: null,
-    //   collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
-    //   faceColor: new Phaser.Display.Color(40, 39, 37, 255)
-    // });
-
-
     this.character = new Character(this, 850, 740, "character");
     this.character.setSize(this.character.width * 0.4, this.character.height * 0.4)
     this.physics.add.existing(this.character, false);
@@ -130,6 +122,13 @@ export class FoxGame extends Phaser.Scene {
     });
 
     this.createEventListeners()
+
+    const debugGraphics = this.add.graphics().setAlpha(0.75);
+    this.terrainLayer?.renderDebug(debugGraphics, {
+      tileColor: null,
+      collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
+      faceColor: new Phaser.Display.Color(40, 39, 37, 255)
+    });
   }
 
   private spawnFood() {
@@ -280,7 +279,7 @@ export class FoxGame extends Phaser.Scene {
   }
 
   handleWinLevel1() {
-    this.lizards.clear(true, true) 
+    this.lizards.clear(true, true)
     const wonLevels = getWonLevels()
     localStorage.setItem("wonLevels", JSON.stringify([...wonLevels, 1]));
   }
