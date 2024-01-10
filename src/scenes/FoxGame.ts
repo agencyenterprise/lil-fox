@@ -26,9 +26,9 @@ export class FoxGame extends Phaser.Scene {
   private treesLayer: Phaser.Tilemaps.TilemapLayer
   private treasuresLayer: Phaser.Tilemaps.TilemapLayer
   private objectsLayer: Phaser.Tilemaps.TilemapLayer
-  private signsLayer: Phaser.Tilemaps.TilemapLayer
 
   private signsObjects: Phaser.Tilemaps.ObjectLayer
+  private blueberryObjects: Phaser.Tilemaps.ObjectLayer
 
   private foods: Phaser.GameObjects.Group
   private lizards: Phaser.GameObjects.Group
@@ -114,12 +114,32 @@ export class FoxGame extends Phaser.Scene {
 
     this.physics.add.collider(this.character, this.foods, this.handleCollectFood, undefined, this);
 
-    this.time.addEvent({
-      delay: 15 * 60 * 1000,
-      callback: this.spawnFood,
-      callbackScope: this,
-      loop: true,
-    });
+    map.getObjectLayer('Blueberries')!.objects.forEach(enemy => {
+      const x = enemy.x! + enemy.width! * 0.5
+      const y = enemy.y! + enemy.height! * 0.5
+
+      const food = this.foods.get(x, y, 'berry')
+
+      const tween = this.add.tween({
+        yoyo: true,
+        delay: 0,
+        duration: 300,
+        repeat: -1,
+        y: {
+          from: y,
+          start: y,
+          to: y - 2,
+        },
+        targets: food,
+      })
+    })
+
+    // this.time.addEvent({
+    //   delay: 15 * 1000,
+    //   callback: this.spawnFood,
+    //   callbackScope: this,
+    //   loop: true,
+    // });
 
     this.createEventListeners()
 
@@ -138,8 +158,8 @@ export class FoxGame extends Phaser.Scene {
       const x = Phaser.Math.Between(1, this.mapLength - 1)
       const y = Phaser.Math.Between(1, this.mapHeight - 1)
 
-      if (this.objectsLayer.getTileAt(x, y) !== null)
-        break
+      // if (this.objectsLayer.getTileAt(x, y) !== null)
+      //   break
 
       const tileToReceiveFood = this.terrainLayer.getTileAt(x, y)
       this.foods.get(tileToReceiveFood.pixelX, tileToReceiveFood.pixelY, 'berry')
