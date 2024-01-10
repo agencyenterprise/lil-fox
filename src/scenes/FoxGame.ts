@@ -104,43 +104,7 @@ export class FoxGame extends Phaser.Scene {
     })
 
     this.addColliders()
-
-    this.foods = this.add.group({
-      classType: Phaser.GameObjects.Image,
-      createCallback: (go) => {
-        this.physics.world.enable(go)
-      }
-    })
-
-    this.physics.add.collider(this.character, this.foods, this.handleCollectFood, undefined, this);
-
-    map.getObjectLayer('Blueberries')!.objects.forEach(enemy => {
-      const x = enemy.x! + enemy.width! * 0.5
-      const y = enemy.y! + enemy.height! * 0.5
-
-      const food = this.foods.get(x, y, 'berry')
-
-      const tween = this.add.tween({
-        yoyo: true,
-        delay: 0,
-        duration: 300,
-        repeat: -1,
-        y: {
-          from: y,
-          start: y,
-          to: y - 2,
-        },
-        targets: food,
-      })
-    })
-
-    // this.time.addEvent({
-    //   delay: 15 * 1000,
-    //   callback: this.spawnFood,
-    //   callbackScope: this,
-    //   loop: true,
-    // });
-
+    this.createBlueberries(map)
     this.createEventListeners()
 
     // const debugGraphics = this.add.graphics().setAlpha(0.75);
@@ -151,20 +115,33 @@ export class FoxGame extends Phaser.Scene {
     // });
   }
 
-  private spawnFood() {
-    let foodQuantityToSpawn = 210
+  createBlueberries(map: Phaser.Tilemaps.Tilemap) {
+    this.foods = this.add.group({
+      classType: Phaser.GameObjects.Image,
+      createCallback: (go) => {
+        this.physics.world.enable(go)
+      }
+    })
 
-    while (foodQuantityToSpawn > 0) {
-      const x = Phaser.Math.Between(1, this.mapLength - 1)
-      const y = Phaser.Math.Between(1, this.mapHeight - 1)
+    this.physics.add.collider(this.character, this.foods, this.handleCollectFood, undefined, this);
 
-      // if (this.objectsLayer.getTileAt(x, y) !== null)
-      //   break
+    map.getObjectLayer('Blueberries')!.objects.forEach(blueberry => {
+      const x = blueberry.x! + blueberry.width! * 0.5
+      const y = blueberry.y! + blueberry.height! * 0.5
 
-      const tileToReceiveFood = this.terrainLayer.getTileAt(x, y)
-      this.foods.get(tileToReceiveFood.pixelX, tileToReceiveFood.pixelY, 'berry')
-      foodQuantityToSpawn--
-    }
+      this.add.tween({
+        yoyo: true,
+        delay: 0,
+        duration: 300,
+        repeat: -1,
+        y: {
+          from: y,
+          start: y,
+          to: y - 2,
+        },
+        targets: this.foods.get(x, y, 'berry'),
+      })
+    })
   }
 
   private handleCollectFood(obj1: any, obj2: any) {
