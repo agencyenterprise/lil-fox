@@ -98,7 +98,9 @@ export class FoxGame extends Phaser.Scene {
           this.lizards.get(x, y, 'lizard')
           break
         case 'green_archer':
-          greenArcher.get(x, y, 'greenArcher').setArrows(this.arrows)
+          const props = enemy.properties
+          const facingDirection = props.find((p: any) => p.name === 'facing')?.value.split(";")[0]
+          greenArcher.get(x, y, 'greenArcher').setArrows(this.arrows).setFacingDirection(facingDirection)
           break
       }
     })

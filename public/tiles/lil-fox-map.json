@@ -526,18 +526,6 @@
                  "y":496
                 }, 
                 {
-                 "height":0,
-                 "id":14,
-                 "name":"green_archer",
-                 "point":true,
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":720,
-                 "y":576
-                }, 
-                {
                  "gid":1760,
                  "height":16,
                  "id":24,

@@ -3502,9 +3502,6 @@
   <object id="11" name="lizard" x="1296" y="496">
    <point/>
   </object>
-  <object id="14" name="green_archer" x="720" y="576">
-   <point/>
-  </object>
   <object id="24" gid="1760" x="1264" y="480" width="16" height="16"/>
   <object id="28" name="lizard" x="1408" y="512">
    <point/>

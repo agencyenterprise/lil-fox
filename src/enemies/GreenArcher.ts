@@ -3,6 +3,7 @@ import Phaser from 'phaser'
 export default class GreenArcher extends Phaser.Physics.Arcade.Sprite {
 
   private arrows?: Phaser.Physics.Arcade.Group
+  private facingDirection = 'right'
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
     super(scene, x, y, texture, frame)
@@ -15,7 +16,7 @@ export default class GreenArcher extends Phaser.Physics.Arcade.Sprite {
     });
   }
 
-  private shootArrow() {
+  shootArrow() {
     if (!this.arrows) return
 
     const arrow = this.arrows.get(this.x, this.y, 'green_arrow') as Phaser.Physics.Arcade.Image
@@ -25,8 +26,7 @@ export default class GreenArcher extends Phaser.Physics.Arcade.Sprite {
       return
     }
 
-    const vec = new Phaser.Math.Vector2(0, 1)
-
+    const vec = this.getArrowVector()
 
     arrow.setActive(true)
     arrow.setVisible(true)
@@ -34,11 +34,24 @@ export default class GreenArcher extends Phaser.Physics.Arcade.Sprite {
     arrow.x += vec.x * 16
     arrow.y += vec.y * 16
 
-    this.anims.play('green_archer_shooting_left')
+    this.anims.play(`green_archer_shooting_${this.facingDirection}`)
     arrow.setVelocity(vec.x * 250, vec.y * 250)
   }
 
-  setArrows(arrows: Phaser.Physics.Arcade.Group) {
+  getArrowVector(): Phaser.Math.Vector2 {
+    if (this.facingDirection === 'right') {
+      return new Phaser.Math.Vector2(1, 0)
+    } else {
+      return new Phaser.Math.Vector2(-1, 0)
+    }
+  }
+
+  setArrows(arrows: Phaser.Physics.Arcade.Group): GreenArcher {
     this.arrows = arrows
+    return this
+  }
+
+  setFacingDirection(direction: string) {
+    this.facingDirection = direction
   }
 }
