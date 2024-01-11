@@ -9,7 +9,7 @@ export default class GreenArcher extends Phaser.Physics.Arcade.Sprite {
     super(scene, x, y, texture, frame)
 
     this.scene.time.addEvent({
-      delay: 2000,
+      delay: 1000,
       callback: this.shootArrow,
       callbackScope: this,
       loop: true,
