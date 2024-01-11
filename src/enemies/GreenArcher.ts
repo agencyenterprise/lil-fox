@@ -34,7 +34,7 @@ export default class GreenArcher extends Phaser.Physics.Arcade.Sprite {
     arrow.x += vec.x * 16
     arrow.y += vec.y * 16
 
-    this.anims.play('green_archer_shooting')
+    this.anims.play('green_archer_shooting_left')
     arrow.setVelocity(vec.x * 250, vec.y * 250)
   }
 
