@@ -205,6 +205,14 @@ export class FoxGame extends Phaser.Scene {
     arrow.destroy()
   }
 
+  private handleObjectsArrowCollision(
+    obj1: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile,
+    obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile
+  ) {
+    const arrow = obj1 as Phaser.Physics.Arcade.Image
+    arrow.destroy()
+  }
+
   update(t: number, dt: number) {
     this.character.update(this.cursors, this.signsObjects)
   }
@@ -251,6 +259,8 @@ export class FoxGame extends Phaser.Scene {
 
     this.playerLizardsCollider = this.physics.add.collider(this.lizards, this.character, this.handleCharacterLizardCollision, undefined, this);
     this.playerArrowsCollider = this.physics.add.collider(this.arrows, this.character, this.handleCharacterArrowCollision, undefined, this);
+    this.physics.add.collider(this.arrows, this.treesLayer, this.handleObjectsArrowCollision, undefined, this);
+    this.physics.add.collider(this.arrows, this.constructionsLayer, this.handleObjectsArrowCollision, undefined, this);
   }
 
   changeSkin(skin: Skin) {
