@@ -116,7 +116,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       }
     }
 
-    const speed = 100
+    const speed = 85
 
     const leftDown = cursors.left?.isDown
     const rightDown = cursors.right?.isDown
