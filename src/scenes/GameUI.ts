@@ -20,7 +20,7 @@ export default class GameUI extends Phaser.Scene {
 
   create() {
     this.dialogUi = new Dialog(this, 310)
-    this.tipUi = new Tip(this, 310)
+    this.tipUi = new Tip(this)
     // this.settingsMenu = new SettingsMenu(this)
 
     this.hearts = this.add.group({
@@ -144,20 +144,20 @@ export default class GameUI extends Phaser.Scene {
     }
 
     if (this.dialogUi.isVisible && this.dialogUi.moreMessagesToShow) {
+      this.tipUi.hideTip()
       this.dialogUi.showNextMessage()
       sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, true)
       return
     }
 
     this.dialogUi.hideDialogModal()
+    this.tipUi.hideTip()
     this.dialogUi.showDialogModal(messages)
     sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, true)
   }
 
   showTip(show: boolean = true) {
-    if (show && this.tipUi.isVisible) {
-      return
-    } else if (show && !this.tipUi.isVisible) {
+    if (show && !this.tipUi.isVisible && !this.dialogUi.isVisible) {
       this.tipUi.showTip()
     } else if (!show && this.tipUi.isVisible) {
       this.tipUi.hideTip()

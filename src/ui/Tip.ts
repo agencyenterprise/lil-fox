@@ -9,17 +9,16 @@ const UI_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
 export class Tip {
   private scene: Phaser.Scene
   private padding: number
-  private width: number
-  private height: number
+  private width: number = 280
+  private height: number = 20
   private container: Phaser.GameObjects.Container
   private _isVisible: boolean = false
   private uiText: Phaser.GameObjects.Text
 
-  constructor(scene: Phaser.Scene, width: number) {
+  constructor(scene: Phaser.Scene) {
     this.scene = scene
     this.padding = 5
-    this.width = width - this.padding * 2
-    this.height = 50
+    this.width = this.width - this.padding * 2
 
     const panel = this.scene.add.rectangle(
       0,
@@ -43,11 +42,11 @@ export class Tip {
 
   showTip() {
     this.height - 10
-    this.container.setPosition(50, 185)
+    this.container.setPosition(125, 220)
     this.container.setAlpha(1)
     this._isVisible = true
 
-    this.uiText.setText("Hey").setAlpha(1)
+    this.uiText.setText("Press space next to the sign to read it.").setAlpha(1)
   }
 
   hideTip() {
