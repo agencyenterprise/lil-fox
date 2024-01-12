@@ -3,6 +3,7 @@ import Phaser from "phaser";
 import { Events, sceneEvents } from "../events/EventsCenter";
 import SettingsMenu from "./SettingsMenu";
 import { Dialog } from "@/ui/Dialog";
+import { Tip } from "@/ui/Tip";
 
 export default class GameUI extends Phaser.Scene {
 
@@ -11,6 +12,7 @@ export default class GameUI extends Phaser.Scene {
   private hearts: Phaser.GameObjects.Group
   private berries: Phaser.GameObjects.Group
   private dialogUi: Dialog
+  private tipUi: Tip
 
   constructor() {
     super("game-ui");
@@ -18,6 +20,7 @@ export default class GameUI extends Phaser.Scene {
 
   create() {
     this.dialogUi = new Dialog(this, 310)
+    this.tipUi = new Tip(this, 310)
     // this.settingsMenu = new SettingsMenu(this)
 
     this.hearts = this.add.group({
@@ -51,6 +54,7 @@ export default class GameUI extends Phaser.Scene {
     sceneEvents.on(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
     sceneEvents.on(Events.PLAYER_HUNGER_CHANGED, this.handlePlayerHungerChanged, this)
     sceneEvents.on(Events.SHOW_DIALOG, this.showDialog, this)
+    sceneEvents.on(Events.SHOW_TIP, this.showTip, this)
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       sceneEvents.off(Events.PLAYER_HUNGER_CHANGED, this.handlePlayerHungerChanged, this)
@@ -148,5 +152,15 @@ export default class GameUI extends Phaser.Scene {
     this.dialogUi.hideDialogModal()
     this.dialogUi.showDialogModal(messages)
     sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, true)
+  }
+
+  showTip(show: boolean = true) {
+    if (show && this.tipUi.isVisible) {
+      return
+    } else if (show && !this.tipUi.isVisible) {
+      this.tipUi.showTip()
+    } else if (!show && this.tipUi.isVisible) {
+      this.tipUi.hideTip()
+    }
   }
 }

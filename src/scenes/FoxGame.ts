@@ -73,7 +73,6 @@ export class FoxGame extends Phaser.Scene {
     this.physics.world.enableBody(this.character, Phaser.Physics.Arcade.DYNAMIC_BODY)
 
     this.cameras.main.startFollow(this.character, true, 0.05, 0.05);
-    this.dialogUi = new Dialog(this, 1280);
 
     this.lizards = this.physics.add.group({
       classType: Lizard,

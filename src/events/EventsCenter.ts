@@ -5,6 +5,7 @@ enum Events {
   PLAYER_HUNGER_CHANGED = 'player-hunger-changed',
   LOCK_PLAYER_MOVEMENT = 'lock-player-movement',
   SHOW_DIALOG = 'show-dialog',
+  SHOW_TIP = 'show-tip',
   WON_LEVEL_1 = 'won-level-1',
 }
 

@@ -123,7 +123,11 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     const upDown = cursors.up?.isDown
     const downDown = cursors.down?.isDown
 
-    if (this.isPlayerMovementLocked) return
+    if (this.isPlayerMovementLocked) {
+      this.anims.play(`idle-${this.selectedSkin}`);
+      this.setVelocity(0, 0);
+      return
+    }
 
     if (leftDown) {
       this.anims.play(`run-${this.selectedSkin}`, true);
@@ -160,11 +164,12 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
   }
 
   isCharacterInArea(areasLayer: Phaser.Geom.Rectangle[]) {
-    areasLayer.forEach(area => {
-      if (area.contains(this.x, this.y)) {
-        console.log("ta na area")
-      }
-    })
+    const isInArea = areasLayer.find(area => area.contains(this.x, this.y))
+    if (isInArea) {
+      sceneEvents.emit(Events.SHOW_TIP)
+    } else {
+      sceneEvents.emit(Events.SHOW_TIP, false)
+    }
   }
 
   handleSignInteraction(sign: Phaser.Types.Tilemaps.TiledObject) {
@@ -184,7 +189,6 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
         this.scene.scene.launch('QuizScene', { messages, correctAlternative });
       }
     } else {
-      console.log(levelNumber)
       if (levelNumber && wonLevels.includes(levelNumber)) {
         sceneEvents.emit(Events.SHOW_DIALOG, ["You already won this level!"])
       } else {
