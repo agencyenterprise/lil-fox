@@ -37,7 +37,7 @@ export class Dialog {
       .setStrokeStyle(3, 0x905ac2, 1)
     this.container = this.scene.add.container(0, 0, [panel])
 
-    this.uiText = this.scene.add.text(18, 12, "", {
+    this.uiText = this.scene.add.text(18, 6, "", {
       ...UI_TEXT_STYLE,
       ...{ wordWrap: { width: this.width - 18 } },
     })

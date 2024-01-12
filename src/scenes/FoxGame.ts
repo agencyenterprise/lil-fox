@@ -63,7 +63,7 @@ export class FoxGame extends Phaser.Scene {
     const map = this.make.tilemap({ key: 'map' });
     this.createLayers(map)
 
-    this.character = new Character(this, 842, 1375, "character");
+    this.character = new Character(this, 1255, 624, "character");
     this.character.setSize(this.character.width * 0.4, this.character.height * 0.4)
     this.physics.add.existing(this.character, false);
     this.add.existing(this.character);
