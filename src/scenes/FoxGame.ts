@@ -28,7 +28,10 @@ export class FoxGame extends Phaser.Scene {
   private objectsLayer: Phaser.Tilemaps.TilemapLayer
 
   private signsObjects: Phaser.Tilemaps.ObjectLayer
+  private areasObjects: Phaser.Tilemaps.ObjectLayer
   private blueberryObjects: Phaser.Tilemaps.ObjectLayer
+
+  private areas: Phaser.Geom.Rectangle[]
 
   private foods: Phaser.GameObjects.Group
   private lizards: Phaser.GameObjects.Group
@@ -214,7 +217,7 @@ export class FoxGame extends Phaser.Scene {
   }
 
   update(t: number, dt: number) {
-    this.character.update(this.cursors, this.signsObjects)
+    this.character.update(this.cursors, this.signsObjects, this.areas)
   }
 
   createLayers(map: Phaser.Tilemaps.Tilemap) {
@@ -230,6 +233,7 @@ export class FoxGame extends Phaser.Scene {
     this.objectsLayer = map.createLayer('Objects', tileset1!)!;
 
     this.signsObjects = map.getObjectLayer('Signs')!
+    this.areasObjects = map.getObjectLayer('Area')!
 
     const chests = this.physics.add.staticGroup({
       classType: Chest
@@ -238,6 +242,8 @@ export class FoxGame extends Phaser.Scene {
     chestsLayer?.objects.forEach(chestObj => {
       chests.get(chestObj.x! + chestObj.width! * 0.5, chestObj.y! + chestObj.height! * 0.5, 'treasure')
     })
+
+    this.areas = this.areasObjects.objects.map(area => new Phaser.Geom.Rectangle(area.x!, area.y!, area.width!, area.height!))
   }
 
   addColliders() {

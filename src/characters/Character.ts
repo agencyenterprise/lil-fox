@@ -95,9 +95,12 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
   update(
     cursors: Phaser.Types.Input.Keyboard.CursorKeys,
     signsLayer: Phaser.Tilemaps.ObjectLayer,
+    areasLayer: Phaser.Geom.Rectangle[]
   ) {
     if (this.healthState === HealthState.DAMAGE || this.healthState === HealthState.DEAD) return
     if (!cursors) return;
+
+    this.isCharacterInArea(areasLayer)
 
     if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
       const coordinate = { x: this.x, y: this.y }
@@ -154,6 +157,14 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     if (leftDown || rightDown || upDown || downDown) {
       this.activeChest = undefined
     }
+  }
+
+  isCharacterInArea(areasLayer: Phaser.Geom.Rectangle[]) {
+    areasLayer.forEach(area => {
+      if (area.contains(this.x, this.y)) {
+        console.log("ta na area")
+      }
+    })
   }
 
   handleSignInteraction(sign: Phaser.Types.Tilemaps.TiledObject) {

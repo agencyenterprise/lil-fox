@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="150" height="150" tilewidth="16" tileheight="16" infinite="0" nextlayerid="26" nextobjectid="57">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="150" height="150" tilewidth="16" tileheight="16" infinite="0" nextlayerid="27" nextobjectid="64">
  <editorsettings>
   <export target="public/tiles/lil-fox-map.json" format="json"/>
  </editorsettings>
@@ -3622,6 +3622,10 @@ Remember, the decentralized nature of blockchain provides security, but individu
 4) Responding immediately to urgent requests in emails.</property>
    </properties>
   </object>
+ </objectgroup>
+ <objectgroup id="26" name="Area">
+  <object id="59" name="area1" x="1620.39" y="400.429" width="43.4032" height="30.8023"/>
+  <object id="63" name="area2" x="1222.31" y="559.536" width="41.0107" height="35.8254"/>
  </objectgroup>
  <objectgroup id="25" name="Blueberries">
   <object id="37" name="blueberry" x="1735.54" y="1305.26">

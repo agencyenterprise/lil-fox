@@ -812,6 +812,39 @@
         }, 
         {
          "draworder":"topdown",
+         "id":26,
+         "name":"Area",
+         "objects":[
+                {
+                 "height":30.8022588323144,
+                 "id":59,
+                 "name":"area1",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":43.4031829000792,
+                 "x":1620.3854949363,
+                 "y":400.429364820087
+                }, 
+                {
+                 "height":35.825398321863,
+                 "id":63,
+                 "name":"area2",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":41.0106533421322,
+                 "x":1222.30602432356,
+                 "y":559.536155369096
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":25,
          "name":"Blueberries",
          "objects":[
@@ -833,8 +866,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":26,
- "nextobjectid":57,
+ "nextlayerid":27,
+ "nextobjectid":64,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
