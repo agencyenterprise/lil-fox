@@ -232,9 +232,7 @@ export class FoxGame extends Phaser.Scene {
     this.terrainLayer = map.createLayer('Terrain', tileset0!)!;
     this.treesLayer = map.createLayer('Trees', tileset0!)!;
     this.constructionsLayer = map.createLayer('Constructions', tileset0!)!;
-    this.signsLayer = map.createLayer('Signs', tileset0!)!;
     // this.treasuresLayer = map.createLayer('Treasures', tileset2!)!;
-    this.objectsLayer = map.createLayer('Objects', tileset1!)!;
 
     this.signsObjects = map.getObjectLayer('Signs')!
     this.areasObjects = map.getObjectLayer('Area')!
