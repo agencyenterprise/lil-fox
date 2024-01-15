@@ -26,7 +26,7 @@ const wagmiConfig = createConfig({
 })
 
 export default function Home() {
-  let game = useRef<Phaser.Game | null>(null);
+  // let game = useRef<Phaser.Game | null>(null);
   const [hasFlask, setHasFlask] = useState(false);
   const [initiated, setInitiated] = useState(false);
 
@@ -60,24 +60,31 @@ export default function Home() {
     <WagmiConfig config={wagmiConfig}>
       <main className="flex items-center min-h-screen justify-center ">
         {hasFlask && !initiated && (
-          <NotInitiatedGame game={game} setInitiated={setInitiated} />
+          <>
+            Not initiated
+            <NotInitiatedGame setInitiated={setInitiated} />
+          </>
         )}
 
         {!hasFlask && !initiated && (
-          <a
-            id="flask"
-            className="flex flex-col absolute mx-auto my-auto justify-center items-center text-center"
-            href="https://metamask.io"
-            target="_blank"
-          >
-            <Image src="/ie.png" width="48" height="48" alt="flask icon" />
-            <p>Flask Required</p>
-            <p>Get MetaMask</p>
-          </a>
+          <>
+            !hasFlask
+            <a
+              id="flask"
+              className="flex flex-col absolute mx-auto my-auto justify-center items-center text-center"
+              href="https://metamask.io"
+              target="_blank"
+            >
+              <Image src="/ie.png" width="48" height="48" alt="flask icon" />
+              <p>Flask Required</p>
+              <p>Get MetaMask</p>
+            </a>
+          </>
         )}
 
         {initiated && (
-          <InitiatedGame setInitiated={setInitiated} game={game} />
+          // <InitiatedGame setInitiated={setInitiated} game={game} />
+          <></>
         )}
       </main>
     </WagmiConfig>
