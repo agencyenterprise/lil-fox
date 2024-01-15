@@ -3,18 +3,14 @@ import Image from "next/image";
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { lineaTestnet } from '@wagmi/core/chains'
 import { MutableRefObject } from 'react';
-import FoxGame from '@/scenes/FoxGame';
-import Preloader from '@/scenes/Preloader';
 import GameUI from '@/scenes/GameUI';
 import QuizScene from '@/scenes/QuizScene';
-import { Plugin as NineSlicePlugin } from 'phaser3-nineslice'
 
 type NotInitiatedGameProps = {
   setInitiated: (initiated: boolean) => void;
-  game: MutableRefObject<Phaser.Game | null>;
 }
 
-export function NotInitiatedGame({ setInitiated, game }: NotInitiatedGameProps) {
+export function NotInitiatedGame({ setInitiated }: NotInitiatedGameProps) {
   const { connect } = useConnect()
   const { chain } = useNetwork()
   const { isConnected } = useAccount()
@@ -30,6 +26,8 @@ export function NotInitiatedGame({ setInitiated, game }: NotInitiatedGameProps) 
 
       const { default: Preloader } = await import("../scenes/Preloader")
       const { default: FoxGame } = await import("../scenes/FoxGame")
+      const { default: GameUI } = await import("../scenes/GameUI")
+      const { default: QuizScene } = await import("../scenes/QuizScene")
 
       const phaserGame = new Phaser.Game({
         parent: 'phaser-container',
@@ -48,9 +46,7 @@ export function NotInitiatedGame({ setInitiated, game }: NotInitiatedGameProps) 
         },
       });
       setInitiated(true);
-
     }
-
     initPhaser()
   };
 
