@@ -61,14 +61,12 @@ export default function Home() {
       <main className="flex items-center min-h-screen justify-center ">
         {hasFlask && !initiated && (
           <>
-            Not initiated
             <NotInitiatedGame setInitiated={setInitiated} />
           </>
         )}
 
         {!hasFlask && !initiated && (
           <>
-            !hasFlask
             <a
               id="flask"
               className="flex flex-col absolute mx-auto my-auto justify-center items-center text-center"
