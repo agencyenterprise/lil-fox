@@ -10,7 +10,7 @@ import { createArcherAnims } from "@/anims/GreenArcherAnims";
 import { Dialog } from "@/ui/Dialog";
 import { getWonLevels } from "@/utils/localStorageUtils";
 
-export class FoxGame extends Phaser.Scene {
+export default class FoxGame extends Phaser.Scene {
   constructor() {
     super({ key: 'LilFox' })
   }
@@ -111,7 +111,7 @@ export class FoxGame extends Phaser.Scene {
     this.createBlueberries(map)
     this.createEventListeners()
 
-    const debugGraphics = this.add.graphics().setAlpha(0.75);
+    // const debugGraphics = this.add.graphics().setAlpha(0.75);
     // this.treesLayer?.renderDebug(debugGraphics, {
     //   tileColor: null,
     //   collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),

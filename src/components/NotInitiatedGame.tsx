@@ -3,6 +3,7 @@ import Image from "next/image";
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { lineaTestnet } from '@wagmi/core/chains'
 import { MutableRefObject } from 'react';
+import FoxGame from '@/scenes/FoxGame';
 import Preloader from '@/scenes/Preloader';
 import GameUI from '@/scenes/GameUI';
 import QuizScene from '@/scenes/QuizScene';
@@ -24,33 +25,33 @@ export function NotInitiatedGame({ setInitiated, game }: NotInitiatedGameProps) 
   })
 
   const startGame = () => {
-    setInitiated(true);
-    // deploy one cycle so that the game can be started on the correct tag
-    if (typeof window !== "undefined") {
-      const FoxGame = require("@/scenes").FoxGame;
-      setTimeout(() => {
-        game.current = new Phaser.Game({
-          type: Phaser.AUTO,
-          parent: 'phaser-container',
-          width: 400,
-          height: 250,
-          physics: {
-            default: 'arcade',
-            arcade: {
-              gravity: { y: 0 },
-              // debug: true
-            },
+    async function initPhaser() {
+      const Phaser = await import("phaser")
+
+      const { default: Preloader } = await import("../scenes/Preloader")
+      const { default: FoxGame } = await import("../scenes/FoxGame")
+
+      const phaserGame = new Phaser.Game({
+        parent: 'phaser-container',
+        width: 400,
+        height: 250,
+        physics: {
+          default: 'arcade',
+          arcade: {
+            gravity: { y: 0 },
+            // debug: true
           },
-          plugins: {
-            global: [NineSlicePlugin.DefaultCfg]
-          },
-          scene: [Preloader, FoxGame, GameUI, QuizScene],
-          scale: {
-            zoom: 2,
-          },
-        });
+        },
+        scene: [Preloader, FoxGame, GameUI, QuizScene],
+        scale: {
+          zoom: 2,
+        },
       });
+      setInitiated(true);
+
     }
+
+    initPhaser()
   };
 
   return (
