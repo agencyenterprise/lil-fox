@@ -1,14 +1,10 @@
-import { MutableRefObject, useEffect, useState } from "react";
+import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { ConnectWalletComponent } from "./ConnectWalletComponent";
 import config from "@/config/index";
 import { BigNumber, ContractInterface, ethers } from "ethers";
 import Image from "next/image";
 import { useAccount } from 'wagmi'
-
-type InitiatedGameProps = {
-  setInitiated: (initiated: boolean) => void;
-  game: MutableRefObject<Phaser.Game | null>;
-}
+import { NotInitiatedGame } from "./NotInitiatedGame";
 
 const tokenIdToSkin = new Map<number | string, number | string>([
   [0, "blue"],
@@ -21,20 +17,22 @@ const tokenIdToSkin = new Map<number | string, number | string>([
   ["sunglasses", 3]
 ]);
 
-export function InitiatedGame({ setInitiated, game }: InitiatedGameProps) {
+export function Game() {
+  let gameRef = useRef<Phaser.Game | null>(null);
+  const [isGameStarted, setIsGameStarted] = useState(false);
   const [ownedSkins, setOwnedSkins] = useState<string[]>([]);
   const { address } = useAccount()
 
-  useEffect(() => {
-    reload()
-    setUserSkins()
-    if (typeof window !== "undefined" && game.current) {
-      const FoxGame = require("@/scenes").FoxGame;
-      const gameScene = game.current?.scene.scenes[1] as typeof FoxGame;
-      gameScene.initializeState();
-    }
-  }, [address])
-
+  // useEffect(() => {
+  //   reload()
+  //   setUserSkins()
+  //   if (typeof window !== "undefined" && gameRef.current) {
+  //     const FoxGame = require("@/scenes").FoxGame;
+  //     const gameScene = gameRef.current?.scene.scenes[1] as typeof FoxGame;
+  //     gameScene.initializeState();
+  //   }
+  // }, [address])
+  
   const setUserSkins = async () => {
     const erc1155Interface: ContractInterface = [
       'function balanceOf(address account, uint256 id) external view returns (uint256)',
@@ -64,20 +62,19 @@ export function InitiatedGame({ setInitiated, game }: InitiatedGameProps) {
   const autosave = () => {
     if (typeof window !== "undefined") {
       const FoxGame = require("@/scenes").FoxGame;
-      const gameScene = game.current?.scene.scenes[1] as typeof FoxGame;
+      const gameScene = gameRef.current?.scene.scenes[1] as typeof FoxGame;
       gameScene.setAutosave();
     }
   };
 
   const closeGame = () => {
-    game.current?.destroy(true, false);
-    setInitiated(false);
+    gameRef.current?.destroy(true, false);
   };
 
   const changeSkin = async (skin: string) => {
     if (typeof window !== "undefined") {
       const FoxGame = require("@/scenes").FoxGame;
-      const gameScene = game.current?.scene.scenes[1] as typeof FoxGame;
+      const gameScene = gameRef.current?.scene.scenes[1] as typeof FoxGame;
       await gameScene.changeSkin(skin);
     }
   };
@@ -85,7 +82,7 @@ export function InitiatedGame({ setInitiated, game }: InitiatedGameProps) {
   const reload = async () => {
     if (typeof window !== "undefined") {
       const FoxGame = require("@/scenes").FoxGame;
-      const gameScene = game.current?.scene.scenes[1] as typeof FoxGame;
+      const gameScene = gameRef.current?.scene.scenes[1] as typeof FoxGame;
       if (!gameScene) return
       await gameScene.foxLoad();
     }
@@ -113,7 +110,11 @@ export function InitiatedGame({ setInitiated, game }: InitiatedGameProps) {
               </button>
             </div>
           </div>
-          <div id="phaser-container" className="h-[600px] w-[800px]"></div>
+          <div id="phaser-container" className="h-[600px] w-[800px]">
+            {!isGameStarted && (
+              <NotInitiatedGame gameRef={gameRef} setIsGameStarted={setIsGameStarted}/>
+            )}
+          </div>
         </div>
       </div>
 
@@ -128,7 +129,7 @@ export function InitiatedGame({ setInitiated, game }: InitiatedGameProps) {
           <button
             key={skin}
             id={skin}
-            className="skin-button button-inactive flex flex-col gap-y-4 mt-4  items-center justify-center w-full"
+            className="skin-button button-inactive flex flex-col gap-y-4 mt-4 items-center justify-center w-full"
             onClick={() => changeSkin(skin)}
           >
             <Image

@@ -7,10 +7,11 @@ import GameUI from '@/scenes/GameUI';
 import QuizScene from '@/scenes/QuizScene';
 
 type NotInitiatedGameProps = {
-  setInitiated: (initiated: boolean) => void;
+  setIsGameStarted: (started: boolean) => void;
+  gameRef: any
 }
 
-export function NotInitiatedGame({ setInitiated }: NotInitiatedGameProps) {
+export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGameProps) {
   const { connect } = useConnect()
   const { chain } = useNetwork()
   const { isConnected } = useAccount()
@@ -29,7 +30,7 @@ export function NotInitiatedGame({ setInitiated }: NotInitiatedGameProps) {
       const { default: GameUI } = await import("../scenes/GameUI")
       const { default: QuizScene } = await import("../scenes/QuizScene")
 
-      const phaserGame = new Phaser.Game({
+      gameRef.current = new Phaser.Game({
         parent: 'phaser-container',
         width: 400,
         height: 250,
@@ -45,7 +46,7 @@ export function NotInitiatedGame({ setInitiated }: NotInitiatedGameProps) {
           zoom: 2,
         },
       });
-      setInitiated(true);
+      setIsGameStarted(true);
     }
     initPhaser()
   };

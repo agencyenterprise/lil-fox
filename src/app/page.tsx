@@ -5,8 +5,7 @@ import Image from "next/image";
 import { WagmiConfig, createConfig, configureChains } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
 import { lineaTestnet } from '@wagmi/core/chains'
-import { InitiatedGame } from "@/components/InitiatedGame";
-import { NotInitiatedGame } from "@/components/NotInitiatedGame";
+import { Game } from "@/components/Game";
 
 declare global {
   interface Window {
@@ -26,9 +25,7 @@ const wagmiConfig = createConfig({
 })
 
 export default function Home() {
-  // let game = useRef<Phaser.Game | null>(null);
   const [hasFlask, setHasFlask] = useState(false);
-  const [initiated, setInitiated] = useState(false);
 
   useEffect(() => {
     isFlask().then((result) => {
@@ -59,13 +56,11 @@ export default function Home() {
   return (
     <WagmiConfig config={wagmiConfig}>
       <main className="flex items-center min-h-screen justify-center ">
-        {hasFlask && !initiated && (
-          <>
-            <NotInitiatedGame setInitiated={setInitiated} />
-          </>
+        {hasFlask && (
+          <Game />
         )}
 
-        {!hasFlask && !initiated && (
+        {!hasFlask && (
           <>
             <a
               id="flask"
@@ -78,11 +73,6 @@ export default function Home() {
               <p>Get MetaMask</p>
             </a>
           </>
-        )}
-
-        {initiated && (
-          // <InitiatedGame setInitiated={setInitiated} game={game} />
-          <></>
         )}
       </main>
     </WagmiConfig>
