@@ -2,9 +2,6 @@ import { useNetwork, useAccount, useConnect, useSwitchNetwork } from 'wagmi'
 import Image from "next/image";
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { lineaTestnet } from '@wagmi/core/chains'
-import { MutableRefObject } from 'react';
-import GameUI from '@/scenes/GameUI';
-import QuizScene from '@/scenes/QuizScene';
 
 type NotInitiatedGameProps = {
   setIsGameStarted: (started: boolean) => void;
