@@ -181,12 +181,13 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
     if (isFinishLevelSign) {
       const correctAlternative = props.find((p: any) => p.name === 'correctAlternative')?.value
+      const levelNumber = props.find((p: any) => p.name === 'levelNumber')?.value
 
       if (wonLevels.includes(levelNumber)) {
         sceneEvents.emit(Events.SHOW_DIALOG, ["You already won this level!"])
       } else {
         this.scene.scene.pause("LilFox");
-        this.scene.scene.launch('QuizScene', { messages, correctAlternative });
+        this.scene.scene.launch('QuizScene', { messages, correctAlternative, levelNumber });
       }
     } else {
       if (levelNumber && wonLevels.includes(levelNumber)) {

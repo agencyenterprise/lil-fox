@@ -35,6 +35,7 @@ export default class FoxGame extends Phaser.Scene {
 
   private foods: Phaser.GameObjects.Group
   private lizards: Phaser.GameObjects.Group
+  private greenArchers: Phaser.GameObjects.Group
   private arrows: Phaser.GameObjects.Group
 
   private playerLizardsCollider?: Phaser.Physics.Arcade.Collider
@@ -66,7 +67,7 @@ export default class FoxGame extends Phaser.Scene {
     const map = this.make.tilemap({ key: 'map' });
     this.createLayers(map)
 
-    this.character = new Character(this, 858, 1431, "character");
+    this.character = new Character(this, 870, 1400, "character");
     this.character.setSize(this.character.width * 0.4, this.character.height * 0.4)
     this.physics.add.existing(this.character, false);
     this.add.existing(this.character);
@@ -84,7 +85,7 @@ export default class FoxGame extends Phaser.Scene {
       }
     })
 
-    const greenArcher = this.physics.add.group({
+    this.greenArchers = this.physics.add.group({
       classType: GreenArcher
     })
     this.arrows = this.physics.add.group({
@@ -102,7 +103,7 @@ export default class FoxGame extends Phaser.Scene {
         case 'green_archer':
           const props = enemy.properties
           const facingDirection = props.find((p: any) => p.name === 'facing')?.value.split(";")[0]
-          greenArcher.get(x, y, 'greenArcher').setArrows(this.arrows).setFacingDirection(facingDirection)
+          this.greenArchers.get(x, y, 'greenArcher').setArrows(this.arrows).setFacingDirection(facingDirection)
           break
       }
     })
@@ -277,6 +278,7 @@ export default class FoxGame extends Phaser.Scene {
 
   createEventListeners() {
     sceneEvents.on(Events.WON_LEVEL_1, this.handleWinLevel1, this)
+    sceneEvents.on(Events.WON_LEVEL_2, this.handleWinLevel2, this)
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       sceneEvents.off(Events.WON_LEVEL_1, this.handleWinLevel1, this)
@@ -299,6 +301,12 @@ export default class FoxGame extends Phaser.Scene {
     this.lizards.clear(true, true)
     const wonLevels = getWonLevels()
     localStorage.setItem("wonLevels", JSON.stringify([...wonLevels, 1]));
+  }
+
+  handleWinLevel2() {
+    this.greenArchers.clear(true, true)
+    const wonLevels = getWonLevels()
+    localStorage.setItem("wonLevels", JSON.stringify([...wonLevels, 2]));
   }
 
   loadSkinSpriteSheet(skinName: string) {

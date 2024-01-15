@@ -19,6 +19,7 @@ export default class QuizScene extends Phaser.Scene {
   private selectedOption: number = 1;
   private messagesToShow: string[]
   private correctAlternative: number
+  private levelNumber: number
   private showingFinalMessage: boolean = false
 
   constructor() {
@@ -26,6 +27,7 @@ export default class QuizScene extends Phaser.Scene {
   }
 
   init(data: any) {
+    this.levelNumber = data.levelNumber
     this.messagesToShow = data.messages
     this.correctAlternative = data.correctAlternative
   }
@@ -74,7 +76,7 @@ export default class QuizScene extends Phaser.Scene {
 
   update() {
     const wasSpaceKeyPressed = Phaser.Input.Keyboard.JustDown(this.cursorKeys.space);
-    
+
     if (this.textAnimationPlaying) return
 
     if (this.messagesToShow.length > 0 && wasSpaceKeyPressed) {
@@ -169,8 +171,7 @@ export default class QuizScene extends Phaser.Scene {
       this.scene.setVisible(false)
       this.scene.pause()
       this.scene.resume("LilFox")
-      
-      sceneEvents.emit(Events.WON_LEVEL_1)
+      sceneEvents.emit(`won-level-${this.levelNumber}`)
     } else {
       this.scene.setVisible(false)
       this.scene.pause()

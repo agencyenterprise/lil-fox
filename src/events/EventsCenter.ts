@@ -7,6 +7,7 @@ enum Events {
   SHOW_DIALOG = 'show-dialog',
   SHOW_TIP = 'show-tip',
   WON_LEVEL_1 = 'won-level-1',
+  WON_LEVEL_2 = 'won-level-2',
 }
 
 const sceneEvents = new Phaser.Events.EventEmitter()
