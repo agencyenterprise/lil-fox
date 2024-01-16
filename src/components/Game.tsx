@@ -5,6 +5,7 @@ import { BigNumber, ContractInterface, ethers } from "ethers";
 import Image from "next/image";
 import { useAccount } from 'wagmi'
 import { NotInitiatedGame } from "./NotInitiatedGame";
+import { GetNFT } from "./GetNFT";
 
 const tokenIdToSkin = new Map<number | string, number | string>([
   [0, "blue"],
@@ -32,7 +33,7 @@ export function Game() {
   //     gameScene.initializeState();
   //   }
   // }, [address])
-  
+
   const setUserSkins = async () => {
     const erc1155Interface: ContractInterface = [
       'function balanceOf(address account, uint256 id) external view returns (uint256)',
@@ -112,8 +113,9 @@ export function Game() {
           </div>
           <div id="phaser-container" className="h-[600px] w-[800px]">
             {!isGameStarted && (
-              <NotInitiatedGame gameRef={gameRef} setIsGameStarted={setIsGameStarted}/>
+              <NotInitiatedGame gameRef={gameRef} setIsGameStarted={setIsGameStarted} />
             )}
+            <GetNFT />
           </div>
         </div>
       </div>

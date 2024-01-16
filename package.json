@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/classnames": "^2.3.1",
+    "@types/react-google-recaptcha": "^2.1.8",
     "@types/semver": "^7.5.3",
     "@wagmi/core": "^1.4.6",
     "bitecs": "^0.3.40",
@@ -23,6 +24,7 @@
     "phaser3spectorjs": "^0.0.8",
     "react": "^18",
     "react-dom": "^18",
+    "react-google-recaptcha": "^3.1.0",
     "regenerator-runtime": "^0.14.0",
     "semver": "^7.5.4",
     "viem": "^1.18.9",

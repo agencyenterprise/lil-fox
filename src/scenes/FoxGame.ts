@@ -112,6 +112,10 @@ export default class FoxGame extends Phaser.Scene {
     this.createBlueberries(map)
     this.createEventListeners()
 
+    this.input.on('pointerdown', () => {
+      this.showDiv();
+    });
+
     // const debugGraphics = this.add.graphics().setAlpha(0.75);
     // this.treesLayer?.renderDebug(debugGraphics, {
     //   tileColor: null,
@@ -124,6 +128,12 @@ export default class FoxGame extends Phaser.Scene {
     //   faceColor: new Phaser.Display.Color(40, 39, 37, 255)
     // });
   }
+
+  showDiv() {
+    const captchaDiv = document.getElementById('GetNFT')!;
+    captchaDiv.style.display = 'block';
+  }
+
 
   createBlueberries(map: Phaser.Tilemaps.Tilemap) {
     this.foods = this.add.group({
