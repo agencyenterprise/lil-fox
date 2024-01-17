@@ -104,6 +104,7 @@ export default class FoxGame extends Phaser.Scene {
           this.lizards.get(x, y, 'lizard')
           break
         case 'green_archer':
+          if (wonLevels.includes(2)) break
           const props = enemy.properties
           const facingDirection = props.find((p: any) => p.name === 'facing')?.value.split(";")[0]
           this.greenArchers.get(x, y, 'greenArcher').setArrows(this.arrows).setFacingDirection(facingDirection)
@@ -288,17 +289,6 @@ export default class FoxGame extends Phaser.Scene {
     })
   }
 
-  createLevel1() {
-    this.lizards = this.physics.add.group({
-      classType: Lizard,
-      createCallback: (go) => {
-        const lizGo = go as Lizard
-        if (!lizGo.body) return
-        lizGo.body.onCollide = true
-        lizGo.setDepth(2);
-      }
-    })
-  }
 
   handleWinLevel1() {
     this.currentLevel = 1
