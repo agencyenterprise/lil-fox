@@ -36,7 +36,9 @@ export function GetNFT({ getCurrentLevel }: GetNFTProps) {
 
       if(response.status !== 200) {
         if (responseData.message === Errors.CAPTCHA_FAILED) {
-          setError('Captcha failed try again')
+          setError('Captcha failed, try again.')
+        } else {
+          setError('Something went wrong, try again.')
         }
         return
       }
@@ -53,12 +55,15 @@ export function GetNFT({ getCurrentLevel }: GetNFTProps) {
       className="absolute top-1/3 left-28 p-1 py-4 w-[600px] bg-[#fed5fb] border-2 border-[#9f1bf5] flex flex-col justify-center items-center space-y-4"
     >
       <h1 className="text-xl font-bold">Congratulations for completing this level! Click the button below to get your get your NFT skin.</h1>
+      {
+        error ? <p className="text-red-500">{error}</p> : null
+      }
       <ReCAPTCHA
         className="flex justify-center"
         sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
         onChange={setCaptcha}
       />
-      <button id="autosave" type="submit" className="button mt-4">
+      <button id="autosave" type="submit" className={`button mt-4 ${!captcha && "hover:cursor-not-allowed"}`} disabled={!captcha}>
         GET NFT
       </button>
     </form>

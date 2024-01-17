@@ -1,3 +1,4 @@
 export enum Errors {
+  UNKNOWN_ERROR = "UNKNOWN_ERROR",
   CAPTCHA_FAILED = "CAPTCHA_FAILED",
 }

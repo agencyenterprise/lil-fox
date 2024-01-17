@@ -9,9 +9,12 @@ export async function POST(request: NextRequest) {
     return new NextResponse(JSON.stringify({ message: Errors.CAPTCHA_FAILED }), { status: 404 });
   }
 
-  const txHash = await sendNft(userAddress, level)
-
-  return NextResponse.json({ txHash });
+  try {
+    const txHash = await sendNft(userAddress, level)
+    return NextResponse.json({ txHash });
+  } catch (error) {
+    return new NextResponse(JSON.stringify({ message: Errors.UNKNOWN_ERROR }), { status: 400 });
+  }
 }
 
 const isCaptchaValid = async (captchaResponse: string): Promise<boolean> => {
