@@ -33,9 +33,9 @@ const isCaptchaValid = async (captchaResponse: string): Promise<boolean> => {
 const sendNft = async (to: string, level: number): Promise<string> => {
   const mintFunctionInterface = new ethers.utils.Interface(["function mint(address,uint256,uint256,bytes)"]);
 
-  const provider = new ethers.providers.JsonRpcProvider(process.env.LINEA_RPC_URL)
+  const provider = new ethers.providers.JsonRpcProvider(process.env.NEXT_PUBLIC_LINEA_RPC_URL)
   const wallet = new ethers.Wallet(process.env.CONTRACT_OWNER_PRIVATE_KEY!, provider);
-  const skinsContract = new ethers.Contract(process.env.LIL_FOX_SKINS_CONTRACT_ADDRESS!, mintFunctionInterface, wallet);
+  const skinsContract = new ethers.Contract(process.env.NEXT_PUBLIC_LIL_FOX_SKINS_CONTRACT_ADDRESS!, mintFunctionInterface, wallet);
 
   const tx = await skinsContract.mint(to, level, 1, "0x");
   return tx.hash

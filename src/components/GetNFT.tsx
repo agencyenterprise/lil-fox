@@ -67,7 +67,7 @@ export function GetNFT({ getCurrentLevel }: GetNFTProps) {
       onSubmit={onSubmit}
       className="absolute top-1/3 left-28 p-1 py-4 w-[600px] bg-[#fed5fb] border-2 border-[#9f1bf5] flex flex-col justify-center items-center space-y-4"
     >
-      <h1 className="text-xl font-bold">Congratulations for completing this level! Click the button below to get your get your NFT skin.</h1>
+      <h1 className="text-xl font-bold">Congratulations for completing this level! Click the button below to get your NFT skin.</h1>
       {
         error && <p className="text-red-500">{error}</p>
       }
