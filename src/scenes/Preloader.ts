@@ -31,7 +31,7 @@ export default class Preloader extends Phaser.Scene {
     this.load.image('gear', 'ui/gear.png')
     this.load.image('checkmark', 'ui/blue_checkmark.png')
 
-    this.load.image('green_arrow', 'weapons/green_arrow.png')
+    this.load.image('arrow', 'weapons/arrow.png')
 
     this.load.image("cursor", `ui/cursor.png`);
   }

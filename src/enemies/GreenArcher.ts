@@ -25,8 +25,13 @@ export default class GreenArcher extends Phaser.Physics.Arcade.Sprite {
   shootArrow() {
     if (!this.arrows) return
 
-    const arrow = this.arrows.get(this.x, this.y, 'green_arrow') as Phaser.Physics.Arcade.Image
-    arrow.angle = 200
+    const arrow = this.arrows.get(this.x, this.y, 'arrow') as Phaser.Physics.Arcade.Image
+    arrow.setSize(16, 6)
+    if (this.facingDirection === 'right') {
+      arrow.angle = 90
+    } else {
+      arrow.angle = 270
+    }
 
     if (!arrow) {
       return
