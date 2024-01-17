@@ -111,7 +111,7 @@ export function Game() {
               </button>
             </div>
           </div>
-          <div id="phaser-container" className="h-[600px] w-[800px]">
+          <div id="phaser-container" className="h-[500px] w-[800px]">
             {!isGameStarted && (
               <NotInitiatedGame gameRef={gameRef} setIsGameStarted={setIsGameStarted} />
             )}
