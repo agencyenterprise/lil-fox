@@ -77,9 +77,9 @@ export function GetNFT({ getCurrentLevel }: GetNFTProps) {
     >
       <h1 className="text-xl font-bold">Congratulations for completing this level! Click the button below to get your NFT skin.</h1>
       {isLoading ? (
-        <>
+        <div className="min-h-[160px] flex justify-center items-center">
           Loading...
-        </>
+        </div>
       ) : (
         <>
           {
