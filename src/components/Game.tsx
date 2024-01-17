@@ -92,7 +92,6 @@ export function Game() {
         className="h-64 w-64 absolute top-0 -left-72 text-center pb-1 window-style justify-center items-center flex-row opacity-0"
       ></div>
       <div className="flex flex-col w-full p-1">
-        <ConnectWalletComponent />
         <div className="flex flex-col w-full justify-center items-center">
           <div className="flex m-1 mx-4 justify-between box-border w-[800px] h-12 p-1 bg-[#fed5fb] items-center border-2 border-[#9f1bf5] header">
             <h1 id="title" className="text-2xl font-bold pl-2">

@@ -72,16 +72,16 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
             </div>
           )
         ) : (
-          <>
+          <div>
             <button
               disabled={!connector.ready}
               key={connector.id}
               onClick={() => connect({ connector })}
-              className='border-2 p-2 mt-2 mb-2 font-bold bg-blue-500'
+              className='border-2 p-2 font-bold bg-blue-500 absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2'
             >
               Connect With Metamask
             </button>
-          </>
+          </div>
         )
       }
     </div>
