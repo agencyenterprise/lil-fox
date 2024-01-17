@@ -1,7 +1,7 @@
 import Chest from "@/items/Chest";
 import Phaser from "phaser";
 import { Events, sceneEvents } from "@/events/EventsCenter";
-import { Direction, TILE_SIZE, getTargetPosition } from "@/utils/gridUtils";
+import { Direction, getTargetPosition } from "@/utils/gridUtils";
 import { getWonLevels } from "@/utils/localStorageUtils";
 
 declare global {

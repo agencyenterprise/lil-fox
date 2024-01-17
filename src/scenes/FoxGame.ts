@@ -68,7 +68,7 @@ export default class FoxGame extends Phaser.Scene {
     const map = this.make.tilemap({ key: 'map' });
     this.createLayers(map)
 
-    this.character = new Character(this, 870, 1400, "character");
+    this.character = new Character(this, 1250, 600, "character");
     this.character.setSize(this.character.width * 0.4, this.character.height * 0.4)
     this.physics.add.existing(this.character, false);
     this.add.existing(this.character);
@@ -113,10 +113,6 @@ export default class FoxGame extends Phaser.Scene {
     this.createBlueberries(map)
     this.createEventListeners()
 
-    this.input.on('pointerdown', () => {
-      this.showDiv();
-    });
-
     // const debugGraphics = this.add.graphics().setAlpha(0.75);
     // this.treesLayer?.renderDebug(debugGraphics, {
     //   tileColor: null,
@@ -129,12 +125,6 @@ export default class FoxGame extends Phaser.Scene {
     //   faceColor: new Phaser.Display.Color(40, 39, 37, 255)
     // });
   }
-
-  showDiv() {
-    const sendNftDiv = document.getElementById('GetNFT')!;
-    sendNftDiv.style.display = 'block';
-  }
-
 
   createBlueberries(map: Phaser.Tilemaps.Tilemap) {
     this.foods = this.add.group({
@@ -313,6 +303,7 @@ export default class FoxGame extends Phaser.Scene {
     this.lizards.clear(true, true)
     const wonLevels = getWonLevels()
     localStorage.setItem("wonLevels", JSON.stringify([...wonLevels, 1]));
+    this.showGetNftDiv();
   }
 
   handleWinLevel2() {
@@ -320,6 +311,12 @@ export default class FoxGame extends Phaser.Scene {
     this.greenArchers.clear(true, true)
     const wonLevels = getWonLevels()
     localStorage.setItem("wonLevels", JSON.stringify([...wonLevels, 2]));
+    this.showGetNftDiv();
+  }
+
+  showGetNftDiv() {
+    const sendNftDiv = document.getElementById('GetNFT')!;
+    sendNftDiv.style.display = 'block';
   }
 
   getCurrentLevel() {
