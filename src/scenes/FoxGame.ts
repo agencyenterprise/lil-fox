@@ -43,6 +43,7 @@ export default class FoxGame extends Phaser.Scene {
 
   private dialogUi: Dialog
 
+  private currentLevel: number = 0
 
   preload() {
     this.loadSkinSpriteSheet(Skin.DEFAULT)
@@ -308,15 +309,21 @@ export default class FoxGame extends Phaser.Scene {
   }
 
   handleWinLevel1() {
+    this.currentLevel = 1
     this.lizards.clear(true, true)
     const wonLevels = getWonLevels()
     localStorage.setItem("wonLevels", JSON.stringify([...wonLevels, 1]));
   }
 
   handleWinLevel2() {
+    this.currentLevel = 2
     this.greenArchers.clear(true, true)
     const wonLevels = getWonLevels()
     localStorage.setItem("wonLevels", JSON.stringify([...wonLevels, 2]));
+  }
+
+  getCurrentLevel() {
+    return this.currentLevel
   }
 
   loadSkinSpriteSheet(skinName: string) {

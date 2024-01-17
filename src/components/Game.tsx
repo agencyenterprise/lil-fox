@@ -89,6 +89,16 @@ export function Game() {
     }
   };
 
+  const getCurrentLevel = async (): Promise<number | void> => {
+    if (typeof window !== "undefined") {
+      const FoxGame = require("@/scenes").FoxGame;
+      const gameScene = gameRef.current?.scene.scenes[1] as typeof FoxGame;
+      if (!gameScene) return
+      return await gameScene.getCurrentLevel();
+    }
+    return -1
+  }
+
   return (
     <div className="flex text-center w-[814px] pb-1 window-style absolute top-[50%] left-[50%] mt-[-334px] ml-[-407px] justify-center items-center flex-row ">
       <div
@@ -115,7 +125,7 @@ export function Game() {
             {!isGameStarted && (
               <NotInitiatedGame gameRef={gameRef} setIsGameStarted={setIsGameStarted} />
             )}
-            <GetNFT />
+            <GetNFT getCurrentLevel={getCurrentLevel} />
           </div>
         </div>
       </div>

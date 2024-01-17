@@ -1,14 +1,49 @@
 import ReCAPTCHA from "react-google-recaptcha";
 import { FormEvent, useState } from "react";
+import { Errors } from "@/utils/errors";
 
-export function GetNFT() {
+type GetNFTProps = {
+  getCurrentLevel: () => Promise<number | void>
+}
+
+export function GetNFT({ getCurrentLevel }: GetNFTProps) {
   const [captcha, setCaptcha] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault()
     console.log(captcha)
 
-    fetch('api/nft')
+    const send = async () => {
+      const currentLevel = await getCurrentLevel()      
+      const body = {
+        "g-recaptcha-response": captcha,
+        level: currentLevel
+      }
+  
+      const response = await fetch('api/nft', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      })
+
+      const responseData = await response.json()
+
+      if(response.status !== 200) {
+        console.log(responseData.message)
+        if (responseData.message === Errors.CAPTCHA_FAILED) {
+          setError('Captcha failed try again')
+        }
+        return
+      }
+
+
+      
+    }
+    
+    send()
   }
 
   return (
