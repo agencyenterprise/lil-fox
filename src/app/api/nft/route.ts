@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     return new NextResponse(JSON.stringify({ message: Errors.CAPTCHA_FAILED }), { status: 404 });
   }
 
-  const txHash = sendNft(userAddress, level)
+  const txHash = await sendNft(userAddress, level)
 
   return NextResponse.json({ txHash });
 }

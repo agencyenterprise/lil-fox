@@ -1,12 +1,14 @@
 import ReCAPTCHA from "react-google-recaptcha";
 import { FormEvent, useState } from "react";
 import { Errors } from "@/utils/errors";
+import { useAccount } from 'wagmi'
 
 type GetNFTProps = {
   getCurrentLevel: () => Promise<number | void>
 }
 
 export function GetNFT({ getCurrentLevel }: GetNFTProps) {
+  const { address } = useAccount()
   const [captcha, setCaptcha] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -18,7 +20,8 @@ export function GetNFT({ getCurrentLevel }: GetNFTProps) {
       const currentLevel = await getCurrentLevel()      
       const body = {
         "g-recaptcha-response": captcha,
-        level: currentLevel
+        level: currentLevel,
+        userAddress: address
       }
   
       const response = await fetch('api/nft', {
@@ -32,15 +35,11 @@ export function GetNFT({ getCurrentLevel }: GetNFTProps) {
       const responseData = await response.json()
 
       if(response.status !== 200) {
-        console.log(responseData.message)
         if (responseData.message === Errors.CAPTCHA_FAILED) {
           setError('Captcha failed try again')
         }
         return
       }
-
-
-      
     }
     
     send()

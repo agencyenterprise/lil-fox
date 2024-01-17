@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { ConnectWalletComponent } from "./ConnectWalletComponent";
 import config from "@/config/index";
 import { BigNumber, ContractInterface, ethers } from "ethers";
