@@ -15,9 +15,15 @@ export function GetNFT({ getCurrentLevel }: GetNFTProps) {
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault()
-    
-    const send = async () => {
+
+    const sendNft = async () => {
       const currentLevel = await getCurrentLevel()
+
+      if (!currentLevel || currentLevel <= 0) {
+        setError('Something went wrong, try again.')
+        return
+      }
+
       const body = {
         "g-recaptcha-response": captcha,
         level: currentLevel,
@@ -46,7 +52,7 @@ export function GetNFT({ getCurrentLevel }: GetNFTProps) {
       setTxHash(responseData.txHash)
     }
 
-    send()
+    sendNft()
   }
 
   const onOk = () => {
@@ -69,7 +75,7 @@ export function GetNFT({ getCurrentLevel }: GetNFTProps) {
         txHash ? (
           <>
             <p className="text-base">
-              Your skin is on the way, follow the transaction status <a className="text-blue-500" href={`${process.env.NEXT_PUBLIC_LINEA_BLOCK_EXPLORER_URL}/tx/${txHash}`}>here</a>
+              Your skin is on the way, follow the transaction status <a className="text-blue-500" href={`${process.env.NEXT_PUBLIC_LINEA_BLOCK_EXPLORER_URL}/tx/${txHash}`}>here</a>.
             </p>
             <button id="autosave" className="button mt-4" onClick={onOk}>
               Ok
