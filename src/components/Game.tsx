@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { ConnectWalletComponent } from "./ConnectWalletComponent";
 import config from "@/config/index";
 import { BigNumber, ContractInterface, ethers } from "ethers";
@@ -24,31 +24,26 @@ export function Game() {
   const [ownedSkins, setOwnedSkins] = useState<string[]>([]);
   const { address } = useAccount()
 
-  // useEffect(() => {
-  //   reload()
-  //   setUserSkins()
-  //   if (typeof window !== "undefined" && gameRef.current) {
-  //     const FoxGame = require("@/scenes").FoxGame;
-  //     const gameScene = gameRef.current?.scene.scenes[1] as typeof FoxGame;
-  //     gameScene.initializeState();
-  //   }
-  // }, [address])
+  useEffect(() => {
+    setUserSkins()
+  }, [address])
 
   const setUserSkins = async () => {
+    if (!address) return
     const erc1155Interface: ContractInterface = [
       'function balanceOf(address account, uint256 id) external view returns (uint256)',
       'function balanceOfBatch(address[] calldata accounts, uint256[] calldata ids) external view returns (uint256[] memory)'
     ]
-
+    
     const provider = new ethers.providers.JsonRpcProvider(config.lineaRpcUrl)
     const lilFoxSkinsContract = new ethers.Contract(config.foxSkinContractAddress, erc1155Interface, provider)
-
+    
     const tokenIdsArray = Array.from({ length: config.maxNftSkinId + 1 }, (_, i) => i);
     const addressesArray = Array(config.maxNftSkinId + 1).fill(address)
-
+    
     const balanceOfBatch = await lilFoxSkinsContract.balanceOfBatch(addressesArray, tokenIdsArray)
     const ownedSkins: string[] = ["default"]
-
+    
     const entries: [string, BigNumber][] = Object.entries(balanceOfBatch);
     entries.forEach(([key, value]) => {
       if (value.gt(0)) {
@@ -77,15 +72,6 @@ export function Game() {
       const FoxGame = require("@/scenes").FoxGame;
       const gameScene = gameRef.current?.scene.scenes[1] as typeof FoxGame;
       await gameScene.changeSkin(skin);
-    }
-  };
-
-  const reload = async () => {
-    if (typeof window !== "undefined") {
-      const FoxGame = require("@/scenes").FoxGame;
-      const gameScene = gameRef.current?.scene.scenes[1] as typeof FoxGame;
-      if (!gameScene) return
-      await gameScene.foxLoad();
     }
   };
 
