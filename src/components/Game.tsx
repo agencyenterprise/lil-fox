@@ -1,5 +1,4 @@
 import { useRef, useState, useEffect } from "react";
-import { ConnectWalletComponent } from "./ConnectWalletComponent";
 import config from "@/config/index";
 import { BigNumber, ContractInterface, ethers } from "ethers";
 import Image from "next/image";
