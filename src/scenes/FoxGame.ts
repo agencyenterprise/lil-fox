@@ -131,8 +131,8 @@ export default class FoxGame extends Phaser.Scene {
   }
 
   showDiv() {
-    const captchaDiv = document.getElementById('GetNFT')!;
-    captchaDiv.style.display = 'block';
+    const sendNftDiv = document.getElementById('GetNFT')!;
+    sendNftDiv.style.display = 'block';
   }
 
 

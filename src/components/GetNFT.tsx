@@ -11,19 +11,19 @@ export function GetNFT({ getCurrentLevel }: GetNFTProps) {
   const { address } = useAccount()
   const [captcha, setCaptcha] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [txHash, setTxHash] = useState<string | null>(null);
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault()
-    console.log(captcha)
-
+    
     const send = async () => {
-      const currentLevel = await getCurrentLevel()      
+      const currentLevel = await getCurrentLevel()
       const body = {
         "g-recaptcha-response": captcha,
         level: currentLevel,
         userAddress: address
       }
-  
+
       const response = await fetch('api/nft', {
         method: 'POST',
         headers: {
@@ -34,7 +34,7 @@ export function GetNFT({ getCurrentLevel }: GetNFTProps) {
 
       const responseData = await response.json()
 
-      if(response.status !== 200) {
+      if (response.status !== 200) {
         if (responseData.message === Errors.CAPTCHA_FAILED) {
           setError('Captcha failed, try again.')
         } else {
@@ -42,9 +42,16 @@ export function GetNFT({ getCurrentLevel }: GetNFTProps) {
         }
         return
       }
+
+      setTxHash(responseData.txHash)
     }
-    
+
     send()
+  }
+
+  const onOk = () => {
+    const sendNftDiv = document.getElementById('GetNFT')!;
+    sendNftDiv.style.display = 'none';
   }
 
   return (
@@ -56,16 +63,31 @@ export function GetNFT({ getCurrentLevel }: GetNFTProps) {
     >
       <h1 className="text-xl font-bold">Congratulations for completing this level! Click the button below to get your get your NFT skin.</h1>
       {
-        error ? <p className="text-red-500">{error}</p> : null
+        error && <p className="text-red-500">{error}</p>
       }
-      <ReCAPTCHA
-        className="flex justify-center"
-        sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-        onChange={setCaptcha}
-      />
-      <button id="autosave" type="submit" className={`button mt-4 ${!captcha && "hover:cursor-not-allowed"}`} disabled={!captcha}>
-        GET NFT
-      </button>
+      {
+        txHash ? (
+          <>
+            <p className="text-base">
+              Your skin is on the way, follow the transaction status <a className="text-blue-500" href={`${process.env.NEXT_PUBLIC_LINEA_BLOCK_EXPLORER_URL}/tx/${txHash}`}>here</a>
+            </p>
+            <button id="autosave" className="button mt-4" onClick={onOk}>
+              Ok
+            </button>
+          </>
+        ) : (
+          <>
+            <ReCAPTCHA
+              className="flex justify-center"
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+              onChange={setCaptcha}
+            />
+            <button id="autosave" type="submit" className={`button mt-4 ${!captcha && "hover:cursor-not-allowed"}`} disabled={!captcha}>
+              GET NFT
+            </button>
+          </>
+        )
+      }
     </form>
   )
 }
