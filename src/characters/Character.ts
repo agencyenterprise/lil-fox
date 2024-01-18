@@ -33,7 +33,7 @@ enum HealthState {
 
 export default class Character extends Phaser.Physics.Arcade.Sprite {
   private currentDirection = Direction.NONE
-  private selectedSkin: Skin = Skin.BLUE
+  private selectedSkin: Skin = Skin.DEFAULT
   private healthState = HealthState.IDLE
   private damageTime = 0
   private isPlayerMovementLocked = false
