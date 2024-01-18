@@ -57,7 +57,7 @@ type NumberMapping = {
   // Add more mappings if needed
 };
 
-export const levelToSkinId: NumberMapping = {
+const levelToSkinId: NumberMapping = {
   1: 0,
   2: 2,
   3: 3,
