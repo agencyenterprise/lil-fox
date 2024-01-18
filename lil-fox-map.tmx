@@ -3716,7 +3716,7 @@
   <object id="16" name="enter_sign_level_1" gid="1920" x="1248" y="576" width="16" height="16">
    <properties>
     <property name="levelNumber" type="int" value="1"/>
-    <property name="message" value="This village has been raided by Phising Lizards, sneak into it dodging the lizards and get to the end of the village to acquire the knewlodge of how to defeat them."/>
+    <property name="message" value="This village has been raided by Phising Lizards, sneak into it dodging the lizards and get to the end of the village to acquire the knowledge of how to defeat them."/>
    </properties>
   </object>
   <object id="25" name="end_sign_level_1" gid="1920" x="1648" y="416" width="16" height="16">

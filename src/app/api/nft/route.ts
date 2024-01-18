@@ -2,15 +2,24 @@ import { Errors } from "@/utils/errors";
 import { ethers } from "ethers";
 import { NextRequest, NextResponse } from "next/server";
 
+type SendNftBody = {
+  "g-recaptcha-response": string;
+  level: 1 | 2 | 3;
+  userAddress: string;
+};
+
 export async function POST(request: NextRequest) {
-  const { "g-recaptcha-response": captchaResponse, level, userAddress } = await request.json()
+  const { "g-recaptcha-response": captchaResponse, level, userAddress } = (await request.json()) as SendNftBody;
+
+  if (level === undefined || level < 1 || level > 3) return new NextResponse(JSON.stringify({ message: Errors.UNKNOWN_ERROR }), { status: 400 });
 
   if (!isCaptchaValid(captchaResponse)) {
     return new NextResponse(JSON.stringify({ message: Errors.CAPTCHA_FAILED }), { status: 404 });
   }
 
   try {
-    const txHash = await sendNft(userAddress, level)
+    const skinId = levelToSkinId[level]
+    const txHash = await sendNft(userAddress, skinId)
     return NextResponse.json({ txHash });
   } catch (error) {
     return new NextResponse(JSON.stringify({ message: Errors.UNKNOWN_ERROR }), { status: 400 });
@@ -39,4 +48,17 @@ const sendNft = async (to: string, level: number): Promise<string> => {
 
   const tx = await skinsContract.mint(to, level, 1, "0x");
   return tx.hash
+}
+
+type NumberMapping = {
+  1: number;
+  2: number;
+  3: number;
+  // Add more mappings if needed
+};
+
+export const levelToSkinId: NumberMapping = {
+  1: 0,
+  2: 2,
+  3: 3,
 }
