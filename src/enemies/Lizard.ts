@@ -15,14 +15,14 @@ export const randomDirection = (exclude: Direction): Direction => {
 export default class Lizard extends Phaser.Physics.Arcade.Sprite {
 
   private direction = Direction.RIGHT
-  private moveEvent: Phaser.Time.TimerEvent  
+  private moveEvent: Phaser.Time.TimerEvent
 
-  constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number ) {
+  constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
     super(scene, x, y, texture, frame)
 
     this.anims.play('lizard-idle')
 
-    scene.physics.world.on(Phaser.Physics.Arcade.Events.TILE_COLLIDE, this.handleTileCollision, this)
+    scene.physics.world.on(Phaser.Physics.Arcade.Events.TILE_COLLIDE, this.changeDirection, this)
 
     this.moveEvent = scene.time.addEvent({
       delay: 2000,
@@ -34,14 +34,14 @@ export default class Lizard extends Phaser.Physics.Arcade.Sprite {
   }
 
   destroy(fromScene?: boolean | undefined) {
-    this.moveEvent.destroy()  
+    this.moveEvent.destroy()
     super.destroy(fromScene)
   }
 
-  private handleTileCollision(go: Phaser.GameObjects.GameObject, tile: Phaser.Tilemaps.Tile) {
-     if (go !== this) return
+  changeDirection(go: Phaser.GameObjects.GameObject, tile?: Phaser.Tilemaps.Tile) {
+    if (go !== this) return
 
-      this.direction = randomDirection(this.direction)
+    this.direction = randomDirection(this.direction)
   }
 
   protected preUpdate(time: number, delta: number): void {
@@ -52,7 +52,7 @@ export default class Lizard extends Phaser.Physics.Arcade.Sprite {
 
     const speed = 50
 
-    switch(this.direction) { 
+    switch (this.direction) {
       case Direction.UP:
         this.setVelocity(0, -speed)
         break

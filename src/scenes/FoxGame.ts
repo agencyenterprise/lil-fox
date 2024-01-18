@@ -68,9 +68,11 @@ export default class FoxGame extends Phaser.Scene {
     const map = this.make.tilemap({ key: 'map' });
     this.createLayers(map)
 
+    this.character = new Character(this, 856, 738, "character");
+
     // this.character = new Character(this, 1250, 600, "character");
-    this.character = new Character(this, 850, 1400, "character");
-    
+    // this.character = new Character(this, 850, 1400, "character");
+
     this.character.setSize(this.character.width * 0.4, this.character.height * 0.4)
     this.physics.add.existing(this.character, false);
     this.add.existing(this.character);
@@ -182,6 +184,8 @@ export default class FoxGame extends Phaser.Scene {
     const lizard = obj2 as Lizard
     const dx = this.character.x - lizard.x
     const dy = this.character.y - lizard.y
+
+    lizard.changeDirection(lizard)
 
     const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(150)
 
