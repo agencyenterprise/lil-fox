@@ -2,7 +2,7 @@ import Phaser from "phaser";
 
 enum Events {
   PLAYER_HEALTH_CHANGED = 'player-health-changed',
-  PLAYER_HUNGER_CHANGED = 'player-hunger-changed',
+  PLAYER_COLLECTED_BERRY = 'player-collected-berry',
   LOCK_PLAYER_MOVEMENT = 'lock-player-movement',
   SHOW_DIALOG = 'show-dialog',
   SHOW_TIP = 'show-tip',

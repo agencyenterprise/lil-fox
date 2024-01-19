@@ -15,9 +15,6 @@ export default class FoxGame extends Phaser.Scene {
     super({ key: 'LilFox' })
   }
 
-  private mapHeight: number = 100
-  private mapLength: number = 100
-
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
   private character!: Character
 
@@ -44,6 +41,7 @@ export default class FoxGame extends Phaser.Scene {
   private dialogUi: Dialog
 
   private currentLevel: number = 0
+  private collectedBlueBerries: number = 0
 
   preload() {
     this.loadSkinSpriteSheet(Skin.DEFAULT)
@@ -164,9 +162,10 @@ export default class FoxGame extends Phaser.Scene {
     const food = obj2 as Phaser.GameObjects.Image
     food.destroy()
 
-    if (this.character.hunger >= 5) return
+    if (this.collectedBlueBerries >= 5) return
 
-    this.character.eat()
+    this.collectedBlueBerries += 1
+    sceneEvents.emit(Events.PLAYER_COLLECTED_BERRY, this.collectedBlueBerries)
   }
 
   private handleCharacterChestCollision(

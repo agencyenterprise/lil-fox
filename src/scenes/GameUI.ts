@@ -41,7 +41,7 @@ export default class GameUI extends Phaser.Scene {
     })
 
     this.berries.createMultiple({
-      key: 'berry',
+      key: 'berry-empty',
       setXY: {
         x: 10,
         y: 25,
@@ -52,12 +52,12 @@ export default class GameUI extends Phaser.Scene {
 
 
     sceneEvents.on(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
-    sceneEvents.on(Events.PLAYER_HUNGER_CHANGED, this.handlePlayerHungerChanged, this)
+    sceneEvents.on(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
     sceneEvents.on(Events.SHOW_DIALOG, this.showDialog, this)
     sceneEvents.on(Events.SHOW_TIP, this.showTip, this)
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      sceneEvents.off(Events.PLAYER_HUNGER_CHANGED, this.handlePlayerHungerChanged, this)
+      sceneEvents.off(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
       sceneEvents.off(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
       sceneEvents.off(Events.SHOW_DIALOG, () => this.dialogUi.hideDialogModal(), this)
     })
@@ -121,12 +121,12 @@ export default class GameUI extends Phaser.Scene {
     })
   }
 
-  handlePlayerHungerChanged(hunger: number) {
+  handlePlayerCollectedBerry(collectedBerrys: number) {
     // @ts-ignore
     this.berries.children.each((go, idx) => {
       const berry = go as Phaser.GameObjects.Image
 
-      if (idx < hunger) {
+      if (idx < collectedBerrys) {
         berry.setTexture('berry')
       } else {
         berry.setTexture('berry-empty')

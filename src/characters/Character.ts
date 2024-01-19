@@ -39,16 +39,11 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
   private isPlayerMovementLocked = false
 
   private _health = 5
-  private _hunger = 5
 
   private activeChest?: Chest
 
   get health() {
     return this._health
-  }
-
-  get hunger() {
-    return this._hunger
   }
 
   set skin(skin: Skin) {
@@ -60,13 +55,6 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
     this.anims.play(`idle-${this.selectedSkin}`);
     scene.physics.add.existing(this, false);
-
-    this.scene.time.addEvent({
-      delay: 5 * 60 * 1000,
-      callback: this.getHungry,
-      callbackScope: this,
-      loop: true,
-    });
 
     sceneEvents.on(Events.LOCK_PLAYER_MOVEMENT, this.handleLockPlayerMovement, this)
     scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
@@ -220,18 +208,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       this.damageTime = 0
     }
   }
-
-  eat() {
-    this._hunger += 1
-    sceneEvents.emit(Events.PLAYER_HUNGER_CHANGED, this._hunger)
-  }
-
-  getHungry() {
-    if (this._hunger <= 0) return
-    this._hunger -= 1
-    sceneEvents.emit(Events.PLAYER_HUNGER_CHANGED, this._hunger)
-  }
-
+  
   setChest(chest: Chest) {
     this.activeChest = chest
   }
