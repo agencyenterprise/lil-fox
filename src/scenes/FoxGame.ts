@@ -125,7 +125,7 @@ export default class FoxGame extends Phaser.Scene {
     // this.terrainLayer?.renderDebug(debugGraphics, {
     //   tileColor: null,
     //   collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
-    //   faceColor: new Phaser.Display.Color(40, 39, 37, 255)
+    //   faceColor: new Phaser.Display.Color(40, 39,1 37, 255)
     // });
   }
 
