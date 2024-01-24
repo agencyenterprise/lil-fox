@@ -104,6 +104,20 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       }
     }
 
+    if (this.isPlayerMovementLocked) {
+      this.anims.play(`idle-${this.selectedSkin}`);
+      this.setVelocity(0, 0);
+      return
+    }
+
+    this.moveFox(cursors)
+
+    // if (leftDown || rightDown || upDown || downDown) {
+    //   this.activeChest = undefined
+    // }
+  }
+
+  moveFox(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
     const speed = 85
 
     const leftDown = cursors.left?.isDown
@@ -111,13 +125,39 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     const upDown = cursors.up?.isDown
     const downDown = cursors.down?.isDown
 
-    if (this.isPlayerMovementLocked) {
-      this.anims.play(`idle-${this.selectedSkin}`);
-      this.setVelocity(0, 0);
-      return
-    }
-
-    if (leftDown) {
+    if (rightDown && upDown) {
+      console.log("right up")
+      this.anims.play(`run-${this.selectedSkin}`, true);
+      this.setVelocity(speed / 1.65, -speed / 1.65);
+      this.scaleX = 1;
+      this.body?.offset.setTo(8, 12);
+      this.currentDirection = Direction.RIGHT
+      
+    } else if (rightDown && downDown) {
+      console.log("right down")
+      this.anims.play(`run-${this.selectedSkin}`, true);
+      this.setVelocity(speed / 1.65, speed / 1.65);
+      this.scaleX = 1;
+      this.body?.offset.setTo(8, 12);
+      this.currentDirection = Direction.RIGHT
+      
+    } else if (leftDown && upDown) {
+      console.log("left up")
+      this.anims.play(`run-${this.selectedSkin}`, true);
+      this.setVelocity(-speed / 1.65, -speed / 1.65);
+      this.scaleX = -1;
+      this.body?.offset.setTo(24, 12);
+      this.currentDirection = Direction.LEFT
+      
+    } else if (leftDown && downDown) {
+      console.log("left down")
+      this.anims.play(`run-${this.selectedSkin}`, true);
+      this.setVelocity(-speed / 1.65, speed / 1.65);
+      this.scaleX = -1;
+      this.body?.offset.setTo(24, 12);
+      this.currentDirection = Direction.LEFT
+      
+    } else if (leftDown) {
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(-speed, 0);
       this.scaleX = -1;
@@ -144,10 +184,6 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     } else {
       this.anims.play(`idle-${this.selectedSkin}`);
       this.setVelocity(0, 0);
-    }
-
-    if (leftDown || rightDown || upDown || downDown) {
-      this.activeChest = undefined
     }
   }
 
@@ -208,7 +244,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       this.damageTime = 0
     }
   }
-  
+
   setChest(chest: Chest) {
     this.activeChest = chest
   }
