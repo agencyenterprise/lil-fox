@@ -13,6 +13,10 @@ import Cat from "@/npcs/cat";
 import { createCatAnims } from "@/anims/NpcAnims";
 import { SpawnPoints } from "@/types/SpawnPoints";
 
+type CreateData = {
+  levelNumber?: number
+}
+
 export default class FoxGame extends Phaser.Scene {
   constructor() {
     super({ key: 'LilFox' })
@@ -58,7 +62,7 @@ export default class FoxGame extends Phaser.Scene {
     this.cursors = this.input.keyboard?.createCursorKeys()!;
   }
 
-  create() {
+  create(data: CreateData) {
     const wonLevels = getWonLevels()
 
     this.scene.run('game-ui')
@@ -79,8 +83,13 @@ export default class FoxGame extends Phaser.Scene {
       this.spawnPoints.set(spawnPoint.name, new Phaser.Geom.Point(x!, y!))
     })
 
-    const mainSpawn = this.spawnPoints.get(SpawnPoints.MAIN_SPAWN)!
-    this.character = new Character(this, mainSpawn.x, mainSpawn.y, "character");
+    if (data.levelNumber) {
+      const levelSpawn = this.spawnPoints.get(`level${data.levelNumber}Spawn`)!
+      this.character = new Character(this, levelSpawn.x, levelSpawn.y, "character");
+    } else {
+      const mainSpawn = this.spawnPoints.get(SpawnPoints.MAIN_SPAWN)!
+      this.character = new Character(this, mainSpawn.x, mainSpawn.y, "character");
+    }
 
     this.character.setSize(this.character.width * 0.4, this.character.height * 0.4)
     this.physics.add.existing(this.character, false);
@@ -311,9 +320,11 @@ export default class FoxGame extends Phaser.Scene {
   createEventListeners() {
     sceneEvents.on(Events.WON_LEVEL_1, this.handleWinLevel1, this)
     sceneEvents.on(Events.WON_LEVEL_2, this.handleWinLevel2, this)
+    sceneEvents.on(Events.FAILED_LEVEL, this.handleFailedLevel, this)
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       sceneEvents.off(Events.WON_LEVEL_1, this.handleWinLevel1, this)
+      sceneEvents.off(Events.FAILED_LEVEL, this.handleFailedLevel, this)
     })
   }
 
@@ -337,6 +348,10 @@ export default class FoxGame extends Phaser.Scene {
   showGetNftDiv() {
     const sendNftDiv = document.getElementById('GetNFT')!;
     sendNftDiv.style.display = 'block';
+  }
+
+  handleFailedLevel() {
+
   }
 
   getCurrentLevel() {
