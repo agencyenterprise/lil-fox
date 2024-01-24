@@ -9,7 +9,7 @@ import GreenArcher from "@/enemies/GreenArcher";
 import { createArcherAnims } from "@/anims/GreenArcherAnims";
 import { Dialog } from "@/ui/Dialog";
 import { getWonLevels } from "@/utils/localStorageUtils";
-import Cat from "@/npcs/cat";
+import Cat from "@/npcs/Cat";
 import { createCatAnims } from "@/anims/NpcAnims";
 import { SpawnPoints } from "@/types/SpawnPoints";
 
