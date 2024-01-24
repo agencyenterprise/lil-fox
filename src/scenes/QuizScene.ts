@@ -176,7 +176,6 @@ export default class QuizScene extends Phaser.Scene {
       this.scene.setVisible(false)
       this.scene.pause()
       this.scene.start("LilFox", { levelNumber: this.levelNumber })
-      sceneEvents.emit(Events.FAILED_LEVEL, this.levelNumber)
     }
   }
 

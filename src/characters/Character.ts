@@ -85,12 +85,18 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     signsLayer: Phaser.Tilemaps.ObjectLayer,
     areasLayer: Phaser.Geom.Rectangle[]
   ) {
-    if (this.healthState === HealthState.DAMAGE || this.healthState === HealthState.DEAD) return
     if (!cursors) return;
+    const spaceJustDown = Phaser.Input.Keyboard.JustDown(cursors.space)
+
+    if (this.healthState === HealthState.DEAD && spaceJustDown) {
+      this.scene.scene.restart()
+    }
+
+    if (this.healthState === HealthState.DAMAGE || this.healthState === HealthState.DEAD) return
 
     this.isCharacterInArea(areasLayer)
 
-    if (Phaser.Input.Keyboard.JustDown(cursors.space)) {
+    if (spaceJustDown) {
       const coordinate = { x: this.x, y: this.y }
       const targetPosition = getTargetPosition(coordinate, this.currentDirection)
 
@@ -111,10 +117,6 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     }
 
     this.moveFox(cursors)
-
-    // if (leftDown || rightDown || upDown || downDown) {
-    //   this.activeChest = undefined
-    // }
   }
 
   moveFox(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
@@ -221,22 +223,23 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       }
     }
   }
-
+  
   handleLockPlayerMovement(lock: boolean) {
     this.isPlayerMovementLocked = lock
   }
-
+  
   handleDamage(dir: Phaser.Math.Vector2) {
     if (this._health <= 0) return
-
+    
     if (this.healthState === HealthState.DAMAGE) return
-
+    
     --this._health
-
+    
     if (this._health <= 0) {
       this.healthState = HealthState.DEAD
       this.anims.play(`idle-${this.selectedSkin}`);
       this.setVelocity(0, 0)
+      sceneEvents.emit(Events.CHARACTER_DIED)
     } else {
       this.setVelocity(dir.x, dir.y)
       this.setTint(0xff0000)

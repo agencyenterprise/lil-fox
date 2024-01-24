@@ -4,6 +4,7 @@ import { Events, sceneEvents } from "../events/EventsCenter";
 import SettingsMenu from "./SettingsMenu";
 import { Dialog } from "@/ui/Dialog";
 import { Tip } from "@/ui/Tip";
+import { CharacterDiedDialog } from "@/ui/CharacterDiedDialog";
 
 export default class GameUI extends Phaser.Scene {
 
@@ -12,6 +13,7 @@ export default class GameUI extends Phaser.Scene {
   private hearts: Phaser.GameObjects.Group
   private berries: Phaser.GameObjects.Group
   private dialogUi: Dialog
+  private characterDiedDialog: CharacterDiedDialog
   private tipUi: Tip
 
   constructor() {
@@ -20,6 +22,7 @@ export default class GameUI extends Phaser.Scene {
 
   create() {
     this.dialogUi = new Dialog(this, 310)
+    this.characterDiedDialog = new CharacterDiedDialog(this)
     this.tipUi = new Tip(this)
     // this.settingsMenu = new SettingsMenu(this)
 
@@ -55,57 +58,16 @@ export default class GameUI extends Phaser.Scene {
     sceneEvents.on(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
     sceneEvents.on(Events.SHOW_DIALOG, this.showDialog, this)
     sceneEvents.on(Events.SHOW_TIP, this.showTip, this)
+    sceneEvents.on(Events.CHARACTER_DIED, this.handleCharacterDied, this)
+
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       sceneEvents.off(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
       sceneEvents.off(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
       sceneEvents.off(Events.SHOW_DIALOG, () => this.dialogUi.hideDialogModal(), this)
+      sceneEvents.off(Events.CHARACTER_DIED, this.handleCharacterDied, this)
+
     })
-
-
-    // const padding = 90
-    // const width = 1280 - padding * 2
-    // const height = 124
-
-    // const panel = this.add.rectangle(
-    //   0,
-    //   0,
-    //   width,
-    //   height,
-    //   0xede4f3,
-    //   0.9
-    // ).setOrigin(0)
-    //   .setStrokeStyle(8, 0x905ac2, 1)
-    // const c = this.add.container(0, 0, [panel])
-
-    // c.setPosition(0, 0)
-    // c.setAlpha(1)
-
-
-
-    // const width = this.scale.width
-    // const settingsButton = this.add.image(width - 20, 20, 'small-button').setScale(0.7)
-    // console.log({
-    //   posx: settingsButton.x - settingsButton.width * 0.5,
-    //   posy: settingsButton.y + settingsButton.height * 0.5
-    // })
-    // this.add.image(settingsButton.x - settingsButton.width * 0.05, settingsButton.y + settingsButton.height * 0.02, 'gear').setScale(0.5)
-    // // settingsButton.setVisible(false)
-
-    // settingsButton.setInteractive()
-    //   .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OVER, () => {
-    //     settingsButton.setTint(0xdedede)
-    //   })
-    //   .on(Phaser.Input.Events.GAMEOBJECT_POINTER_OUT, () => {
-    //     settingsButton.setTint(0xffffff)
-    //   })
-    //   .on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => {
-    //     console.log("OIII")
-    //     settingsButton.setTint(0x8afbff)
-    //   })
-    //   .on(Phaser.Input.Events.GAMEOBJECT_POINTER_UP, () => {
-    //     settingsButton.setTint(0xffffff)
-    //   })
   }
 
   handlePlayerHealthChanged(health: number) {
@@ -162,5 +124,9 @@ export default class GameUI extends Phaser.Scene {
     } else if (!show && this.tipUi.isVisible) {
       this.tipUi.hideTip()
     }
+  }
+
+  handleCharacterDied() {
+    this.characterDiedDialog.showDialogModal()
   }
 }

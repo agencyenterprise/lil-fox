@@ -8,7 +8,7 @@ enum Events {
   SHOW_TIP = 'show-tip',
   WON_LEVEL_1 = 'won-level-1',
   WON_LEVEL_2 = 'won-level-2',
-  FAILED_LEVEL = 'failed-level',
+  CHARACTER_DIED = 'character-died',
 }
 
 const sceneEvents = new Phaser.Events.EventEmitter()

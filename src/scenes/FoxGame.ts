@@ -150,6 +150,10 @@ export default class FoxGame extends Phaser.Scene {
     this.createBlueberries(map)
     this.createEventListeners()
 
+    // this.input.on('pointerdown', () => {
+    //   sceneEvents.emit(Events.CHARACTER_DIED)
+    // });
+
     // const debugGraphics = this.add.graphics().setAlpha(0.75);
     // this.treesLayer?.renderDebug(debugGraphics, {
     //   tileColor: null,
@@ -320,11 +324,9 @@ export default class FoxGame extends Phaser.Scene {
   createEventListeners() {
     sceneEvents.on(Events.WON_LEVEL_1, this.handleWinLevel1, this)
     sceneEvents.on(Events.WON_LEVEL_2, this.handleWinLevel2, this)
-    sceneEvents.on(Events.FAILED_LEVEL, this.handleFailedLevel, this)
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       sceneEvents.off(Events.WON_LEVEL_1, this.handleWinLevel1, this)
-      sceneEvents.off(Events.FAILED_LEVEL, this.handleFailedLevel, this)
     })
   }
 
@@ -350,9 +352,6 @@ export default class FoxGame extends Phaser.Scene {
     sendNftDiv.style.display = 'block';
   }
 
-  handleFailedLevel() {
-
-  }
 
   getCurrentLevel() {
     return this.currentLevel
