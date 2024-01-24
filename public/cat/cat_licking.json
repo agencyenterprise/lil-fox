@@ -1,0 +1,104 @@
+{
+	"textures": [
+		{
+			"image": "cat_licking.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 17,
+				"h": 58
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "tile016.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 8,
+						"y": 19,
+						"w": 15,
+						"h": 13
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 15,
+						"h": 13
+					}
+				},
+				{
+					"filename": "tile019.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 8,
+						"y": 19,
+						"w": 15,
+						"h": 13
+					},
+					"frame": {
+						"x": 1,
+						"y": 16,
+						"w": 15,
+						"h": 13
+					}
+				},
+				{
+					"filename": "tile017.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 8,
+						"y": 20,
+						"w": 15,
+						"h": 12
+					},
+					"frame": {
+						"x": 1,
+						"y": 31,
+						"w": 15,
+						"h": 12
+					}
+				},
+				{
+					"filename": "tile018.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 8,
+						"y": 20,
+						"w": 15,
+						"h": 12
+					},
+					"frame": {
+						"x": 1,
+						"y": 45,
+						"w": 15,
+						"h": 12
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:ade12bbb4b6111d9c0763626f2bb7c75:d92c2476fcb445a44ad615fddd1daae2:6b900c5b2efd3e9014e2109899652e6d$"
+	}
+}

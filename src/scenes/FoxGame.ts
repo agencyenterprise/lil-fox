@@ -9,6 +9,8 @@ import GreenArcher from "@/enemies/GreenArcher";
 import { createArcherAnims } from "@/anims/GreenArcherAnims";
 import { Dialog } from "@/ui/Dialog";
 import { getWonLevels } from "@/utils/localStorageUtils";
+import Cat from "@/npcs/cat";
+import { createCatAnims } from "@/anims/NpcAnims";
 
 export default class FoxGame extends Phaser.Scene {
   constructor() {
@@ -33,6 +35,7 @@ export default class FoxGame extends Phaser.Scene {
   private foods: Phaser.GameObjects.Group
   private lizards: Phaser.GameObjects.Group
   private greenArchers: Phaser.GameObjects.Group
+  private cats: Phaser.GameObjects.Group
   private arrows: Phaser.GameObjects.Group
 
   private playerLizardsCollider?: Phaser.Physics.Arcade.Collider
@@ -62,6 +65,7 @@ export default class FoxGame extends Phaser.Scene {
     createArcherAnims(this.anims)
     createLizardAnims(this.anims)
     createChestAnims(this.anims)
+    createCatAnims(this.anims)
 
     const map = this.make.tilemap({ key: 'map' });
     this.createLayers(map)
@@ -95,6 +99,10 @@ export default class FoxGame extends Phaser.Scene {
       classType: Phaser.Physics.Arcade.Image,
     })
 
+    this.cats = this.physics.add.group({
+      classType: Cat
+    })
+
     map.getObjectLayer('Enemies')!.objects.forEach(enemy => {
       const x = enemy.x! + enemy.width! * 0.5
       const y = enemy.y! + enemy.height! * 0.5
@@ -108,6 +116,16 @@ export default class FoxGame extends Phaser.Scene {
           const props = enemy.properties
           const facingDirection = props.find((p: any) => p.name === 'facing')?.value.split(";")[0]
           this.greenArchers.get(x, y, 'greenArcher').setArrows(this.arrows).setFacingDirection(facingDirection)
+          break
+      }
+    })
+
+    map.getObjectLayer('Npcs')!.objects.forEach(npc => {
+      const x = npc.x! + npc.width! * 0.5
+      const y = npc.y! + npc.height! * 0.5
+      switch (npc.name) {
+        case 'cat':
+          this.cats.get(x, y, 'cat')
           break
       }
     })
