@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="150" height="150" tilewidth="16" tileheight="16" infinite="0" nextlayerid="29" nextobjectid="83">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="150" height="150" tilewidth="16" tileheight="16" infinite="0" nextlayerid="30" nextobjectid="87">
  <editorsettings>
   <export target="public/tiles/lil-fox-map.json" format="json"/>
  </editorsettings>
@@ -3661,9 +3661,20 @@ Choose the correct option that explains the relationship between network demand 
    </properties>
   </object>
  </objectgroup>
+ <objectgroup id="29" name="SpawnPoints">
+  <object id="83" name="mainSpawn" x="841.046" y="749.105">
+   <point/>
+  </object>
+  <object id="84" name="level1Spawn" x="1206.34" y="584.351">
+   <point/>
+  </object>
+  <object id="85" name="level2Spawn" x="826.237" y="1385.91">
+   <point/>
+  </object>
+ </objectgroup>
  <objectgroup id="26" name="Area">
   <object id="59" name="area1" x="1620.39" y="400.429" width="43.4032" height="30.8023"/>
-  <object id="63" name="area2" x="1222.31" y="559.536" width="63.8027" height="42.5594"/>
+  <object id="63" name="area2" x="1226.01" y="558.302" width="63.8027" height="41.3253"/>
   <object id="67" name="area3" x="821.229" y="1135.48" width="44.0852" height="37.5855"/>
   <object id="68" name="area4" x="864.466" y="1360.71" width="47.759" height="31.0857"/>
  </objectgroup>

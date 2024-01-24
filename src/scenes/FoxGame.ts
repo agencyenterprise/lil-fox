@@ -11,6 +11,7 @@ import { Dialog } from "@/ui/Dialog";
 import { getWonLevels } from "@/utils/localStorageUtils";
 import Cat from "@/npcs/cat";
 import { createCatAnims } from "@/anims/NpcAnims";
+import { SpawnPoints } from "@/types/SpawnPoints";
 
 export default class FoxGame extends Phaser.Scene {
   constructor() {
@@ -31,6 +32,8 @@ export default class FoxGame extends Phaser.Scene {
   private blueberryObjects: Phaser.Tilemaps.ObjectLayer
 
   private areas: Phaser.Geom.Rectangle[]
+
+  private spawnPoints: Map<string, Phaser.Geom.Point> = new Map()
 
   private foods: Phaser.GameObjects.Group
   private lizards: Phaser.GameObjects.Group
@@ -70,10 +73,14 @@ export default class FoxGame extends Phaser.Scene {
     const map = this.make.tilemap({ key: 'map' });
     this.createLayers(map)
 
-    this.character = new Character(this, 856, 738, "character");
+    map.getObjectLayer('SpawnPoints')!.objects.forEach(spawnPoint => {
+      const x = spawnPoint.x
+      const y = spawnPoint.y
+      this.spawnPoints.set(spawnPoint.name, new Phaser.Geom.Point(x!, y!))
+    })
 
-    // this.character = new Character(this, 1250, 600, "character");
-    // this.character = new Character(this, 850, 1400, "character");
+    const mainSpawn = this.spawnPoints.get(SpawnPoints.MAIN_SPAWN)!
+    this.character = new Character(this, mainSpawn.x, mainSpawn.y, "character");
 
     this.character.setSize(this.character.width * 0.4, this.character.height * 0.4)
     this.physics.add.existing(this.character, false);
