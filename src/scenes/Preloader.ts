@@ -19,10 +19,13 @@ export default class Preloader extends Phaser.Scene {
     this.load.atlas('lizard_run', 'enemies/lizard_run.png', 'enemies/lizard_run.json')
     this.load.atlas('treasure', 'items/treasure.png', 'items/treasure.json')
 
-    this.load.atlas('cat_swinging_tail', 'cat/cat_swinging_tail.png', 'cat/cat_swinging_tail.json')
-    this.load.atlas('cat_licking', 'cat/cat_licking.png', 'cat/cat_licking.json')
-    this.load.atlas('cat_licking', 'cat/cat_licking.png', 'cat/cat_licking.json')
-    this.load.atlas('cat_cleaning_head', 'cat/cat_cleaning_head.png', 'cat/cat_cleaning_head.json')
+    this.load.atlas('cat_swinging_tail', 'npcs/cat/cat_swinging_tail.png', 'npcs/cat/cat_swinging_tail.json')
+    this.load.atlas('cat_licking', 'npcs/cat/cat_licking.png', 'npcs/cat/cat_licking.json')
+    this.load.atlas('cat_licking', 'npcs/cat/cat_licking.png', 'npcs/cat/cat_licking.json')
+    this.load.atlas('cat_cleaning_head', 'npcs/cat/cat_cleaning_head.png', 'npcs/cat/cat_cleaning_head.json')
+
+    this.load.atlas('cat_owner_walking_left', 'npcs/cat-owner/cat-owner-walking-left.png', 'npcs/cat-owner/cat-owner-walking-left.json')
+    this.load.atlas('cat_owner_walking_right', 'npcs/cat-owner/cat-owner-walking-left.png', 'npcs/cat-owner/cat-owner-walking-left.json')
 
     this.load.image('ui-heart-empty', 'ui/ui_heart_empty.png')
     this.load.image('ui-heart-full', 'ui/ui_heart_full.png')

@@ -10,7 +10,7 @@ import { createArcherAnims } from "@/anims/GreenArcherAnims";
 import { Dialog } from "@/ui/Dialog";
 import { getWonLevels } from "@/utils/localStorageUtils";
 import Cat from "@/npcs/Cat";
-import { createCatAnims } from "@/anims/NpcAnims";
+import { createCatAnims, createCatOwnerAnims } from "@/anims/NpcAnims";
 import { SpawnPoints } from "@/types/SpawnPoints";
 
 type CreateData = {
@@ -43,6 +43,7 @@ export default class FoxGame extends Phaser.Scene {
   private lizards: Phaser.GameObjects.Group
   private greenArchers: Phaser.GameObjects.Group
   private cats: Phaser.GameObjects.Group
+  private catOwners: Phaser.GameObjects.Group
   private arrows: Phaser.GameObjects.Group
 
   private playerLizardsCollider?: Phaser.Physics.Arcade.Collider
@@ -73,6 +74,7 @@ export default class FoxGame extends Phaser.Scene {
     createLizardAnims(this.anims)
     createChestAnims(this.anims)
     createCatAnims(this.anims)
+    createCatOwnerAnims(this.anims)
 
     const map = this.make.tilemap({ key: 'map' });
     this.createLayers(map)
@@ -119,6 +121,10 @@ export default class FoxGame extends Phaser.Scene {
       classType: Cat
     })
 
+    this.catOwners = this.physics.add.group({
+      classType: Cat
+    })
+
     map.getObjectLayer('Enemies')!.objects.forEach(enemy => {
       const x = enemy.x! + enemy.width! * 0.5
       const y = enemy.y! + enemy.height! * 0.5
@@ -142,6 +148,9 @@ export default class FoxGame extends Phaser.Scene {
       switch (npc.name) {
         case 'cat':
           this.cats.get(x, y, 'cat')
+          break
+        case 'cat_owner':
+          this.catOwners.get(x, y, 'cat_owner')
           break
       }
     })

@@ -32,6 +32,29 @@ const createCatAnims = (anims: Phaser.Animations.AnimationManager) => {
   })
 }
 
+const createCatOwnerAnims = (anims: Phaser.Animations.AnimationManager) => {
+  anims.create({
+    key: 'cat_owner_walking_left',
+    duration: 1000,
+    frames: anims.generateFrameNames('cat_owner_walking_left', {
+      start: 59, end: 62, prefix: 'tile0', suffix: '.png'
+    }),
+    repeat: -1,
+    frameRate: 8
+  })
+
+  anims.create({
+    key: 'cat_owner_walking_right',
+    duration: 1000,
+    frames: anims.generateFrameNames('cat_owner_walking_right', {
+      start: 5, end: 8, prefix: 'tile17', suffix: '.png'
+    }),
+    repeat: -1,
+    frameRate: 8
+  })
+}
+
 export {
-  createCatAnims
+  createCatAnims,
+  createCatOwnerAnims,
 } 
