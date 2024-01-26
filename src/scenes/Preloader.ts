@@ -25,7 +25,7 @@ export default class Preloader extends Phaser.Scene {
     this.load.atlas('cat_cleaning_head', 'npcs/cat/cat_cleaning_head.png', 'npcs/cat/cat_cleaning_head.json')
 
     this.load.atlas('cat_owner_walking_left', 'npcs/cat-owner/cat-owner-walking-left.png', 'npcs/cat-owner/cat-owner-walking-left.json')
-    this.load.atlas('cat_owner_walking_right', 'npcs/cat-owner/cat-owner-walking-left.png', 'npcs/cat-owner/cat-owner-walking-left.json')
+    this.load.atlas('cat_owner_walking_right', 'npcs/cat-owner/cat-owner-walking-right.png', 'npcs/cat-owner/cat-owner-walking-right.json')
 
     this.load.image('ui-heart-empty', 'ui/ui_heart_empty.png')
     this.load.image('ui-heart-full', 'ui/ui_heart_full.png')

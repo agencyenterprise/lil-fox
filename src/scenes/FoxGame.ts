@@ -12,6 +12,7 @@ import { getWonLevels } from "@/utils/localStorageUtils";
 import Cat from "@/npcs/Cat";
 import { createCatAnims, createCatOwnerAnims } from "@/anims/NpcAnims";
 import { SpawnPoints } from "@/types/SpawnPoints";
+import CatOwner from "@/npcs/CatOwner";
 
 type CreateData = {
   levelNumber?: number
@@ -122,7 +123,7 @@ export default class FoxGame extends Phaser.Scene {
     })
 
     this.catOwners = this.physics.add.group({
-      classType: Cat
+      classType: CatOwner
     })
 
     map.getObjectLayer('Enemies')!.objects.forEach(enemy => {
