@@ -128,37 +128,33 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     const downDown = cursors.down?.isDown
 
     if (rightDown && upDown) {
-      console.log("right up")
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(speed / 1.65, -speed / 1.65);
       this.scaleX = 1;
       this.body?.offset.setTo(8, 12);
       this.currentDirection = Direction.RIGHT
-      
+
     } else if (rightDown && downDown) {
-      console.log("right down")
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(speed / 1.65, speed / 1.65);
       this.scaleX = 1;
       this.body?.offset.setTo(8, 12);
       this.currentDirection = Direction.RIGHT
-      
+
     } else if (leftDown && upDown) {
-      console.log("left up")
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(-speed / 1.65, -speed / 1.65);
       this.scaleX = -1;
       this.body?.offset.setTo(24, 12);
       this.currentDirection = Direction.LEFT
-      
+
     } else if (leftDown && downDown) {
-      console.log("left down")
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(-speed / 1.65, speed / 1.65);
       this.scaleX = -1;
       this.body?.offset.setTo(24, 12);
       this.currentDirection = Direction.LEFT
-      
+
     } else if (leftDown) {
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(-speed, 0);
@@ -223,18 +219,18 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       }
     }
   }
-  
+
   handleLockPlayerMovement(lock: boolean) {
     this.isPlayerMovementLocked = lock
   }
-  
+
   handleDamage(dir: Phaser.Math.Vector2) {
     if (this._health <= 0) return
-    
+
     if (this.healthState === HealthState.DAMAGE) return
-    
+
     --this._health
-    
+
     if (this._health <= 0) {
       this.healthState = HealthState.DEAD
       this.anims.play(`idle-${this.selectedSkin}`);
