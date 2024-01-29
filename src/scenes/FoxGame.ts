@@ -127,7 +127,7 @@ export default class FoxGame extends Phaser.Scene {
     })
 
     this.catOwners = this.physics.add.group({
-      classType: CatOwner
+      classType: CatOwner,
     })
 
     map.getObjectLayer('Enemies')!.objects.forEach(enemy => {
@@ -286,7 +286,7 @@ export default class FoxGame extends Phaser.Scene {
   }
 
   update(t: number, dt: number) {
-    this.character.update(this.cursors, this.interactiveObjects, this.areas)
+    this.character.update(this.cursors)
   }
 
   createLayers(map: Phaser.Tilemaps.Tilemap) {
@@ -333,6 +333,7 @@ export default class FoxGame extends Phaser.Scene {
     // this.physics.add.collider(this.character, chests, this.handleCharacterChestCollision, undefined, this)
     // this.physics.add.collider(this.lizards, chests)
 
+    // this.physics.add.collider(this.catOwners, this.character);-
     this.playerLizardsCollider = this.physics.add.collider(this.lizards, this.character, this.handleCharacterLizardCollision, undefined, this);
     this.playerArrowsCollider = this.physics.add.collider(this.arrows, this.character, this.handleCharacterArrowCollision, undefined, this);
     this.physics.add.collider(this.arrows, this.treesLayer, this.handleObjectsArrowCollision, undefined, this);

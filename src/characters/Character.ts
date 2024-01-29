@@ -1,7 +1,7 @@
 import Chest from "@/items/Chest";
 import Phaser from "phaser";
 import { Events, sceneEvents } from "@/events/EventsCenter";
-import { Direction, getTargetPosition } from "@/utils/gridUtils";
+import { Direction, TILE_SIZE } from "@/utils/gridUtils";
 import { getWonLevels } from "@/utils/localStorageUtils";
 import { Singleton } from "@/utils/GlobalAccessSingleton";
 
@@ -33,7 +33,6 @@ enum HealthState {
 }
 
 export default class Character extends Phaser.Physics.Arcade.Sprite {
-  private currentDirection = Direction.NONE
   private selectedSkin: Skin = Skin.DEFAULT
   private healthState = HealthState.IDLE
   private damageTime = 0
@@ -100,11 +99,11 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
     if (spaceJustDown) {
       const coordinate = { x: this.x, y: this.y }
-      const targetPosition = getTargetPosition(coordinate, this.currentDirection)
+
+      const nearbyArea = new Phaser.Geom.Rectangle(this.x - TILE_SIZE, this.y - TILE_SIZE, TILE_SIZE, TILE_SIZE)
 
       const nearbyObject = interactiveObjects.find(obj => {
-        if (!obj.x || !obj.y) return
-        return obj.x >= targetPosition.x - 12 && obj.x <= targetPosition.x + 12 && obj.y >= targetPosition.y - 12 && obj.y <= targetPosition.y + 12
+        return nearbyArea.contains(obj.x!, obj.y!)
       })
 
       if (nearbyObject) {
@@ -134,52 +133,44 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       this.setVelocity(speed / 1.65, -speed / 1.65);
       this.scaleX = 1;
       this.body?.offset.setTo(8, 12);
-      this.currentDirection = Direction.RIGHT
 
     } else if (rightDown && downDown) {
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(speed / 1.65, speed / 1.65);
       this.scaleX = 1;
       this.body?.offset.setTo(8, 12);
-      this.currentDirection = Direction.RIGHT
 
     } else if (leftDown && upDown) {
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(-speed / 1.65, -speed / 1.65);
       this.scaleX = -1;
       this.body?.offset.setTo(24, 12);
-      this.currentDirection = Direction.LEFT
 
     } else if (leftDown && downDown) {
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(-speed / 1.65, speed / 1.65);
       this.scaleX = -1;
       this.body?.offset.setTo(24, 12);
-      this.currentDirection = Direction.LEFT
 
     } else if (leftDown) {
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(-speed, 0);
       this.scaleX = -1;
       this.body?.offset.setTo(24, 12);
-      this.currentDirection = Direction.LEFT
 
     } else if (rightDown) {
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(speed, 0);
       this.scaleX = 1;
       this.body?.offset.setTo(8, 12);
-      this.currentDirection = Direction.RIGHT
 
     } else if (upDown) {
       this.anims.play(`run-${this.selectedSkin}`);
       this.setVelocity(0, -speed);
-      this.currentDirection = Direction.UP
 
     } else if (downDown) {
       this.anims.play(`run-${this.selectedSkin}`);
       this.setVelocity(0, speed);
-      this.currentDirection = Direction.DOWN
 
     } else {
       this.anims.play(`idle-${this.selectedSkin}`);
