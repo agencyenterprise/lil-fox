@@ -1,0 +1,62 @@
+{
+	"textures": [
+		{
+			"image": "cat-owner-standing.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 18,
+				"h": 43
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "tile001.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 8,
+						"y": 4,
+						"w": 16,
+						"h": 20
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 16,
+						"h": 20
+					}
+				},
+				{
+					"filename": "tile000.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 8,
+						"y": 5,
+						"w": 16,
+						"h": 19
+					},
+					"frame": {
+						"x": 1,
+						"y": 23,
+						"w": 16,
+						"h": 19
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:44e1159f277e8ed7203046ee7ebb8992:792d0cc61f765333e42326c11c636f4c:311765b99209d8ee7da8a4e4c547cf5d$"
+	}
+}

@@ -3,7 +3,7 @@ import Phaser from 'phaser'
 
 export default class CatOwner extends Phaser.Physics.Arcade.Sprite {
 
-  private direction = Direction.RIGHT
+  private direction: Direction | null = Direction.RIGHT
   private moveEvent: Phaser.Time.TimerEvent
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
@@ -28,11 +28,20 @@ export default class CatOwner extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
+  lookAtFox() {
+    this.moveEvent.destroy()
+    this.direction = null
+    this.setVelocity(0, 0)
+    this.anims.play("cat_owner_standing")
+  }
+
   protected preUpdate(time: number, delta: number): void {
     super.preUpdate(time, delta)
 
     this.setSize(this.width, this.height * 0.6)
     this.body?.offset.setTo(0, 12);
+
+    if (!this.direction) return
 
     const speed = 30
 

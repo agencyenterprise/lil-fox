@@ -13,6 +13,7 @@ import Cat from "@/npcs/Cat";
 import { createCatAnims, createCatOwnerAnims } from "@/anims/NpcAnims";
 import { SpawnPoints } from "@/types/SpawnPoints";
 import CatOwner from "@/npcs/CatOwner";
+import { Singleton } from "@/utils/GlobalAccessSingleton";
 
 type CreateData = {
   levelNumber?: number
@@ -154,7 +155,8 @@ export default class FoxGame extends Phaser.Scene {
           this.cats.get(x, y, 'cat')
           break
         case 'cat_owner':
-          this.catOwners.get(x, y, 'cat_owner')
+          const catOwner: CatOwner = this.catOwners.get(x, y, 'cat_owner')
+          Singleton.getInstance().catOwner = catOwner
           break
       }
     })
@@ -162,6 +164,10 @@ export default class FoxGame extends Phaser.Scene {
     this.addColliders()
     this.createBlueberries(map)
     this.createEventListeners()
+
+    const globalAccessSingleton = Singleton.getInstance()
+    globalAccessSingleton.areas = this.areas
+    globalAccessSingleton.interactiveObjects = this.interactiveObjects
 
     // this.input.on('pointerdown', () => {
     //   sceneEvents.emit(Events.CHARACTER_DIED)

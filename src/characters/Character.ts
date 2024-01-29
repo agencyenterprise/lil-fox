@@ -3,6 +3,7 @@ import Phaser from "phaser";
 import { Events, sceneEvents } from "@/events/EventsCenter";
 import { Direction, getTargetPosition } from "@/utils/gridUtils";
 import { getWonLevels } from "@/utils/localStorageUtils";
+import { Singleton } from "@/utils/GlobalAccessSingleton";
 
 declare global {
   namespace Phaser.GameObjects {
@@ -82,9 +83,10 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
   update(
     cursors: Phaser.Types.Input.Keyboard.CursorKeys,
-    interactiveObjects: Phaser.Types.Tilemaps.TiledObject[],
-    areasLayer: Phaser.Geom.Rectangle[]
   ) {
+    const interactiveObjects = Singleton.getInstance().interactiveObjects
+    const areasLayer = Singleton.getInstance().areas
+
     if (!cursors) return;
     const spaceJustDown = Phaser.Input.Keyboard.JustDown(cursors.space)
 
@@ -195,6 +197,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
   }
 
   handleInteraction(object: Phaser.Types.Tilemaps.TiledObject) {
+    console.log("Handling Interaction")
     const wonLevels = getWonLevels()
     const props = object.properties
     const messages = props.find((p: any) => p.name === 'message')?.value.split(";")
@@ -214,6 +217,9 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     } else {
       if (levelNumber && wonLevels.includes(levelNumber)) {
         sceneEvents.emit(Events.SHOW_DIALOG, ["You already won this level!"])
+      } else if (object.name === "cat_owner") {
+        const catOwner = Singleton.getInstance().catOwner
+        catOwner.lookAtFox()
       } else {
         sceneEvents.emit(Events.SHOW_DIALOG, messages)
       }
