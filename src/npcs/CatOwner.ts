@@ -12,14 +12,13 @@ export default class CatOwner extends Phaser.Physics.Arcade.Sprite {
     this.anims.play('cat_owner_walking_left')
 
     this.moveEvent = scene.time.addEvent({
-      delay: 1700,
+      delay: 1000,
       loop: true,
       callback: () => this.changeDirection()
     })
   }
 
   changeDirection() {
-    console.log('changing Direction')
     if (this.direction === Direction.RIGHT) {
       this.direction = Direction.LEFT
       this.anims.play('cat_owner_walking_right')

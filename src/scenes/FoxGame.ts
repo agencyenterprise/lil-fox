@@ -33,8 +33,11 @@ export default class FoxGame extends Phaser.Scene {
   private objectsLayer: Phaser.Tilemaps.TilemapLayer
 
   private signsObjects: Phaser.Tilemaps.ObjectLayer
+  private npcsObjects: Phaser.Tilemaps.ObjectLayer
   private areasObjects: Phaser.Tilemaps.ObjectLayer
   private blueberryObjects: Phaser.Tilemaps.ObjectLayer
+
+  private interactiveObjects: Phaser.Types.Tilemaps.TiledObject[]
 
   private areas: Phaser.Geom.Rectangle[]
 
@@ -143,7 +146,7 @@ export default class FoxGame extends Phaser.Scene {
       }
     })
 
-    map.getObjectLayer('Npcs')!.objects.forEach(npc => {
+    this.npcsObjects.objects.forEach(npc => {
       const x = npc.x! + npc.width! * 0.5
       const y = npc.y! + npc.height! * 0.5
       switch (npc.name) {
@@ -277,7 +280,7 @@ export default class FoxGame extends Phaser.Scene {
   }
 
   update(t: number, dt: number) {
-    this.character.update(this.cursors, this.signsObjects, this.areas)
+    this.character.update(this.cursors, this.interactiveObjects, this.areas)
   }
 
   createLayers(map: Phaser.Tilemaps.Tilemap) {
@@ -291,7 +294,10 @@ export default class FoxGame extends Phaser.Scene {
     // this.treasuresLayer = map.createLayer('Treasures', tileset2!)!;
 
     this.signsObjects = map.getObjectLayer('Signs')!
+    this.npcsObjects = map.getObjectLayer('Npcs')!
     this.areasObjects = map.getObjectLayer('Area')!
+
+    this.interactiveObjects = [...this.npcsObjects.objects, ...this.signsObjects.objects]
 
     const chests = this.physics.add.staticGroup({
       classType: Chest

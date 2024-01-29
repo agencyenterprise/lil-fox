@@ -82,7 +82,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
   update(
     cursors: Phaser.Types.Input.Keyboard.CursorKeys,
-    signsLayer: Phaser.Tilemaps.ObjectLayer,
+    interactiveObjects: Phaser.Types.Tilemaps.TiledObject[],
     areasLayer: Phaser.Geom.Rectangle[]
   ) {
     if (!cursors) return;
@@ -100,13 +100,13 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       const coordinate = { x: this.x, y: this.y }
       const targetPosition = getTargetPosition(coordinate, this.currentDirection)
 
-      const nearbySign = signsLayer.objects.find(sign => {
-        if (!sign.x || !sign.y) return
-        return sign.x >= targetPosition.x - 12 && sign.x <= targetPosition.x + 12 && sign.y >= targetPosition.y - 12 && sign.y <= targetPosition.y + 12
+      const nearbyObject = interactiveObjects.find(obj => {
+        if (!obj.x || !obj.y) return
+        return obj.x >= targetPosition.x - 12 && obj.x <= targetPosition.x + 12 && obj.y >= targetPosition.y - 12 && obj.y <= targetPosition.y + 12
       })
 
-      if (nearbySign) {
-        this.handleSignInteraction(nearbySign)
+      if (nearbyObject) {
+        this.handleInteraction(nearbyObject)
       }
     }
 
@@ -194,9 +194,9 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  handleSignInteraction(sign: Phaser.Types.Tilemaps.TiledObject) {
+  handleInteraction(object: Phaser.Types.Tilemaps.TiledObject) {
     const wonLevels = getWonLevels()
-    const props = sign.properties
+    const props = object.properties
     const messages = props.find((p: any) => p.name === 'message')?.value.split(";")
     const isFinishLevelSign = props.find((p: any) => p.name === 'isFinishLevelSign')?.value
     const levelNumber = props.find((p: any) => p.name === 'levelNumber')?.value
