@@ -1,9 +1,11 @@
 import Chest from "@/items/Chest";
 import Phaser from "phaser";
 import { Events, sceneEvents } from "@/events/EventsCenter";
-import { Direction, TILE_SIZE } from "@/utils/gridUtils";
+import { TILE_SIZE } from "@/utils/gridUtils";
 import { getWonLevels } from "@/utils/localStorageUtils";
 import { Singleton } from "@/utils/GlobalAccessSingleton";
+import CatOwner from "@/npcs/CatOwner";
+import Npc from "@/npcs/Npc";
 
 declare global {
   namespace Phaser.GameObjects {
@@ -98,9 +100,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     this.isCharacterInArea(areasLayer)
 
     if (spaceJustDown) {
-      const coordinate = { x: this.x, y: this.y }
-
-      const nearbyArea = new Phaser.Geom.Rectangle(this.x - TILE_SIZE, this.y - TILE_SIZE, TILE_SIZE, TILE_SIZE)
+      const nearbyArea = new Phaser.Geom.Circle(this.x, this.y, TILE_SIZE)
 
       const nearbyObject = interactiveObjects.find(obj => {
         return nearbyArea.contains(obj.x!, obj.y!)
@@ -187,32 +187,32 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  handleInteraction(object: Phaser.Types.Tilemaps.TiledObject) {
-    console.log("Handling Interaction")
-    const wonLevels = getWonLevels()
-    const props = object.properties
-    const messages = props.find((p: any) => p.name === 'message')?.value.split(";")
-    const isFinishLevelSign = props.find((p: any) => p.name === 'isFinishLevelSign')?.value
-    const levelNumber = props.find((p: any) => p.name === 'levelNumber')?.value
-
-    if (isFinishLevelSign) {
-      const correctAlternative = props.find((p: any) => p.name === 'correctAlternative')?.value
+  handleInteraction(object: Phaser.Types.Tilemaps.TiledObject | Npc) {
+    if (object instanceof Npc) {
+      object.handleInteraction(this)
+    } else {
+      const wonLevels = getWonLevels()
+      const props = object.properties
+      const messages = props.find((p: any) => p.name === 'message')?.value.split(";")
+      const isFinishLevelSign = props.find((p: any) => p.name === 'isFinishLevelSign')?.value
       const levelNumber = props.find((p: any) => p.name === 'levelNumber')?.value
 
-      if (wonLevels.includes(levelNumber)) {
-        sceneEvents.emit(Events.SHOW_DIALOG, ["You already won this level!"])
+      if (isFinishLevelSign) {
+        const correctAlternative = props.find((p: any) => p.name === 'correctAlternative')?.value
+        const levelNumber = props.find((p: any) => p.name === 'levelNumber')?.value
+
+        if (wonLevels.includes(levelNumber)) {
+          sceneEvents.emit(Events.SHOW_DIALOG, ["You already won this level!"])
+        } else {
+          this.scene.scene.pause("LilFox");
+          this.scene.scene.launch('QuizScene', { messages, correctAlternative, levelNumber });
+        }
       } else {
-        this.scene.scene.pause("LilFox");
-        this.scene.scene.launch('QuizScene', { messages, correctAlternative, levelNumber });
-      }
-    } else {
-      if (levelNumber && wonLevels.includes(levelNumber)) {
-        sceneEvents.emit(Events.SHOW_DIALOG, ["You already won this level!"])
-      } else if (object.name === "cat_owner") {
-        const catOwner = Singleton.getInstance().catOwner
-        catOwner.lookAtFox()
-      } else {
-        sceneEvents.emit(Events.SHOW_DIALOG, messages)
+        if (levelNumber && wonLevels.includes(levelNumber)) {
+          sceneEvents.emit(Events.SHOW_DIALOG, ["You already won this level!"])
+        } else {
+          sceneEvents.emit(Events.SHOW_DIALOG, messages)
+        }
       }
     }
   }

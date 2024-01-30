@@ -1,9 +1,10 @@
 import CatOwner from "@/npcs/CatOwner";
+import Npc from "@/npcs/Npc";
 
 export class Singleton {
   private static instance: Singleton | null = null;
 
-  public interactiveObjects: Phaser.Types.Tilemaps.TiledObject[]
+  public interactiveObjects: (Phaser.Types.Tilemaps.TiledObject | Npc)[] = []
   public catOwner: CatOwner
   public areas: Phaser.Geom.Rectangle[]
 

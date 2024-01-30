@@ -38,8 +38,6 @@ export default class FoxGame extends Phaser.Scene {
   private areasObjects: Phaser.Tilemaps.ObjectLayer
   private blueberryObjects: Phaser.Tilemaps.ObjectLayer
 
-  private interactiveObjects: Phaser.Types.Tilemaps.TiledObject[]
-
   private areas: Phaser.Geom.Rectangle[]
 
   private spawnPoints: Map<string, Phaser.Geom.Point> = new Map()
@@ -150,15 +148,24 @@ export default class FoxGame extends Phaser.Scene {
     this.npcsObjects.objects.forEach(npc => {
       const x = npc.x! + npc.width! * 0.5
       const y = npc.y! + npc.height! * 0.5
+      const props = npc.properties
       switch (npc.name) {
         case 'cat':
-          this.cats.get(x, y, 'cat')
+          const cat: Cat = this.cats.get(x, y, 'cat')
+          Singleton.getInstance().interactiveObjects.push(cat)
           break
         case 'cat_owner':
           const catOwner: CatOwner = this.catOwners.get(x, y, 'cat_owner')
+          const messages = props.find((p: any) => p.name === 'message')?.value.split(";")
+          catOwner.setMessages(messages)
           Singleton.getInstance().catOwner = catOwner
+          Singleton.getInstance().interactiveObjects.push(catOwner)
           break
       }
+    })
+
+    this.signsObjects.objects.forEach(sign => {
+      Singleton.getInstance().interactiveObjects.push(sign)
     })
 
     this.addColliders()
@@ -167,7 +174,6 @@ export default class FoxGame extends Phaser.Scene {
 
     const globalAccessSingleton = Singleton.getInstance()
     globalAccessSingleton.areas = this.areas
-    globalAccessSingleton.interactiveObjects = this.interactiveObjects
 
     // this.input.on('pointerdown', () => {
     //   sceneEvents.emit(Events.CHARACTER_DIED)
@@ -302,8 +308,6 @@ export default class FoxGame extends Phaser.Scene {
     this.signsObjects = map.getObjectLayer('Signs')!
     this.npcsObjects = map.getObjectLayer('Npcs')!
     this.areasObjects = map.getObjectLayer('Area')!
-
-    this.interactiveObjects = [...this.npcsObjects.objects, ...this.signsObjects.objects]
 
     const chests = this.physics.add.staticGroup({
       classType: Chest

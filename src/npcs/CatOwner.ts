@@ -1,9 +1,13 @@
 import { Direction } from '@/utils/gridUtils'
 import Phaser from 'phaser'
+import Npc from './Npc'
+import Character from '@/characters/Character'
+import { Events, sceneEvents } from '@/events/EventsCenter'
 
-export default class CatOwner extends Phaser.Physics.Arcade.Sprite {
+export default class CatOwner extends Npc {
 
   private direction: Direction | null = Direction.RIGHT
+  private messages: string[] = []
   private moveEvent: Phaser.Time.TimerEvent
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
@@ -28,11 +32,16 @@ export default class CatOwner extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  lookAtFox() {
+  stopMoving() {
     this.moveEvent.destroy()
     this.direction = null
     this.setVelocity(0, 0)
     this.anims.play("cat_owner_standing")
+  }
+
+  handleInteraction(character?: Character): void {
+    this.stopMoving()
+    sceneEvents.emit(Events.SHOW_DIALOG, this.messages)
   }
 
   protected preUpdate(time: number, delta: number): void {
@@ -53,6 +62,10 @@ export default class CatOwner extends Phaser.Physics.Arcade.Sprite {
         this.setVelocity(speed, 0)
         break
     }
+  }
+
+  setMessages(messages: string[]) {
+    this.messages = messages
   }
 
   destroy(fromScene?: boolean | undefined) {
