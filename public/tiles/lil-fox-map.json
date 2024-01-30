@@ -965,7 +965,7 @@
                 {
                  "height":32.9226155551209,
                  "id":89,
-                 "name":"dialogArea1",
+                 "name":"tipArea5",
                  "properties":[
                         {
                          "name":"messages",
@@ -978,6 +978,17 @@
                  "width":41.7237108025295,
                  "x":895.103983310516,
                  "y":384.314492470174
+                }, 
+                {
+                 "height":136.649214659686,
+                 "id":93,
+                 "name":"catArea",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":68.586387434555,
+                 "x":228.272251308901,
+                 "y":301.570680628272
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1030,6 +1041,12 @@
                  "id":82,
                  "name":"cat",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"message",
+                         "type":"string",
+                         "value":"MEOOWWW! MEOOW!; MEOOooww meowww; meoww meow meowww MEEEOOWW!!!"
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -1062,7 +1079,7 @@
          "y":0
         }],
  "nextlayerid":30,
- "nextobjectid":93,
+ "nextobjectid":94,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

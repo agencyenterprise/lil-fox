@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="150" height="150" tilewidth="16" tileheight="16" infinite="0" nextlayerid="30" nextobjectid="93">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="150" height="150" tilewidth="16" tileheight="16" infinite="0" nextlayerid="30" nextobjectid="94">
  <editorsettings>
   <export target="public/tiles/lil-fox-map.json" format="json"/>
  </editorsettings>
@@ -3677,11 +3677,12 @@ Choose the correct option that explains the relationship between network demand 
   <object id="63" name="tipArea2" x="1226.01" y="558.302" width="63.8027" height="41.3253"/>
   <object id="67" name="tipArea3" x="821.229" y="1135.48" width="44.0852" height="37.5855"/>
   <object id="68" name="tipArea4" x="864.466" y="1360.71" width="47.759" height="31.0857"/>
-  <object id="89" name="dialogArea1" x="895.104" y="384.314" width="41.7237" height="32.9226">
+  <object id="89" name="tipArea5" x="895.104" y="384.314" width="41.7237" height="32.9226">
    <properties>
     <property name="messages" value="teste;test2"/>
    </properties>
   </object>
+  <object id="93" name="catArea" x="228.272" y="301.571" width="68.5864" height="136.649"/>
  </objectgroup>
  <objectgroup id="25" name="Blueberries">
   <object id="37" name="blueberry" x="1735.54" y="1305.26">
@@ -3693,6 +3694,9 @@ Choose the correct option that explains the relationship between network demand 
  </objectgroup>
  <objectgroup id="28" name="Npcs">
   <object id="82" name="cat" x="256.904" y="394.683">
+   <properties>
+    <property name="message" value="MEOOWWW! MEOOW!; MEOOooww meowww; meoww meow meowww MEEEOOWW!!!"/>
+   </properties>
    <point/>
   </object>
   <object id="87" name="cat_owner" x="898.263" y="396.026">

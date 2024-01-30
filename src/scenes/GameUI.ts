@@ -118,12 +118,8 @@ export default class GameUI extends Phaser.Scene {
     sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, true)
   }
 
-  showTip(show: boolean = true) {
-    if (show && !this.tipUi.isVisible && !this.dialogUi.isVisible) {
-      this.tipUi.showTip()
-    } else if (!show && this.tipUi.isVisible) {
-      this.tipUi.hideTip()
-    }
+  showTip() {
+    this.tipUi.showTip()
   }
 
   handleCharacterDied() {

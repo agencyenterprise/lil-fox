@@ -14,6 +14,9 @@ import { createCatAnims, createCatOwnerAnims } from "@/anims/NpcAnims";
 import { SpawnPoints } from "@/types/SpawnPoints";
 import CatOwner from "@/npcs/CatOwner";
 import { Singleton } from "@/utils/GlobalAccessSingleton";
+import { TipArea } from "@/types/TipArea";
+import { Area } from "@/types/Area";
+import { CatArea } from "@/types/CatArea";
 
 type CreateData = {
   levelNumber?: number
@@ -38,7 +41,7 @@ export default class FoxGame extends Phaser.Scene {
   private areasObjects: Phaser.Tilemaps.ObjectLayer
   private blueberryObjects: Phaser.Tilemaps.ObjectLayer
 
-  private areas: Phaser.Geom.Rectangle[]
+  private areas: Area[]
 
   private spawnPoints: Map<string, Phaser.Geom.Point> = new Map()
 
@@ -149,15 +152,16 @@ export default class FoxGame extends Phaser.Scene {
       const x = npc.x! + npc.width! * 0.5
       const y = npc.y! + npc.height! * 0.5
       const props = npc.properties
+      const messages = props.find((p: any) => p.name === 'message')?.value.split(";")
       switch (npc.name) {
         case 'cat':
           const cat: Cat = this.cats.get(x, y, 'cat')
           cat.setVisible(false)
+          Singleton.getInstance().cat = cat
           Singleton.getInstance().interactiveObjects.push(cat)
           break
         case 'cat_owner':
           const catOwner: CatOwner = this.catOwners.get(x, y, 'cat_owner')
-          const messages = props.find((p: any) => p.name === 'message')?.value.split(";")
           catOwner.setMessages(messages)
           Singleton.getInstance().catOwner = catOwner
           Singleton.getInstance().interactiveObjects.push(catOwner)
@@ -318,7 +322,15 @@ export default class FoxGame extends Phaser.Scene {
       chests.get(chestObj.x! + chestObj.width! * 0.5, chestObj.y! + chestObj.height! * 0.5, 'treasure')
     })
 
-    this.areas = this.areasObjects.objects.map(area => new Phaser.Geom.Rectangle(area.x!, area.y!, area.width!, area.height!))
+    this.areas = this.areasObjects.objects.map(area => {
+      if (area.name.startsWith('tip')) {
+        return new TipArea(area.x!, area.y!, area.width!, area.height!)
+      } else if (area.name.startsWith('cat')) {
+        return new CatArea(area.x!, area.y!, area.width!, area.height!)
+      } else {
+        return new Area(area.x!, area.y!, area.width!, area.height!)
+      }
+    })
   }
 
   addColliders() {

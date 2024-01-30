@@ -47,6 +47,10 @@ export class Tip {
     this._isVisible = true
 
     this.uiText.setText("Press space next to the sign to read it.").setAlpha(1)
+
+    setTimeout(() => {
+      this.hideTip()
+    }, 10)
   }
 
   hideTip() {

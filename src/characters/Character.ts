@@ -4,8 +4,8 @@ import { Events, sceneEvents } from "@/events/EventsCenter";
 import { TILE_SIZE } from "@/utils/gridUtils";
 import { getWonLevels } from "@/utils/localStorageUtils";
 import { Singleton } from "@/utils/GlobalAccessSingleton";
-import CatOwner from "@/npcs/CatOwner";
 import Npc from "@/npcs/Npc";
+import { Area } from "@/types/Area";
 
 declare global {
   namespace Phaser.GameObjects {
@@ -86,7 +86,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     cursors: Phaser.Types.Input.Keyboard.CursorKeys,
   ) {
     const interactiveObjects = Singleton.getInstance().interactiveObjects
-    const areasLayer = Singleton.getInstance().areas
+    const areas = Singleton.getInstance().areas
 
     if (!cursors) return;
     const spaceJustDown = Phaser.Input.Keyboard.JustDown(cursors.space)
@@ -97,7 +97,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
     if (this.healthState === HealthState.DAMAGE || this.healthState === HealthState.DEAD) return
 
-    this.isCharacterInArea(areasLayer)
+    this.isCharacterInArea(areas)
 
     if (spaceJustDown) {
       const nearbyArea = new Phaser.Geom.Circle(this.x, this.y, TILE_SIZE)
@@ -178,12 +178,10 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     }
   }
 
-  isCharacterInArea(areasLayer: Phaser.Geom.Rectangle[]) {
-    const isInArea = areasLayer.find(area => area.contains(this.x, this.y))
-    if (isInArea) {
-      sceneEvents.emit(Events.SHOW_TIP)
-    } else {
-      sceneEvents.emit(Events.SHOW_TIP, false)
+  isCharacterInArea(areas: Area[]) {
+    const area = areas.find(area => area.contains(this.x, this.y))
+    if (area) {
+      area.handleCharacterInArea(this)
     }
   }
 
