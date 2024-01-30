@@ -152,6 +152,7 @@ export default class FoxGame extends Phaser.Scene {
       switch (npc.name) {
         case 'cat':
           const cat: Cat = this.cats.get(x, y, 'cat')
+          cat.setVisible(false)
           Singleton.getInstance().interactiveObjects.push(cat)
           break
         case 'cat_owner':

@@ -42,6 +42,8 @@ export default class CatOwner extends Npc {
   handleInteraction(character?: Character): void {
     this.stopMoving()
     sceneEvents.emit(Events.SHOW_DIALOG, this.messages)
+
+    super.handleInteraction()
   }
 
   protected preUpdate(time: number, delta: number): void {
