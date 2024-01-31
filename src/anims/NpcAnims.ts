@@ -27,6 +27,15 @@ const createCatAnims = (anims: Phaser.Animations.AnimationManager) => {
     repeat: -1,
     frameRate: 6
   })
+
+  anims.create({
+    key: 'cat_walking',
+    frames: anims.generateFrameNames('cat_walking', {
+      start: 35, end: 44, prefix: 'tile0', suffix: '.png'
+    }),
+    repeat: -1,
+    frameRate: 6
+  })
 }
 
 const createCatOwnerAnims = (anims: Phaser.Animations.AnimationManager) => {
