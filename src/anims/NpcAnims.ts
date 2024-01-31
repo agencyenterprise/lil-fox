@@ -34,7 +34,7 @@ const createCatAnims = (anims: Phaser.Animations.AnimationManager) => {
       start: 35, end: 44, prefix: 'tile0', suffix: '.png'
     }),
     repeat: -1,
-    frameRate: 6
+    frameRate: 8
   })
 }
 
