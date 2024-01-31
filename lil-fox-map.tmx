@@ -3662,7 +3662,7 @@ Choose the correct option that explains the relationship between network demand 
   </object>
  </objectgroup>
  <objectgroup id="29" name="SpawnPoints">
-  <object id="83" name="mainSpawn" x="272" y="352">
+  <object id="83" name="mainSpawn" x="915.455" y="430.534">
    <point/>
   </object>
   <object id="84" name="level1Spawn" x="1206.34" y="584.351">
@@ -3682,7 +3682,7 @@ Choose the correct option that explains the relationship between network demand 
     <property name="messages" value="teste;test2"/>
    </properties>
   </object>
-  <object id="93" name="catArea" x="228.272" y="301.571" width="68.5864" height="136.649"/>
+  <object id="93" name="catArea" x="231.413" y="295.812" width="68.5864" height="136.649"/>
  </objectgroup>
  <objectgroup id="25" name="Blueberries">
   <object id="37" name="blueberry" x="1735.54" y="1305.26">
@@ -3695,7 +3695,7 @@ Choose the correct option that explains the relationship between network demand 
  <objectgroup id="28" name="Npcs">
   <object id="82" name="cat" x="256.904" y="394.683">
    <properties>
-    <property name="message" value="MEOOWWW! MEOOW!; MEOOooww meowww; meoww meow meowww MEEEOOWW!!!"/>
+    <property name="message" value="MEOOWWW!"/>
    </properties>
    <point/>
   </object>

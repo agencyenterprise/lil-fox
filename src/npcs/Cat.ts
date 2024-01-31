@@ -8,7 +8,7 @@ import { Direction } from '@/utils/gridUtils'
 export default class Cat extends Npc {
 
   private messages: string[] = []
-  private shouldFollowPlayer = false
+  public shouldFollowPlayer = false
   private currentDirection: Direction = Direction.NONE
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
@@ -50,16 +50,26 @@ export default class Cat extends Npc {
       this.anims.play('cat_walking')
 
     } else if (this.body!.velocity.x === 0 && this.currentDirection !== Direction.NONE) {
-      this.currentDirection = Direction.NONE
-      this.anims.play('cat_swinging_tail')
+      this.stopCat()
     }
+  }
+
+  stopCat() {
+    this.body?.stop()
+    this.currentDirection = Direction.NONE
+    this.anims.play('cat_swinging_tail')
   }
 
   handleInteraction(character?: Character): void {
     sceneEvents.emit(Events.SHOW_DIALOG, this.messages)
+
+    if (this.hasPlayerInteracted) return
+
     character!.startTrackingPosition()
 
     this.shouldFollowPlayer = true
+
+    Singleton.getInstance().hasPlayerFoundCat = true
 
     super.handleInteraction()
   }

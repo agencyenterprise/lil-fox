@@ -12,6 +12,7 @@ export class Singleton {
   public cat: Cat
   public areas: Area[]
   public playerTrack: Coordinate[] = []
+  public hasPlayerFoundCat = false
 
   private constructor() {
   }

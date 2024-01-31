@@ -3,12 +3,14 @@ import Phaser from 'phaser'
 import Npc from './Npc'
 import Character from '@/characters/Character'
 import { Events, sceneEvents } from '@/events/EventsCenter'
+import { Singleton } from '@/utils/GlobalAccessSingleton'
 
 export default class CatOwner extends Npc {
 
   private direction: Direction | null = Direction.RIGHT
   private messages: string[] = []
   private moveEvent: Phaser.Time.TimerEvent
+  private catDelivered = false
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
     super(scene, x, y, texture, frame)
@@ -40,8 +42,22 @@ export default class CatOwner extends Npc {
   }
 
   handleInteraction(character?: Character): void {
-    this.stopMoving()
-    sceneEvents.emit(Events.SHOW_DIALOG, this.messages)
+    if (Singleton.getInstance().hasPlayerFoundCat) {
+      sceneEvents.emit(Events.SHOW_DIALOG, ["I can't believe you found my cat! Thank you so much!", "Please accept this (insert something awesome here) as a token of my gratitude!"])
+      if (!this.catDelivered) {
+        this.catDelivered = true
+        const cat = Singleton.getInstance().cat
+        cat.shouldFollowPlayer = false
+        this.scene.physics.moveTo(cat, this.x + 16, this.y - 10, undefined, 1200)
+        setTimeout(() => {
+          cat.stopCat()
+        }, 1200)
+      }
+
+    } else {
+      this.stopMoving()
+      sceneEvents.emit(Events.SHOW_DIALOG, this.messages)
+    }
 
     super.handleInteraction()
   }

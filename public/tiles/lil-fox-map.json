@@ -880,8 +880,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":272,
-                 "y":352
+                 "x":915.455497382199,
+                 "y":430.534031413613
                 }, 
                 {
                  "height":0,
@@ -987,8 +987,8 @@
                  "type":"",
                  "visible":true,
                  "width":68.5864,
-                 "x":228.272,
-                 "y":301.571
+                 "x":231.413361256545,
+                 "y":295.811837696335
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1045,7 +1045,7 @@
                         {
                          "name":"message",
                          "type":"string",
-                         "value":"MEOOWWW! MEOOW!; MEOOooww meowww; meoww meow meowww MEEEOOWW!!!"
+                         "value":"MEOOWWW!"
                         }],
                  "rotation":0,
                  "type":"",
