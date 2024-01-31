@@ -35,6 +35,8 @@ enum HealthState {
 }
 
 export default class Character extends Phaser.Physics.Arcade.Sprite {
+
+  private isTracking = false
   private selectedSkin: Skin = Skin.DEFAULT
   private healthState = HealthState.IDLE
   private damageTime = 0
@@ -118,6 +120,9 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     }
 
     this.moveFox(cursors)
+    if (this.isTracking) {
+      Singleton.getInstance().addToPlayerTrack({ x: this.x, y: this.y })
+    }
   }
 
   moveFox(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
@@ -241,5 +246,9 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
   setChest(chest: Chest) {
     this.activeChest = chest
+  }
+
+  startTrackingPosition() {
+    this.isTracking = true
   }
 }

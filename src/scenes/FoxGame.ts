@@ -28,7 +28,7 @@ export default class FoxGame extends Phaser.Scene {
   }
 
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
-  private character!: Character
+  character!: Character
 
   private terrainLayer: Phaser.Tilemaps.TilemapLayer
   private constructionsLayer: Phaser.Tilemaps.TilemapLayer
@@ -299,6 +299,7 @@ export default class FoxGame extends Phaser.Scene {
 
   update(t: number, dt: number) {
     this.character.update(this.cursors)
+    Singleton.getInstance().cat.update()
   }
 
   createLayers(map: Phaser.Tilemaps.Tilemap) {

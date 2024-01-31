@@ -3662,7 +3662,7 @@ Choose the correct option that explains the relationship between network demand 
   </object>
  </objectgroup>
  <objectgroup id="29" name="SpawnPoints">
-  <object id="83" name="mainSpawn" x="911.509" y="480.031">
+  <object id="83" name="mainSpawn" x="272" y="352">
    <point/>
   </object>
   <object id="84" name="level1Spawn" x="1206.34" y="584.351">
