@@ -16,6 +16,8 @@ export default class GameUI extends Phaser.Scene {
   private characterDiedDialog: CharacterDiedDialog
   private tipUi: Tip
 
+  private shouldHideTip: boolean = false
+
   constructor() {
     super("game-ui");
   }
@@ -102,6 +104,7 @@ export default class GameUI extends Phaser.Scene {
     if (this.dialogUi.isVisible && !this.dialogUi.moreMessagesToShow) {
       this.dialogUi.hideDialogModal()
       sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, false)
+      this.shouldHideTip = false
       return
     }
 
@@ -116,9 +119,11 @@ export default class GameUI extends Phaser.Scene {
     this.tipUi.hideTip()
     this.dialogUi.showDialogModal(messages)
     sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, true)
+    this.shouldHideTip = true
   }
 
   showTip() {
+    if (this.shouldHideTip) return
     this.tipUi.showTip()
   }
 

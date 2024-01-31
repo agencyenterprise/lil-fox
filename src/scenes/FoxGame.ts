@@ -157,6 +157,7 @@ export default class FoxGame extends Phaser.Scene {
         case 'cat':
           const cat: Cat = this.cats.get(x, y, 'cat')
           cat.setVisible(false)
+          cat.setMessages(messages)
           Singleton.getInstance().cat = cat
           Singleton.getInstance().interactiveObjects.push(cat)
           break
