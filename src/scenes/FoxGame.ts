@@ -70,8 +70,6 @@ export default class FoxGame extends Phaser.Scene {
   }
 
   create(data: CreateData) {
-    const wonLevels = getWonLevels()
-
     this.scene.run('game-ui')
     this.scene.launch('settings-ui')
 
@@ -85,90 +83,9 @@ export default class FoxGame extends Phaser.Scene {
     const map = this.make.tilemap({ key: 'map' });
     this.createLayers(map)
 
-    map.getObjectLayer('SpawnPoints')!.objects.forEach(spawnPoint => {
-      const x = spawnPoint.x
-      const y = spawnPoint.y
-      this.spawnPoints.set(spawnPoint.name, new Phaser.Geom.Point(x!, y!))
-    })
-
-    if (data.levelNumber) {
-      const levelSpawn = this.spawnPoints.get(`level${data.levelNumber}Spawn`)!
-      this.character = new Character(this, levelSpawn.x, levelSpawn.y, "character");
-    } else {
-      const mainSpawn = this.spawnPoints.get(SpawnPoints.MAIN_SPAWN)!
-      this.character = new Character(this, mainSpawn.x, mainSpawn.y, "character");
-    }
-
-    this.character.setSize(this.character.width * 0.4, this.character.height * 0.4)
-    this.physics.add.existing(this.character, false);
-    this.add.existing(this.character);
-    this.physics.world.enableBody(this.character, Phaser.Physics.Arcade.DYNAMIC_BODY)
-
-    this.cameras.main.startFollow(this.character, true, 0.05, 0.05);
-
-    this.lizards = this.physics.add.group({
-      classType: Lizard,
-      createCallback: (go) => {
-        const lizGo = go as Lizard
-        if (!lizGo.body) return
-        lizGo.body.onCollide = true
-        lizGo.setDepth(2);
-      }
-    })
-
-    this.greenArchers = this.physics.add.group({
-      classType: GreenArcher
-    })
-    this.arrows = this.physics.add.group({
-      classType: Phaser.Physics.Arcade.Image,
-    })
-
-    this.cats = this.physics.add.group({
-      classType: Cat
-    })
-
-    this.catOwners = this.physics.add.group({
-      classType: CatOwner,
-    })
-
-    map.getObjectLayer('Enemies')!.objects.forEach(enemy => {
-      const x = enemy.x! + enemy.width! * 0.5
-      const y = enemy.y! + enemy.height! * 0.5
-      switch (enemy.name) {
-        case 'lizard':
-          if (wonLevels.includes(1)) break
-          this.lizards.get(x, y, 'lizard')
-          break
-        case 'green_archer':
-          if (wonLevels.includes(2)) break
-          const props = enemy.properties
-          const facingDirection = props.find((p: any) => p.name === 'facing')?.value.split(";")[0]
-          this.greenArchers.get(x, y, 'greenArcher').setArrows(this.arrows).setFacingDirection(facingDirection)
-          break
-      }
-    })
-
-    this.npcsObjects.objects.forEach(npc => {
-      const x = npc.x! + npc.width! * 0.5
-      const y = npc.y! + npc.height! * 0.5
-      const props = npc.properties
-      const messages = props.find((p: any) => p.name === 'message')?.value.split(";")
-      switch (npc.name) {
-        case 'cat':
-          const cat: Cat = this.cats.get(x, y, 'cat')
-          cat.setVisible(false)
-          cat.setMessages(messages)
-          Singleton.getInstance().cat = cat
-          Singleton.getInstance().interactiveObjects.push(cat)
-          break
-        case 'cat_owner':
-          const catOwner: CatOwner = this.catOwners.get(x, y, 'cat_owner')
-          catOwner.setMessages(messages)
-          Singleton.getInstance().catOwner = catOwner
-          Singleton.getInstance().interactiveObjects.push(catOwner)
-          break
-      }
-    })
+    this.spawnCharacter(map, data)
+    this.spawnEnemies(map)
+    this.spawnNpcs(map)
 
     this.signsObjects.objects.forEach(sign => {
       Singleton.getInstance().interactiveObjects.push(sign)
@@ -196,6 +113,98 @@ export default class FoxGame extends Phaser.Scene {
     //   collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
     //   faceColor: new Phaser.Display.Color(40, 39,1 37, 255)
     // });
+  }
+
+  spawnNpcs(map: Phaser.Tilemaps.Tilemap) {
+    this.cats = this.physics.add.group({
+      classType: Cat
+    })
+
+    this.catOwners = this.physics.add.group({
+      classType: CatOwner,
+    })
+
+    this.npcsObjects.objects.forEach(npc => {
+      const x = npc.x! + npc.width! * 0.5
+      const y = npc.y! + npc.height! * 0.5
+      const props = npc.properties
+      const messages = props.find((p: any) => p.name === 'message')?.value.split(";")
+      switch (npc.name) {
+        case 'cat':
+          const cat: Cat = this.cats.get(x, y, 'cat')
+          cat.setVisible(false)
+          cat.setMessages(messages)
+          Singleton.getInstance().cat = cat
+          Singleton.getInstance().interactiveObjects.push(cat)
+          break
+        case 'cat_owner':
+          const catOwner: CatOwner = this.catOwners.get(x, y, 'cat_owner')
+          catOwner.setMessages(messages)
+          Singleton.getInstance().catOwner = catOwner
+          Singleton.getInstance().interactiveObjects.push(catOwner)
+          break
+      }
+    })
+  }
+
+  spawnEnemies(map: Phaser.Tilemaps.Tilemap) {
+    this.lizards = this.physics.add.group({
+      classType: Lizard,
+      createCallback: (go) => {
+        const lizGo = go as Lizard
+        if (!lizGo.body) return
+        lizGo.body.onCollide = true
+        lizGo.setDepth(2);
+      }
+    })
+
+    this.greenArchers = this.physics.add.group({
+      classType: GreenArcher
+    })
+    this.arrows = this.physics.add.group({
+      classType: Phaser.Physics.Arcade.Image,
+    })
+
+    map.getObjectLayer('Enemies')!.objects.forEach(enemy => {
+      const wonLevels = getWonLevels()
+      const x = enemy.x! + enemy.width! * 0.5
+      const y = enemy.y! + enemy.height! * 0.5
+      switch (enemy.name) {
+        case 'lizard':
+          if (wonLevels.includes(1)) break
+          this.lizards.get(x, y, 'lizard')
+          break
+        case 'green_archer':
+          if (wonLevels.includes(2)) break
+          const props = enemy.properties
+          const facingDirection = props.find((p: any) => p.name === 'facing')?.value.split(";")[0]
+          this.greenArchers.get(x, y, 'greenArcher').setArrows(this.arrows).setFacingDirection(facingDirection)
+          break
+      }
+    })
+  }
+
+  spawnCharacter(map: Phaser.Tilemaps.Tilemap, data: CreateData) {
+    map.getObjectLayer('SpawnPoints')!.objects.forEach(spawnPoint => {
+      const x = spawnPoint.x
+      const y = spawnPoint.y
+      this.spawnPoints.set(spawnPoint.name, new Phaser.Geom.Point(x!, y!))
+    })
+
+    if (data.levelNumber) {
+      const levelSpawn = this.spawnPoints.get(`level${data.levelNumber}Spawn`)!
+      this.character = new Character(this, levelSpawn.x, levelSpawn.y, "character");
+    } else {
+      const mainSpawn = this.spawnPoints.get(SpawnPoints.MAIN_SPAWN)!
+      this.character = new Character(this, mainSpawn.x, mainSpawn.y, "character");
+    }
+
+    this.character.setSize(this.character.width * 0.4, this.character.height * 0.4)
+    this.physics.add.existing(this.character, false);
+    this.add.existing(this.character);
+    this.physics.world.enableBody(this.character, Phaser.Physics.Arcade.DYNAMIC_BODY)
+
+    this.cameras.main.startFollow(this.character, true, 0.05, 0.05);
   }
 
   createBlueberries(map: Phaser.Tilemaps.Tilemap) {
