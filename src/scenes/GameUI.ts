@@ -48,7 +48,7 @@ export default class GameUI extends Phaser.Scene {
     this.berries.createMultiple({
       key: 'berry-empty',
       setXY: {
-        x: 10,
+        x: 15,
         y: 25,
         stepX: 16
       },
@@ -61,7 +61,6 @@ export default class GameUI extends Phaser.Scene {
     sceneEvents.on(Events.SHOW_DIALOG, this.showDialog, this)
     sceneEvents.on(Events.SHOW_TIP, this.showTip, this)
     sceneEvents.on(Events.CHARACTER_DIED, this.handleCharacterDied, this)
-
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       sceneEvents.off(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)

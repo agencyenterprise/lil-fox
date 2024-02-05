@@ -24,7 +24,16 @@ type CreateData = {
 
 export default class FoxGame extends Phaser.Scene {
   constructor() {
-    super({ key: 'LilFox' })
+    super({
+      key: 'LilFox',
+      physics: {
+        default: 'matter',
+        arcade: {
+          gravity: { y: 0 },
+          // debug: true
+        },
+      },
+    })
   }
 
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
@@ -98,9 +107,12 @@ export default class FoxGame extends Phaser.Scene {
     const globalAccessSingleton = Singleton.getInstance()
     globalAccessSingleton.areas = this.areas
 
-    // this.input.on('pointerdown', () => {
-    //   sceneEvents.emit(Events.CHARACTER_DIED)
-    // });
+    this.input.on('pointerdown', () => {
+      this.scene.pause("LilFox");
+      this.scene.setVisible(false, "LilFox");
+      this.scene.run("MarioScene")
+      this.scene.setVisible(true, "MarioScene");
+    });
 
     // const debugGraphics = this.add.graphics().setAlpha(0.75);
     // this.treesLayer?.renderDebug(debugGraphics, {
@@ -361,7 +373,7 @@ export default class FoxGame extends Phaser.Scene {
     // this.physics.add.collider(this.character, chests, this.handleCharacterChestCollision, undefined, this)
     // this.physics.add.collider(this.lizards, chests)
 
-    // this.physics.add.collider(this.catOwners, this.character);-
+    // this.physics.add.collider(this.catOwners, this.character);
     this.playerLizardsCollider = this.physics.add.collider(this.lizards, this.character, this.handleCharacterLizardCollision, undefined, this);
     this.playerArrowsCollider = this.physics.add.collider(this.arrows, this.character, this.handleCharacterArrowCollision, undefined, this);
     this.physics.add.collider(this.arrows, this.treesLayer, this.handleObjectsArrowCollision, undefined, this);
