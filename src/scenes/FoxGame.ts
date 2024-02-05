@@ -117,7 +117,7 @@ export default class FoxGame extends Phaser.Scene {
 
     const themeConfig = {
       mute: false,
-      volume: 0.5,
+      volume: 0.2,
       rate: 1,
       detune: 0,
       seek: 0,

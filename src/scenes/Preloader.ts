@@ -107,6 +107,14 @@ export default class Preloader extends Phaser.Scene {
       "assets/audio/catowner-hello.ogg",
       "assets/audio/catowner-hello.mp3",
     ]);
+    this.load.audio("audio-footsteps-01", [
+      "assets/audio/footsteps-01.ogg",
+      "assets/audio/footsteps-01.mp3",
+    ]);
+    this.load.audio("audio-footsteps-02", [
+      "assets/audio/footsteps-02.ogg",
+      "assets/audio/footsteps-02.mp3",
+    ]);
   }
 
   create() {
