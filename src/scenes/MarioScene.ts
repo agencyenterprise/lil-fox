@@ -36,7 +36,8 @@ export default class MarioScene extends Phaser.Scene {
 
 
 
-    this.character = new Character(this, 50, 50, "character");
+    this.character = new Character(this, 30, 228, "character");
+    this.character.marioLike = true
 
     this.character.setSize(this.character.width * 0.4, this.character.height * 0.4)
     this.physics.add.existing(this.character, false);
@@ -49,13 +50,14 @@ export default class MarioScene extends Phaser.Scene {
 
 
     this.terrainLayer?.setCollisionByProperty({ collides: true });
-    this.physics.add.collider(this.character, this.terrainLayer);
-    
+    this.physics.add.collider(this.character, this.terrainLayer, this.handleTerrainCollision, undefined, this);
   }
 
+  handleTerrainCollision() {
+    console.log('collided')
+  }
 
   update(t: number, dt: number) {
-    console.log("MarioScene")
     this.character.update(this.cursors)
   }
 
