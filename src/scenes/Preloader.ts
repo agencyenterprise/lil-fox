@@ -91,13 +91,21 @@ export default class Preloader extends Phaser.Scene {
 
     this.load.image("cursor", `ui/cursor.png`);
 
-    this.load.audio("audio-beam", [
-      "assets/audio/beam.ogg",
-      "assets/audio/beam.mp3",
+    this.load.audio("audio-theme", [
+      "assets/audio/theme.ogg",
+      "assets/audio/theme.mp3",
+    ]);
+    this.load.audio("audio-ouch", [
+      "assets/audio/ouch.ogg",
+      "assets/audio/ouch.mp3",
     ]);
     this.load.audio("audio-pickup", [
       "assets/audio/pickup.ogg",
       "assets/audio/pickup.mp3",
+    ]);
+    this.load.audio("audio-catowner-hello", [
+      "assets/audio/catowner-hello.ogg",
+      "assets/audio/catowner-hello.mp3",
     ]);
   }
 

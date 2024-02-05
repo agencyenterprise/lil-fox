@@ -60,11 +60,15 @@ export default class FoxGame extends Phaser.Scene {
   private currentLevel: number = 0;
   private collectedBlueBerries: number = 0;
 
-  beamSound:
+  private themeSound:
     | Phaser.Sound.NoAudioSound
     | Phaser.Sound.HTML5AudioSound
     | Phaser.Sound.WebAudioSound;
-  pickupSound:
+  private ouchSound:
+    | Phaser.Sound.NoAudioSound
+    | Phaser.Sound.HTML5AudioSound
+    | Phaser.Sound.WebAudioSound;
+  private pickupSound:
     | Phaser.Sound.NoAudioSound
     | Phaser.Sound.HTML5AudioSound
     | Phaser.Sound.WebAudioSound;
@@ -107,8 +111,21 @@ export default class FoxGame extends Phaser.Scene {
     const globalAccessSingleton = Singleton.getInstance();
     globalAccessSingleton.areas = this.areas;
 
-    this.beamSound = this.sound.add("audio-beam");
+    this.themeSound = this.sound.add("audio-theme");
+    this.ouchSound = this.sound.add("audio-ouch");
     this.pickupSound = this.sound.add("audio-pickup");
+
+    const themeConfig = {
+      mute: false,
+      volume: 0.5,
+      rate: 1,
+      detune: 0,
+      seek: 0,
+      loop: true,
+      delay: 0,
+    };
+
+    this.themeSound.play(themeConfig);
 
     // this.input.on('pointerdown', () => {
     //   sceneEvents.emit(Events.CHARACTER_DIED)
@@ -309,7 +326,7 @@ export default class FoxGame extends Phaser.Scene {
     const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(150);
 
     this.character.handleDamage(dir);
-    this.beamSound.play();
+    this.ouchSound.play();
 
     sceneEvents.emit(Events.PLAYER_HEALTH_CHANGED, this.character.health);
 
