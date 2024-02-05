@@ -19,84 +19,96 @@ import { Area } from "@/types/Area";
 import { CatArea } from "@/types/CatArea";
 
 type CreateData = {
-  levelNumber?: number
-}
+  levelNumber?: number;
+};
 
 export default class FoxGame extends Phaser.Scene {
   constructor() {
-    super({ key: 'LilFox' })
+    super({ key: "LilFox" });
   }
 
-  private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
-  character!: Character
+  private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
+  character!: Character;
 
-  private terrainLayer: Phaser.Tilemaps.TilemapLayer
-  private constructionsLayer: Phaser.Tilemaps.TilemapLayer
-  private treesLayer: Phaser.Tilemaps.TilemapLayer
-  private treasuresLayer: Phaser.Tilemaps.TilemapLayer
-  private objectsLayer: Phaser.Tilemaps.TilemapLayer
+  private terrainLayer: Phaser.Tilemaps.TilemapLayer;
+  private constructionsLayer: Phaser.Tilemaps.TilemapLayer;
+  private treesLayer: Phaser.Tilemaps.TilemapLayer;
+  private treasuresLayer: Phaser.Tilemaps.TilemapLayer;
+  private objectsLayer: Phaser.Tilemaps.TilemapLayer;
 
-  private signsObjects: Phaser.Tilemaps.ObjectLayer
-  private npcsObjects: Phaser.Tilemaps.ObjectLayer
-  private areasObjects: Phaser.Tilemaps.ObjectLayer
-  private blueberryObjects: Phaser.Tilemaps.ObjectLayer
+  private signsObjects: Phaser.Tilemaps.ObjectLayer;
+  private npcsObjects: Phaser.Tilemaps.ObjectLayer;
+  private areasObjects: Phaser.Tilemaps.ObjectLayer;
+  private blueberryObjects: Phaser.Tilemaps.ObjectLayer;
 
-  private areas: Area[]
+  private areas: Area[];
 
-  private spawnPoints: Map<string, Phaser.Geom.Point> = new Map()
+  private spawnPoints: Map<string, Phaser.Geom.Point> = new Map();
 
-  private foods: Phaser.GameObjects.Group
-  private lizards: Phaser.GameObjects.Group
-  private greenArchers: Phaser.GameObjects.Group
-  private cats: Phaser.GameObjects.Group
-  private catOwners: Phaser.GameObjects.Group
-  private arrows: Phaser.GameObjects.Group
+  private foods: Phaser.GameObjects.Group;
+  private lizards: Phaser.GameObjects.Group;
+  private greenArchers: Phaser.GameObjects.Group;
+  private cats: Phaser.GameObjects.Group;
+  private catOwners: Phaser.GameObjects.Group;
+  private arrows: Phaser.GameObjects.Group;
 
-  private playerLizardsCollider?: Phaser.Physics.Arcade.Collider
-  private playerArrowsCollider?: Phaser.Physics.Arcade.Collider
+  private playerLizardsCollider?: Phaser.Physics.Arcade.Collider;
+  private playerArrowsCollider?: Phaser.Physics.Arcade.Collider;
 
-  private dialogUi: Dialog
+  private dialogUi: Dialog;
 
-  private currentLevel: number = 0
-  private collectedBlueBerries: number = 0
+  private currentLevel: number = 0;
+  private collectedBlueBerries: number = 0;
+
+  beamSound:
+    | Phaser.Sound.NoAudioSound
+    | Phaser.Sound.HTML5AudioSound
+    | Phaser.Sound.WebAudioSound;
+  pickupSound:
+    | Phaser.Sound.NoAudioSound
+    | Phaser.Sound.HTML5AudioSound
+    | Phaser.Sound.WebAudioSound;
 
   preload() {
-    this.loadSkinSpriteSheet(Skin.DEFAULT)
-    this.loadSkinSpriteSheet(Skin.BLUE)
-    this.loadSkinSpriteSheet(Skin.KUMAMON)
-    this.loadSkinSpriteSheet(Skin.SUNGLASSES)
+    this.loadSkinSpriteSheet(Skin.DEFAULT);
+    this.loadSkinSpriteSheet(Skin.BLUE);
+    this.loadSkinSpriteSheet(Skin.KUMAMON);
+    this.loadSkinSpriteSheet(Skin.SUNGLASSES);
 
     this.cursors = this.input.keyboard?.createCursorKeys()!;
   }
 
   create(data: CreateData) {
-    this.scene.run('game-ui')
-    this.scene.launch('settings-ui')
+    this.scene.run("game-ui");
+    this.scene.launch("settings-ui");
 
-    createCharacterAnims(this.anims)
-    createArcherAnims(this.anims)
-    createLizardAnims(this.anims)
-    createChestAnims(this.anims)
-    createCatAnims(this.anims)
-    createCatOwnerAnims(this.anims)
+    createCharacterAnims(this.anims);
+    createArcherAnims(this.anims);
+    createLizardAnims(this.anims);
+    createChestAnims(this.anims);
+    createCatAnims(this.anims);
+    createCatOwnerAnims(this.anims);
 
-    const map = this.make.tilemap({ key: 'map' });
-    this.createLayers(map)
+    const map = this.make.tilemap({ key: "map" });
+    this.createLayers(map);
 
-    this.spawnCharacter(map, data)
-    this.spawnEnemies(map)
-    this.spawnNpcs(map)
+    this.spawnCharacter(map, data);
+    this.spawnEnemies(map);
+    this.spawnNpcs(map);
 
-    this.signsObjects.objects.forEach(sign => {
-      Singleton.getInstance().interactiveObjects.push(sign)
-    })
+    this.signsObjects.objects.forEach((sign) => {
+      Singleton.getInstance().interactiveObjects.push(sign);
+    });
 
-    this.addColliders()
-    this.createBlueberries(map)
-    this.createEventListeners()
+    this.addColliders();
+    this.createBlueberries(map);
+    this.createEventListeners();
 
-    const globalAccessSingleton = Singleton.getInstance()
-    globalAccessSingleton.areas = this.areas
+    const globalAccessSingleton = Singleton.getInstance();
+    globalAccessSingleton.areas = this.areas;
+
+    this.beamSound = this.sound.add("audio-beam");
+    this.pickupSound = this.sound.add("audio-pickup");
 
     // this.input.on('pointerdown', () => {
     //   sceneEvents.emit(Events.CHARACTER_DIED)
@@ -117,92 +129,115 @@ export default class FoxGame extends Phaser.Scene {
 
   spawnNpcs(map: Phaser.Tilemaps.Tilemap) {
     this.cats = this.physics.add.group({
-      classType: Cat
-    })
+      classType: Cat,
+    });
 
     this.catOwners = this.physics.add.group({
       classType: CatOwner,
-    })
+    });
 
-    this.npcsObjects.objects.forEach(npc => {
-      const x = npc.x! + npc.width! * 0.5
-      const y = npc.y! + npc.height! * 0.5
-      const props = npc.properties
-      const messages = props.find((p: any) => p.name === 'message')?.value.split(";")
+    this.npcsObjects.objects.forEach((npc) => {
+      const x = npc.x! + npc.width! * 0.5;
+      const y = npc.y! + npc.height! * 0.5;
+      const props = npc.properties;
+      const messages = props
+        .find((p: any) => p.name === "message")
+        ?.value.split(";");
       switch (npc.name) {
-        case 'cat':
-          const cat: Cat = this.cats.get(x, y, 'cat')
-          cat.setVisible(false)
-          cat.setMessages(messages)
-          Singleton.getInstance().cat = cat
-          Singleton.getInstance().interactiveObjects.push(cat)
-          break
-        case 'cat_owner':
-          const catOwner: CatOwner = this.catOwners.get(x, y, 'cat_owner')
-          catOwner.setMessages(messages)
-          Singleton.getInstance().catOwner = catOwner
-          Singleton.getInstance().interactiveObjects.push(catOwner)
-          break
+        case "cat":
+          const cat: Cat = this.cats.get(x, y, "cat");
+          cat.setVisible(false);
+          cat.setMessages(messages);
+          Singleton.getInstance().cat = cat;
+          Singleton.getInstance().interactiveObjects.push(cat);
+          break;
+        case "cat_owner":
+          const catOwner: CatOwner = this.catOwners.get(x, y, "cat_owner");
+          catOwner.setMessages(messages);
+          Singleton.getInstance().catOwner = catOwner;
+          Singleton.getInstance().interactiveObjects.push(catOwner);
+          break;
       }
-    })
+    });
   }
 
   spawnEnemies(map: Phaser.Tilemaps.Tilemap) {
     this.lizards = this.physics.add.group({
       classType: Lizard,
       createCallback: (go) => {
-        const lizGo = go as Lizard
-        if (!lizGo.body) return
-        lizGo.body.onCollide = true
+        const lizGo = go as Lizard;
+        if (!lizGo.body) return;
+        lizGo.body.onCollide = true;
         lizGo.setDepth(2);
-      }
-    })
+      },
+    });
 
     this.greenArchers = this.physics.add.group({
-      classType: GreenArcher
-    })
+      classType: GreenArcher,
+    });
     this.arrows = this.physics.add.group({
       classType: Phaser.Physics.Arcade.Image,
-    })
+    });
 
-    map.getObjectLayer('Enemies')!.objects.forEach(enemy => {
-      const wonLevels = getWonLevels()
-      const x = enemy.x! + enemy.width! * 0.5
-      const y = enemy.y! + enemy.height! * 0.5
+    map.getObjectLayer("Enemies")!.objects.forEach((enemy) => {
+      const wonLevels = getWonLevels();
+      const x = enemy.x! + enemy.width! * 0.5;
+      const y = enemy.y! + enemy.height! * 0.5;
       switch (enemy.name) {
-        case 'lizard':
-          if (wonLevels.includes(1)) break
-          this.lizards.get(x, y, 'lizard')
-          break
-        case 'green_archer':
-          if (wonLevels.includes(2)) break
-          const props = enemy.properties
-          const facingDirection = props.find((p: any) => p.name === 'facing')?.value.split(";")[0]
-          this.greenArchers.get(x, y, 'greenArcher').setArrows(this.arrows).setFacingDirection(facingDirection)
-          break
+        case "lizard":
+          if (wonLevels.includes(1)) break;
+          this.lizards.get(x, y, "lizard");
+          break;
+        case "green_archer":
+          if (wonLevels.includes(2)) break;
+          const props = enemy.properties;
+          const facingDirection = props
+            .find((p: any) => p.name === "facing")
+            ?.value.split(";")[0];
+          this.greenArchers
+            .get(x, y, "greenArcher")
+            .setArrows(this.arrows)
+            .setFacingDirection(facingDirection);
+          break;
       }
-    })
+    });
   }
 
   spawnCharacter(map: Phaser.Tilemaps.Tilemap, data: CreateData) {
-    map.getObjectLayer('SpawnPoints')!.objects.forEach(spawnPoint => {
-      const x = spawnPoint.x
-      const y = spawnPoint.y
-      this.spawnPoints.set(spawnPoint.name, new Phaser.Geom.Point(x!, y!))
-    })
+    map.getObjectLayer("SpawnPoints")!.objects.forEach((spawnPoint) => {
+      const x = spawnPoint.x;
+      const y = spawnPoint.y;
+      this.spawnPoints.set(spawnPoint.name, new Phaser.Geom.Point(x!, y!));
+    });
 
     if (data.levelNumber) {
-      const levelSpawn = this.spawnPoints.get(`level${data.levelNumber}Spawn`)!
-      this.character = new Character(this, levelSpawn.x, levelSpawn.y, "character");
+      const levelSpawn = this.spawnPoints.get(`level${data.levelNumber}Spawn`)!;
+      this.character = new Character(
+        this,
+        levelSpawn.x,
+        levelSpawn.y,
+        "character"
+      );
     } else {
-      const mainSpawn = this.spawnPoints.get(SpawnPoints.MAIN_SPAWN)!
-      this.character = new Character(this, mainSpawn.x, mainSpawn.y, "character");
+      const mainSpawn = this.spawnPoints.get(SpawnPoints.MAIN_SPAWN)!;
+      this.character = new Character(
+        this,
+        mainSpawn.x,
+        mainSpawn.y,
+        "character"
+      );
     }
 
-    this.character.setSize(this.character.width * 0.4, this.character.height * 0.4)
+    this.character.setSize(
+      this.character.width * 0.4,
+      this.character.height * 0.4
+    );
     this.physics.add.existing(this.character, false);
     this.add.existing(this.character);
-    this.physics.world.enableBody(this.character, Phaser.Physics.Arcade.DYNAMIC_BODY)
+    this.physics.world.enableBody(
+      this.character,
+      Phaser.Physics.Arcade.DYNAMIC_BODY
+    );
 
     this.cameras.main.startFollow(this.character, true, 0.05, 0.05);
   }
@@ -211,15 +246,21 @@ export default class FoxGame extends Phaser.Scene {
     this.foods = this.add.group({
       classType: Phaser.GameObjects.Image,
       createCallback: (go) => {
-        this.physics.world.enable(go)
-      }
-    })
+        this.physics.world.enable(go);
+      },
+    });
 
-    this.physics.add.collider(this.character, this.foods, this.handleCollectFood, undefined, this);
+    this.physics.add.collider(
+      this.character,
+      this.foods,
+      this.handleCollectFood,
+      undefined,
+      this
+    );
 
-    map.getObjectLayer('Blueberries')!.objects.forEach(blueberry => {
-      const x = blueberry.x! + blueberry.width! * 0.5
-      const y = blueberry.y! + blueberry.height! * 0.5
+    map.getObjectLayer("Blueberries")!.objects.forEach((blueberry) => {
+      const x = blueberry.x! + blueberry.width! * 0.5;
+      const y = blueberry.y! + blueberry.height! * 0.5;
 
       this.add.tween({
         yoyo: true,
@@ -231,48 +272,50 @@ export default class FoxGame extends Phaser.Scene {
           start: y,
           to: y - 2,
         },
-        targets: this.foods.get(x, y, 'berry'),
-      })
-    })
+        targets: this.foods.get(x, y, "berry"),
+      });
+    });
   }
 
   private handleCollectFood(obj1: any, obj2: any) {
-    const food = obj2 as Phaser.GameObjects.Image
-    food.destroy()
+    const food = obj2 as Phaser.GameObjects.Image;
+    food.destroy();
+    this.pickupSound.play();
 
-    if (this.collectedBlueBerries >= 5) return
+    if (this.collectedBlueBerries >= 5) return;
 
-    this.collectedBlueBerries += 1
-    sceneEvents.emit(Events.PLAYER_COLLECTED_BERRY, this.collectedBlueBerries)
+    this.collectedBlueBerries += 1;
+    sceneEvents.emit(Events.PLAYER_COLLECTED_BERRY, this.collectedBlueBerries);
   }
 
   private handleCharacterChestCollision(
     obj1: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile,
     obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile
   ) {
-    const chest = obj2 as Chest
-    this.character.setChest(chest)
+    const chest = obj2 as Chest;
+    this.character.setChest(chest);
   }
 
   private handleCharacterLizardCollision(
     obj1: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile,
     obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile
   ) {
-    const lizard = obj2 as Lizard
-    const dx = this.character.x - lizard.x
-    const dy = this.character.y - lizard.y
+    const lizard = obj2 as Lizard;
+    const dx = this.character.x - lizard.x;
+    const dy = this.character.y - lizard.y;
 
-    lizard.changeDirection(lizard)
+    lizard.changeDirection(lizard);
 
-    const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(150)
+    const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(150);
 
-    this.character.handleDamage(dir)
+    this.character.handleDamage(dir);
+    this.beamSound.play();
 
-    sceneEvents.emit(Events.PLAYER_HEALTH_CHANGED, this.character.health)
+    sceneEvents.emit(Events.PLAYER_HEALTH_CHANGED, this.character.health);
 
     if (this.character.health <= 0) {
-      this.playerLizardsCollider?.destroy()
-      this.playerArrowsCollider?.destroy()
+      this.playerLizardsCollider?.destroy();
+      this.playerArrowsCollider?.destroy();
     }
   }
 
@@ -280,68 +323,75 @@ export default class FoxGame extends Phaser.Scene {
     obj1: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile,
     obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile
   ) {
-    const arrow = obj2 as Phaser.Physics.Arcade.Image
-    const dx = this.character.x - arrow.x
-    const dy = this.character.y - arrow.y
+    const arrow = obj2 as Phaser.Physics.Arcade.Image;
+    const dx = this.character.x - arrow.x;
+    const dy = this.character.y - arrow.y;
 
-    const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(150)
+    const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(150);
 
-    this.character.handleDamage(dir)
+    this.character.handleDamage(dir);
 
-    sceneEvents.emit(Events.PLAYER_HEALTH_CHANGED, this.character.health)
+    sceneEvents.emit(Events.PLAYER_HEALTH_CHANGED, this.character.health);
 
     if (this.character.health <= 0) {
-      this.playerLizardsCollider?.destroy()
-      this.playerArrowsCollider?.destroy()
+      this.playerLizardsCollider?.destroy();
+      this.playerArrowsCollider?.destroy();
     }
 
-    arrow.destroy()
+    arrow.destroy();
   }
 
   private handleObjectsArrowCollision(
     obj1: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile,
     obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile
   ) {
-    const arrow = obj1 as Phaser.Physics.Arcade.Image
-    arrow.destroy()
+    const arrow = obj1 as Phaser.Physics.Arcade.Image;
+    arrow.destroy();
   }
 
   update(t: number, dt: number) {
-    this.character.update(this.cursors)
-    Singleton.getInstance().cat.update()
+    this.character.update(this.cursors);
+    Singleton.getInstance().cat.update();
   }
 
   createLayers(map: Phaser.Tilemaps.Tilemap) {
-    const tileset0 = map.addTilesetImage('punyworld-overworld-tileset', 'tiles0');
-    const tileset1 = map.addTilesetImage('Tileset 1', 'tiles1');
-    const tileset2 = map.addTilesetImage('DungeonTileset', 'tiles2');
+    const tileset0 = map.addTilesetImage(
+      "punyworld-overworld-tileset",
+      "tiles0"
+    );
+    const tileset1 = map.addTilesetImage("Tileset 1", "tiles1");
+    const tileset2 = map.addTilesetImage("DungeonTileset", "tiles2");
 
-    this.terrainLayer = map.createLayer('Terrain', tileset0!)!;
-    this.treesLayer = map.createLayer('Trees', tileset0!)!;
-    this.constructionsLayer = map.createLayer('Constructions', tileset0!)!;
+    this.terrainLayer = map.createLayer("Terrain", tileset0!)!;
+    this.treesLayer = map.createLayer("Trees", tileset0!)!;
+    this.constructionsLayer = map.createLayer("Constructions", tileset0!)!;
     // this.treasuresLayer = map.createLayer('Treasures', tileset2!)!;
 
-    this.signsObjects = map.getObjectLayer('Signs')!
-    this.npcsObjects = map.getObjectLayer('Npcs')!
-    this.areasObjects = map.getObjectLayer('Area')!
+    this.signsObjects = map.getObjectLayer("Signs")!;
+    this.npcsObjects = map.getObjectLayer("Npcs")!;
+    this.areasObjects = map.getObjectLayer("Area")!;
 
     const chests = this.physics.add.staticGroup({
-      classType: Chest
-    })
-    const chestsLayer = map.getObjectLayer('Treasures')
-    chestsLayer?.objects.forEach(chestObj => {
-      chests.get(chestObj.x! + chestObj.width! * 0.5, chestObj.y! + chestObj.height! * 0.5, 'treasure')
-    })
+      classType: Chest,
+    });
+    const chestsLayer = map.getObjectLayer("Treasures");
+    chestsLayer?.objects.forEach((chestObj) => {
+      chests.get(
+        chestObj.x! + chestObj.width! * 0.5,
+        chestObj.y! + chestObj.height! * 0.5,
+        "treasure"
+      );
+    });
 
-    this.areas = this.areasObjects.objects.map(area => {
-      if (area.name.startsWith('tip')) {
-        return new TipArea(area.x!, area.y!, area.width!, area.height!)
-      } else if (area.name.startsWith('cat')) {
-        return new CatArea(area.x!, area.y!, area.width!, area.height!)
+    this.areas = this.areasObjects.objects.map((area) => {
+      if (area.name.startsWith("tip")) {
+        return new TipArea(area.x!, area.y!, area.width!, area.height!);
+      } else if (area.name.startsWith("cat")) {
+        return new CatArea(area.x!, area.y!, area.width!, area.height!);
       } else {
-        return new Area(area.x!, area.y!, area.width!, area.height!)
+        return new Area(area.x!, area.y!, area.width!, area.height!);
       }
-    })
+    });
   }
 
   addColliders() {
@@ -362,50 +412,72 @@ export default class FoxGame extends Phaser.Scene {
     // this.physics.add.collider(this.lizards, chests)
 
     // this.physics.add.collider(this.catOwners, this.character);-
-    this.playerLizardsCollider = this.physics.add.collider(this.lizards, this.character, this.handleCharacterLizardCollision, undefined, this);
-    this.playerArrowsCollider = this.physics.add.collider(this.arrows, this.character, this.handleCharacterArrowCollision, undefined, this);
-    this.physics.add.collider(this.arrows, this.treesLayer, this.handleObjectsArrowCollision, undefined, this);
-    this.physics.add.collider(this.arrows, this.constructionsLayer, this.handleObjectsArrowCollision, undefined, this);
+    this.playerLizardsCollider = this.physics.add.collider(
+      this.lizards,
+      this.character,
+      this.handleCharacterLizardCollision,
+      undefined,
+      this
+    );
+    this.playerArrowsCollider = this.physics.add.collider(
+      this.arrows,
+      this.character,
+      this.handleCharacterArrowCollision,
+      undefined,
+      this
+    );
+    this.physics.add.collider(
+      this.arrows,
+      this.treesLayer,
+      this.handleObjectsArrowCollision,
+      undefined,
+      this
+    );
+    this.physics.add.collider(
+      this.arrows,
+      this.constructionsLayer,
+      this.handleObjectsArrowCollision,
+      undefined,
+      this
+    );
   }
 
   changeSkin(skin: Skin) {
-    this.character.skin = skin
+    this.character.skin = skin;
   }
 
   createEventListeners() {
-    sceneEvents.on(Events.WON_LEVEL_1, this.handleWinLevel1, this)
-    sceneEvents.on(Events.WON_LEVEL_2, this.handleWinLevel2, this)
+    sceneEvents.on(Events.WON_LEVEL_1, this.handleWinLevel1, this);
+    sceneEvents.on(Events.WON_LEVEL_2, this.handleWinLevel2, this);
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      sceneEvents.off(Events.WON_LEVEL_1, this.handleWinLevel1, this)
-    })
+      sceneEvents.off(Events.WON_LEVEL_1, this.handleWinLevel1, this);
+    });
   }
 
-
   handleWinLevel1() {
-    this.currentLevel = 1
-    this.lizards.clear(true, true)
-    const wonLevels = getWonLevels()
+    this.currentLevel = 1;
+    this.lizards.clear(true, true);
+    const wonLevels = getWonLevels();
     localStorage.setItem("wonLevels", JSON.stringify([...wonLevels, 1]));
     this.showGetNftDiv();
   }
 
   handleWinLevel2() {
-    this.currentLevel = 2
-    this.greenArchers.clear(true, true)
-    const wonLevels = getWonLevels()
+    this.currentLevel = 2;
+    this.greenArchers.clear(true, true);
+    const wonLevels = getWonLevels();
     localStorage.setItem("wonLevels", JSON.stringify([...wonLevels, 2]));
     this.showGetNftDiv();
   }
 
   showGetNftDiv() {
-    const sendNftDiv = document.getElementById('GetNFT')!;
-    sendNftDiv.style.display = 'block';
+    const sendNftDiv = document.getElementById("GetNFT")!;
+    sendNftDiv.style.display = "block";
   }
 
-
   getCurrentLevel() {
-    return this.currentLevel
+    return this.currentLevel;
   }
 
   loadSkinSpriteSheet(skinName: string) {
