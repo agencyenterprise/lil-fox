@@ -95,6 +95,10 @@ export default class Preloader extends Phaser.Scene {
       "assets/audio/theme.ogg",
       "assets/audio/theme.mp3",
     ]);
+    this.load.audio("audio-game-over", [
+      "assets/audio/game-over.ogg",
+      "assets/audio/game-over.mp3",
+    ]);
     this.load.audio("audio-ouch", [
       "assets/audio/ouch.ogg",
       "assets/audio/ouch.mp3",

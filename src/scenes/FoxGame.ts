@@ -64,14 +64,6 @@ export default class FoxGame extends Phaser.Scene {
     | Phaser.Sound.NoAudioSound
     | Phaser.Sound.HTML5AudioSound
     | Phaser.Sound.WebAudioSound;
-  private ouchSound:
-    | Phaser.Sound.NoAudioSound
-    | Phaser.Sound.HTML5AudioSound
-    | Phaser.Sound.WebAudioSound;
-  private pickupSound:
-    | Phaser.Sound.NoAudioSound
-    | Phaser.Sound.HTML5AudioSound
-    | Phaser.Sound.WebAudioSound;
 
   preload() {
     this.loadSkinSpriteSheet(Skin.DEFAULT);
@@ -112,8 +104,6 @@ export default class FoxGame extends Phaser.Scene {
     globalAccessSingleton.areas = this.areas;
 
     this.themeSound = this.sound.add("audio-theme");
-    this.ouchSound = this.sound.add("audio-ouch");
-    this.pickupSound = this.sound.add("audio-pickup");
 
     const themeConfig = {
       mute: false,
@@ -297,7 +287,6 @@ export default class FoxGame extends Phaser.Scene {
   private handleCollectFood(obj1: any, obj2: any) {
     const food = obj2 as Phaser.GameObjects.Image;
     food.destroy();
-    this.pickupSound.play();
 
     if (this.collectedBlueBerries >= 5) return;
 
@@ -326,7 +315,6 @@ export default class FoxGame extends Phaser.Scene {
     const dir = new Phaser.Math.Vector2(dx, dy).normalize().scale(150);
 
     this.character.handleDamage(dir);
-    this.ouchSound.play();
 
     sceneEvents.emit(Events.PLAYER_HEALTH_CHANGED, this.character.health);
 
@@ -466,9 +454,23 @@ export default class FoxGame extends Phaser.Scene {
   createEventListeners() {
     sceneEvents.on(Events.WON_LEVEL_1, this.handleWinLevel1, this);
     sceneEvents.on(Events.WON_LEVEL_2, this.handleWinLevel2, this);
+    sceneEvents.on(Events.STOP_MUSIC, this.handleStopMusic, this);
+    sceneEvents.on(
+      Events.CHANGE_MUSIC_VOLUME,
+      this.handleChangeMusicVolume,
+      this
+    );
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       sceneEvents.off(Events.WON_LEVEL_1, this.handleWinLevel1, this);
+      sceneEvents.off(Events.WON_LEVEL_2, this.handleWinLevel2, this);
+      sceneEvents.off(
+        Events.CHANGE_MUSIC_VOLUME,
+        this.handleChangeMusicVolume,
+        this
+      );
+
+      this.themeSound.stop();
     });
   }
 
@@ -486,6 +488,14 @@ export default class FoxGame extends Phaser.Scene {
     const wonLevels = getWonLevels();
     localStorage.setItem("wonLevels", JSON.stringify([...wonLevels, 2]));
     this.showGetNftDiv();
+  }
+
+  handleStopMusic() {
+    this.themeSound.stop();
+  }
+
+  handleChangeMusicVolume(volume: number) {
+    this.themeSound.setVolume(volume);
   }
 
   showGetNftDiv() {

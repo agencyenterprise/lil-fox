@@ -45,6 +45,10 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
   private activeChest?: Chest;
 
+  private ouchSound:
+    | Phaser.Sound.NoAudioSound
+    | Phaser.Sound.HTML5AudioSound
+    | Phaser.Sound.WebAudioSound;
   private footsteps01Sound:
     | Phaser.Sound.NoAudioSound
     | Phaser.Sound.HTML5AudioSound
@@ -87,6 +91,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       );
     });
 
+    this.ouchSound = this.scene.sound.add("audio-ouch");
     this.footsteps01Sound = this.scene.sound.add("audio-footsteps-01");
     this.footsteps02Sound = this.scene.sound.add("audio-footsteps-02");
   }
@@ -293,6 +298,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       this.setTint(0xff0000);
       this.healthState = HealthState.DAMAGE;
       this.damageTime = 0;
+      this.ouchSound.play();
     }
   }
 
