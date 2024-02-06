@@ -37,11 +37,10 @@ enum HealthState {
 export default class Character extends Phaser.Physics.Arcade.Sprite {
 
   private isTracking = false
-  private selectedSkin: Skin = Skin.DEFAULT
+  public selectedSkin: Skin = Skin.DEFAULT
   private healthState = HealthState.IDLE
   private damageTime = 0
   private isPlayerMovementLocked = false
-  public marioLike = false
 
   private _health = 5
 
@@ -127,7 +126,6 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
   }
 
   moveFox(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
-
     const speed = 85
 
     const leftDown = cursors.left?.isDown
@@ -135,54 +133,48 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     const upDown = cursors.up?.isDown
     const downDown = cursors.down?.isDown
 
-    if (rightDown && upDown && !this.marioLike) {
+    if (rightDown && upDown) {
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(speed / 1.65, -speed / 1.65);
       this.scaleX = 1;
       this.body?.offset.setTo(8, 12);
 
-    } else if (rightDown && downDown && !this.marioLike) {
+    } else if (rightDown && downDown) {
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(speed / 1.65, speed / 1.65);
       this.scaleX = 1;
       this.body?.offset.setTo(8, 12);
 
-    } else if (leftDown && upDown && !this.marioLike) {
+    } else if (leftDown && upDown) {
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(-speed / 1.65, -speed / 1.65);
       this.scaleX = -1;
       this.body?.offset.setTo(24, 12);
 
-    } else if (leftDown && downDown && !this.marioLike) {
+    } else if (leftDown && downDown) {
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(-speed / 1.65, speed / 1.65);
       this.scaleX = -1;
       this.body?.offset.setTo(24, 12);
-
-    } else if (downDown && !this.marioLike) {
-      this.anims.play(`run-${this.selectedSkin}`);
-      this.setVelocity(0, speed);
-
-    } else if (upDown && !this.marioLike) {
-      this.anims.play(`run-${this.selectedSkin}`);
-      this.setVelocity(0, -speed);
 
     } else if (leftDown) {
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(-speed, 0);
       this.scaleX = -1;
       this.body?.offset.setTo(24, 12);
-
     } else if (rightDown) {
       this.anims.play(`run-${this.selectedSkin}`, true);
       this.setVelocity(speed, 0);
       this.scaleX = 1;
       this.body?.offset.setTo(8, 12);
-    
-    } else if (upDown && this.marioLike) {
+
+    } else if (upDown) {
       this.anims.play(`run-${this.selectedSkin}`);
       this.setVelocity(0, -speed);
 
+    } else if (downDown) {
+      this.anims.play(`run-${this.selectedSkin}`);
+      this.setVelocity(0, speed);
 
     } else {
       this.anims.play(`idle-${this.selectedSkin}`);

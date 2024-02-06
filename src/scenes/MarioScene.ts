@@ -1,9 +1,9 @@
-import Character from "@/characters/Character";
+import PlatformGameCharacter from "@/characters/PlatformGameCharacter";
 
 export default class MarioScene extends Phaser.Scene {
 
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
-  public character!: Character
+  public character!: PlatformGameCharacter
   private terrainLayer: Phaser.Tilemaps.TilemapLayer
 
 
@@ -14,7 +14,7 @@ export default class MarioScene extends Phaser.Scene {
       physics: {
         default: 'arcade',
         arcade: {
-          gravity: { y: 1000 },
+          gravity: { y: 1700 },
           // debug: true
         },
       },
@@ -36,8 +36,7 @@ export default class MarioScene extends Phaser.Scene {
 
 
 
-    this.character = new Character(this, 30, 228, "character");
-    this.character.marioLike = true
+    this.character = new PlatformGameCharacter(this, 30, 228, "character");
 
     this.character.setSize(this.character.width * 0.4, this.character.height * 0.4)
     this.physics.add.existing(this.character, false);
@@ -54,7 +53,7 @@ export default class MarioScene extends Phaser.Scene {
   }
 
   handleTerrainCollision() {
-    console.log('collided')
+    this.character.isJumping = false
   }
 
   update(t: number, dt: number) {
