@@ -6,7 +6,6 @@ export default class MarioScene extends Phaser.Scene {
   public character!: PlatformGameCharacter
   private terrainLayer: Phaser.Tilemaps.TilemapLayer
 
-
   constructor() {
     super({
 
@@ -28,15 +27,14 @@ export default class MarioScene extends Phaser.Scene {
 
   create() {
     const map = this.make.tilemap({ key: 'platform-level-map' });
-    const tileset0 = map.addTilesetImage('tilemap', 'tiles3');
+    const tileset0 = map.addTilesetImage('nature-paltformer-tileset-16x16', 'tiles3');
 
-    
+
+    map.createLayer('Sky', tileset0!)!;
     this.terrainLayer = map.createLayer('Terrain', tileset0!)!;
 
 
-
-
-    this.character = new PlatformGameCharacter(this, 30, 228, "character");
+    this.character = new PlatformGameCharacter(this, 30, 650, "character");
 
     this.character.setSize(this.character.width * 0.4, this.character.height * 0.4)
     this.physics.add.existing(this.character, false);
@@ -44,9 +42,7 @@ export default class MarioScene extends Phaser.Scene {
     this.physics.world.enableBody(this.character, Phaser.Physics.Arcade.DYNAMIC_BODY)
 
     this.cameras.main.startFollow(this.character, true, 0.05, 0.05);
-
-
-
+    this.cameras.main.setBounds(25, 500, 3392, 100)
 
     this.terrainLayer?.setCollisionByProperty({ collides: true });
     this.physics.add.collider(this.character, this.terrainLayer, this.handleTerrainCollision, undefined, this);

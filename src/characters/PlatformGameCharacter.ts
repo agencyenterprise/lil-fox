@@ -46,16 +46,15 @@ export default class PlatformGameCharacter extends Character {
       this.setVelocityX(this.speed);
       this.scaleX = 1;
       this.body?.offset.setTo(8, 12);
-
+      
     } else if (upDown && !this.isJumping) {
       this.isJumping = true
       this.anims.play(`run-${this.selectedSkin}`);
       this.jump()
-      this.setVelocity(0, this.jumpSpeed);
 
     } else {
       this.anims.play(`idle-${this.selectedSkin}`);
-      this.setVelocity(0, 0);
+      this.setVelocityX(0);
     }
   }
 
