@@ -19,6 +19,7 @@ export default class Preloader extends Phaser.Scene {
 
     this.load.atlas('lizard_idle', 'enemies/lizard_idle.png', 'enemies/lizard_idle.json')
     this.load.atlas('lizard_run', 'enemies/lizard_run.png', 'enemies/lizard_run.json')
+    this.load.atlas('slug', 'enemies/slug.png', 'enemies/slug.json')
     this.load.atlas('treasure', 'items/treasure.png', 'items/treasure.json')
 
     this.load.atlas('cat_swinging_tail', 'npcs/cat/cat_swinging_tail.png', 'npcs/cat/cat_swinging_tail.json')
@@ -36,6 +37,7 @@ export default class Preloader extends Phaser.Scene {
 
     this.load.image('coin', 'items/coin.png')
     this.load.image('greenPotion', 'items/greenPotion.png')
+    this.load.image('orangePotion', 'items/orangePotion.png')
 
     this.load.image('berry', 'food/blueberry.png')
     this.load.image('berry-empty', 'food/blueberry-empty.png')

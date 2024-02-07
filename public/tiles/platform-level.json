@@ -350,6 +350,53 @@
                  "width":16,
                  "x":272,
                  "y":704
+                }, 
+                {
+                 "gid":65,
+                 "height":16,
+                 "id":38,
+                 "name":"orangePotion",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":176,
+                 "y":704
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":7,
+         "name":"Enemies",
+         "objects":[
+                {
+                 "height":0,
+                 "id":43,
+                 "name":"slug",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":64,
+                 "y":704
+                }, 
+                {
+                 "height":0,
+                 "id":44,
+                 "name":"slug",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":432,
+                 "y":704
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -357,8 +404,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":6,
- "nextobjectid":38,
+ "nextlayerid":8,
+ "nextobjectid":45,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

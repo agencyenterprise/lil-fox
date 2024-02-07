@@ -1,4 +1,5 @@
 import PlatformGameCharacter from "@/characters/PlatformGameCharacter";
+import Slug from "@/enemies/Slug";
 import { Events, sceneEvents } from "@/events/EventsCenter";
 
 export default class MarioScene extends Phaser.Scene {
@@ -10,6 +11,8 @@ export default class MarioScene extends Phaser.Scene {
 
   private coins: Phaser.GameObjects.Group
   private potions: Phaser.GameObjects.Group
+
+  private slugs: Phaser.GameObjects.Group
 
   private collectedCoins: number = 0
 
@@ -77,6 +80,7 @@ export default class MarioScene extends Phaser.Scene {
         targets: this.coins.get(coin.x, coin.y, 'coin').setOrigin(0, 1),
       })
     })
+
     this.potions = this.add.group({
       classType: Phaser.GameObjects.Image,
       createCallback: (go) => {
@@ -87,6 +91,18 @@ export default class MarioScene extends Phaser.Scene {
 
     map.getObjectLayer('Potions')!.objects.forEach(potion => {
       this.potions.get(potion.x!, potion.y!, potion.name).setOrigin(0, 1)
+    })
+
+    this.slugs = this.add.group({
+      classType: Slug,
+      createCallback: (go) => {
+        this.physics.world.enable(go);
+        (go as any).body.allowGravity = false;
+      }
+    })
+
+    map.getObjectLayer('Enemies')!.objects.forEach(enemy => {
+      this.slugs.get(enemy.x!, enemy.y!, enemy.name).setOrigin(0, 1)
     })
   }
 

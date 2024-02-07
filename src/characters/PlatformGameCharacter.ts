@@ -2,12 +2,14 @@ import Character from "./Character";
 
 const NORMAL_SPEED = 110
 const BOOSTED_SPEED = 200
+const NORMAL_JUMP_SPEED = -3500
+const BOOSTED_JUMP_SPEED = -4500
 
 export default class PlatformGameCharacter extends Character {
 
   public isJumping = false
-  private jumpSpeed = -3500
-  private speed = 110
+  private jumpSpeed = NORMAL_JUMP_SPEED
+  private speed = NORMAL_SPEED
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
     super(scene, x, y, texture, frame)
@@ -62,6 +64,11 @@ export default class PlatformGameCharacter extends Character {
       this.speed = BOOSTED_SPEED
       setTimeout(() => {
         this.speed = NORMAL_SPEED
+      }, 10000)
+    } else if (potionName === "orangePotion") {
+      this.jumpSpeed = BOOSTED_JUMP_SPEED
+      setTimeout(() => {
+        this.jumpSpeed = NORMAL_JUMP_SPEED
       }, 10000)
     }
   }
