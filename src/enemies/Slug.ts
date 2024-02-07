@@ -1,17 +1,6 @@
 import { Direction } from '@/utils/gridUtils'
 import Phaser from 'phaser'
 
-export const randomDirection = (exclude: Direction): Direction => {
-  const directions = [Direction.LEFT, Direction.RIGHT]
-  let newDirection = exclude
-
-  while (newDirection === exclude) {
-    newDirection = directions[Math.floor(Math.random() * directions.length)]
-  }
-
-  return newDirection
-}
-
 export default class Slug extends Phaser.Physics.Arcade.Sprite {
 
   private direction = Direction.RIGHT
@@ -27,9 +16,7 @@ export default class Slug extends Phaser.Physics.Arcade.Sprite {
     this.moveEvent = scene.time.addEvent({
       delay: 2000,
       loop: true,
-      callback: () => {
-        this.direction = randomDirection(this.direction)
-      }
+      callback: () => this.changeDirection()
     })
   }
 
@@ -38,10 +25,9 @@ export default class Slug extends Phaser.Physics.Arcade.Sprite {
     super.destroy(fromScene)
   }
 
-  changeDirection(go: Phaser.GameObjects.GameObject, tile?: Phaser.Tilemaps.Tile) {
-    if (go !== this) return
-
-    this.direction = randomDirection(this.direction)
+  changeDirection() {
+    this.direction = this.direction === Direction.LEFT ? Direction.RIGHT : Direction.LEFT
+    this.setFlipX(this.direction === Direction.LEFT)
   }
 
   protected preUpdate(time: number, delta: number): void {
