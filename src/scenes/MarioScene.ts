@@ -76,8 +76,11 @@ export default class MarioScene extends Phaser.Scene {
         targets: this.coins.get(coin.x, coin.y, 'coin').setOrigin(0, 1),
       })
     })
+  }
 
-    this.physics.add.collider(this.character, this.coins, this.handleCollectCoin, undefined, this);
+  update(time: number, delta: number) {
+    this.character.update(this.cursors)
+    this.physics.overlap(this.character, this.coins, this.handleCollectCoin, undefined, this)
   }
 
   handleCollectCoin(obj1: any, obj2: any) {
@@ -88,10 +91,6 @@ export default class MarioScene extends Phaser.Scene {
 
   handleTerrainCollision() {
     this.character.isJumping = false
-  }
-
-  update(t: number, dt: number) {
-    this.character.update(this.cursors)
   }
 
 }
