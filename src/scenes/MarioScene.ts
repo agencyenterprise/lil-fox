@@ -9,6 +9,7 @@ export default class MarioScene extends Phaser.Scene {
   private waterLayer: Phaser.Tilemaps.TilemapLayer
 
   private coins: Phaser.GameObjects.Group
+  private potions: Phaser.GameObjects.Group
 
   private collectedCoins: number = 0
 
@@ -76,17 +77,34 @@ export default class MarioScene extends Phaser.Scene {
         targets: this.coins.get(coin.x, coin.y, 'coin').setOrigin(0, 1),
       })
     })
+    this.potions = this.add.group({
+      classType: Phaser.GameObjects.Image,
+      createCallback: (go) => {
+        this.physics.world.enable(go);
+        (go as any).body.allowGravity = false;
+      }
+    })
+
+    map.getObjectLayer('Potions')!.objects.forEach(potion => {
+      this.potions.get(potion.x!, potion.y!, potion.name).setOrigin(0, 1)
+    })
   }
 
   update(time: number, delta: number) {
     this.character.update(this.cursors)
     this.physics.overlap(this.character, this.coins, this.handleCollectCoin, undefined, this)
+    this.physics.overlap(this.character, this.potions, this.handleCollectPotion, undefined, this)
   }
 
-  handleCollectCoin(obj1: any, obj2: any) {
-    obj2.destroy()
+  handleCollectCoin(character: any, coin: any) {
+    coin.destroy()
     this.collectedCoins++
     sceneEvents.emit(Events.PLAYER_COLLECTED_COIN, this.collectedCoins)
+  }
+
+  handleCollectPotion(character: any, potion: any) {
+    potion.destroy()
+    character.drinkPotion(potion.texture.key)
   }
 
   handleTerrainCollision() {

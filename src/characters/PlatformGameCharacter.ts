@@ -1,9 +1,12 @@
 import Character from "./Character";
 
+const NORMAL_SPEED = 110
+const BOOSTED_SPEED = 200
+
 export default class PlatformGameCharacter extends Character {
 
   public isJumping = false
-  private jumpSpeed = -1500
+  private jumpSpeed = -3500
   private speed = 110
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
@@ -11,7 +14,6 @@ export default class PlatformGameCharacter extends Character {
   }
 
   moveFox(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
-
     const leftDown = cursors.left?.isDown
     const rightDown = cursors.right?.isDown
     const upDown = cursors.up?.isDown
@@ -43,7 +45,7 @@ export default class PlatformGameCharacter extends Character {
       this.setVelocityX(this.speed);
       this.scaleX = 1;
       this.body?.offset.setTo(8, 12);
-      
+
     } else if (upDown && !this.isJumping) {
       this.isJumping = true
       this.anims.play(`run-${this.selectedSkin}`);
@@ -55,8 +57,17 @@ export default class PlatformGameCharacter extends Character {
     }
   }
 
+  drinkPotion(potionName: string) {
+    if (potionName === "greenPotion") {
+      this.speed = BOOSTED_SPEED
+      setTimeout(() => {
+        this.speed = NORMAL_SPEED
+      }, 10000)
+    }
+  }
+
   jump() {
-    this.setAccelerationY(-3500);
+    this.setAccelerationY(this.jumpSpeed);
     setTimeout(() => {
       this.setAccelerationY(0);
     }, 150)
