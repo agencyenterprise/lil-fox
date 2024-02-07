@@ -71,7 +71,6 @@ export default class MarioScene extends Phaser.Scene {
         },
         targets: this.coins.get(coin.x, coin.y, 'coin').setOrigin(0, 1),
       })
-      // this.add.image(coin.x!, coin.y!, 'coin').setOrigin(0, 1)
     })
 
     this.physics.add.collider(this.character, this.coins, this.handleCollectCoin, undefined, this);

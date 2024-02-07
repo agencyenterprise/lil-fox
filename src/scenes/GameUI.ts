@@ -12,6 +12,7 @@ export default class GameUI extends Phaser.Scene {
 
   private hearts: Phaser.GameObjects.Group
   private berries: Phaser.GameObjects.Group
+  private coinAmountText: Phaser.GameObjects.Text
   private dialogUi: Dialog
   private characterDiedDialog: CharacterDiedDialog
   private tipUi: Tip
@@ -55,6 +56,13 @@ export default class GameUI extends Phaser.Scene {
       quantity: 5
     })
 
+    this.coinAmountText = this.add.text(25, 0, 'x1').setScale(0.8, 0.8).setOrigin(1, 0.45)
+    this.add
+      .container(this.scale.width - 30, 10)
+      .setSize(50, 50)
+      .add(this.add.image(0, 0, 'coin'))
+      .add(this.coinAmountText)
+
 
     sceneEvents.on(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
     sceneEvents.on(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
@@ -67,7 +75,6 @@ export default class GameUI extends Phaser.Scene {
       sceneEvents.off(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
       sceneEvents.off(Events.SHOW_DIALOG, () => this.dialogUi.hideDialogModal(), this)
       sceneEvents.off(Events.CHARACTER_DIED, this.handleCharacterDied, this)
-
     })
   }
 
