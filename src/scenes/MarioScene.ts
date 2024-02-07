@@ -5,6 +5,7 @@ export default class MarioScene extends Phaser.Scene {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
   public character!: PlatformGameCharacter
   private terrainLayer: Phaser.Tilemaps.TilemapLayer
+  private waterLayer: Phaser.Tilemaps.TilemapLayer
 
   constructor() {
     super({
@@ -31,6 +32,7 @@ export default class MarioScene extends Phaser.Scene {
 
 
     map.createLayer('Sky', tileset0!)!;
+    this.waterLayer = map.createLayer('Water', tileset0!)!;
     this.terrainLayer = map.createLayer('Terrain', tileset0!)!;
 
 
