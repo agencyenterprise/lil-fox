@@ -7,6 +7,8 @@ export default class MarioScene extends Phaser.Scene {
   private terrainLayer: Phaser.Tilemaps.TilemapLayer
   private waterLayer: Phaser.Tilemaps.TilemapLayer
 
+  private coins: Phaser.GameObjects.Group
+
   constructor() {
     super({
 
@@ -48,6 +50,35 @@ export default class MarioScene extends Phaser.Scene {
 
     this.terrainLayer?.setCollisionByProperty({ collides: true });
     this.physics.add.collider(this.character, this.terrainLayer, this.handleTerrainCollision, undefined, this);
+
+    this.coins = this.add.group({
+      classType: Phaser.GameObjects.Image,
+      createCallback: (go) => {
+        // this.physics.world.enable(go)
+      }
+    })
+
+    map.getObjectLayer('Coins')!.objects.forEach(coin => {
+      this.add.tween({
+        yoyo: true,
+        delay: 0,
+        duration: 300,
+        repeat: -1,
+        y: {
+          from: coin.y,
+          start: coin.y,
+          to: coin.y!- 1,
+        },
+        targets: this.coins.get(coin.x, coin.y, 'coin').setOrigin(0, 1),
+      })
+      // this.add.image(coin.x!, coin.y!, 'coin').setOrigin(0, 1)
+    })
+
+    this.physics.add.collider(this.character, this.coins, this.handleCollectCoin, undefined, this);
+  }
+
+  handleCollectCoin(obj1: any, obj2: any) {
+
   }
 
   handleTerrainCollision() {

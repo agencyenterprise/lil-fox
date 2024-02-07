@@ -82,6 +82,11 @@ export default class FoxGame extends Phaser.Scene {
     this.scene.run('game-ui')
     this.scene.launch('settings-ui')
 
+    this.scene.pause("LilFox");
+    this.scene.setVisible(false, "LilFox");
+    this.scene.run("MarioScene")
+    this.scene.setVisible(true, "MarioScene");
+
     createCharacterAnims(this.anims)
     createArcherAnims(this.anims)
     createLizardAnims(this.anims)
@@ -227,7 +232,6 @@ export default class FoxGame extends Phaser.Scene {
       }
     })
 
-    this.physics.add.collider(this.character, this.foods, this.handleCollectFood, undefined, this);
 
     map.getObjectLayer('Blueberries')!.objects.forEach(blueberry => {
       const x = blueberry.x! + blueberry.width! * 0.5
@@ -378,6 +382,7 @@ export default class FoxGame extends Phaser.Scene {
     this.playerArrowsCollider = this.physics.add.collider(this.arrows, this.character, this.handleCharacterArrowCollision, undefined, this);
     this.physics.add.collider(this.arrows, this.treesLayer, this.handleObjectsArrowCollision, undefined, this);
     this.physics.add.collider(this.arrows, this.constructionsLayer, this.handleObjectsArrowCollision, undefined, this);
+    this.physics.add.collider(this.character, this.foods, this.handleCollectFood, undefined, this);
   }
 
   changeSkin(skin: Skin) {

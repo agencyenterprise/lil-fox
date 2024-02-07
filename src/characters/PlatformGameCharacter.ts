@@ -15,9 +15,6 @@ export default class PlatformGameCharacter extends Character {
     const leftDown = cursors.left?.isDown
     const rightDown = cursors.right?.isDown
     const upDown = cursors.up?.isDown
-    const downDown = cursors.down?.isDown
-
-    console.log("jumping", this.isJumping)
 
     if (rightDown && upDown && !this.isJumping) {
       this.isJumping = true
