@@ -1,4 +1,5 @@
 import PlatformGameCharacter from "@/characters/PlatformGameCharacter";
+import { Events, sceneEvents } from "@/events/EventsCenter";
 
 export default class MarioScene extends Phaser.Scene {
 
@@ -8,6 +9,8 @@ export default class MarioScene extends Phaser.Scene {
   private waterLayer: Phaser.Tilemaps.TilemapLayer
 
   private coins: Phaser.GameObjects.Group
+
+  private collectedCoins: number = 0
 
   constructor() {
     super({
@@ -54,7 +57,8 @@ export default class MarioScene extends Phaser.Scene {
     this.coins = this.add.group({
       classType: Phaser.GameObjects.Image,
       createCallback: (go) => {
-        // this.physics.world.enable(go)
+        this.physics.world.enable(go);
+        (go as any).body.allowGravity = false;
       }
     })
 
@@ -67,7 +71,7 @@ export default class MarioScene extends Phaser.Scene {
         y: {
           from: coin.y,
           start: coin.y,
-          to: coin.y!- 1,
+          to: coin.y! - 1,
         },
         targets: this.coins.get(coin.x, coin.y, 'coin').setOrigin(0, 1),
       })
@@ -77,7 +81,9 @@ export default class MarioScene extends Phaser.Scene {
   }
 
   handleCollectCoin(obj1: any, obj2: any) {
-
+    obj2.destroy()
+    this.collectedCoins++
+    sceneEvents.emit(Events.PLAYER_COLLECTED_COIN, this.collectedCoins)
   }
 
   handleTerrainCollision() {
