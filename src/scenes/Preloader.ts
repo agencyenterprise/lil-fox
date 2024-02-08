@@ -9,6 +9,10 @@ export default class Preloader extends Phaser.Scene {
     this.load.image("tiles1", "tiles/16oga.png");
     this.load.image("tiles2", "tiles/DungeonTileset.png");
     this.load.tilemapTiledJSON("map", "tiles/lil-fox-map.json");
+    this.load.tilemapTiledJSON(
+      "platform-level-map",
+      "tiles/platform-level.json"
+    );
 
     this.load.atlas(
       "green_archer_shooting",
