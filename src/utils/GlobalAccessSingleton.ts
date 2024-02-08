@@ -7,15 +7,15 @@ import { Coordinate } from "./gridUtils";
 export class Singleton {
   private static instance: Singleton | null = null;
 
-  public interactiveObjects: (Phaser.Types.Tilemaps.TiledObject | Npc)[] = []
-  public catOwner: CatOwner
-  public cat: Cat
-  public areas: Area[]
-  public playerTrack: Coordinate[] = []
-  public hasPlayerFoundCat = false
+  public interactiveObjects: (Phaser.Types.Tilemaps.TiledObject | Npc)[] = [];
+  public catOwner: CatOwner;
+  public cat: Cat;
+  public areas: Area[];
+  public playerTrack: Coordinate[] = [];
+  public hasPlayerFoundCat = false;
+  public soundEffectsEnabled = true;
 
-  private constructor() {
-  }
+  private constructor() {}
 
   public static getInstance(): Singleton {
     if (!Singleton.instance) {
@@ -26,16 +26,16 @@ export class Singleton {
 
   public addToPlayerTrack(coordinate: Coordinate) {
     if (this.playerTrack.length > 0) {
-      const lastPosition = this.playerTrack.at(-1)!
+      const lastPosition = this.playerTrack.at(-1)!;
       if (lastPosition.x === coordinate.x && lastPosition.y === coordinate.y) {
-        return
+        return;
       }
     }
 
-    this.playerTrack.push(coordinate)
+    this.playerTrack.push(coordinate);
   }
 
   public getNextPosition() {
-    return this.playerTrack.splice(0, 1)[0]
+    return this.playerTrack.splice(0, 1)[0];
   }
 }

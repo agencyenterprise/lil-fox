@@ -5,6 +5,7 @@ import SettingsMenu from "./SettingsMenu";
 import { Dialog } from "@/ui/Dialog";
 import { Tip } from "@/ui/Tip";
 import { CharacterDiedDialog } from "@/ui/CharacterDiedDialog";
+import { Singleton } from "@/utils/GlobalAccessSingleton";
 
 export default class GameUI extends Phaser.Scene {
   private settingsMenu!: SettingsMenu;
@@ -34,7 +35,40 @@ export default class GameUI extends Phaser.Scene {
     this.dialogUi = new Dialog(this, 310);
     this.characterDiedDialog = new CharacterDiedDialog(this);
     this.tipUi = new Tip(this);
-    // this.settingsMenu = new SettingsMenu(this)
+    this.settingsMenu = new SettingsMenu(this);
+
+    const { width } = this.scale;
+    const settingsButton = this.add
+      .image(width - 5, 5, "small-button")
+      .setScale(0.5)
+      .setOrigin(1, 0);
+    this.add
+      .image(width - 7, 4.5, "gear")
+      .setScale(0.35)
+      .setOrigin(1, 0);
+
+    settingsButton
+      .setInteractive()
+      .on(Phaser.Input.Events.POINTER_OVER, () => {
+        settingsButton.setTint(0xdedede);
+      })
+      .on(Phaser.Input.Events.POINTER_OUT, () => {
+        settingsButton.setTint(0xffffff);
+      })
+      .on(Phaser.Input.Events.POINTER_DOWN, () => {
+        settingsButton.setTint(0x8afbff);
+      })
+      .on(Phaser.Input.Events.POINTER_UP, () => {
+        settingsButton.setTint(0xffffff);
+
+        if (this.settingsMenu.isOpen) {
+          this.settingsMenu.hide();
+          this.scene.resume("LilFox");
+        } else {
+          this.settingsMenu.show();
+          this.scene.pause("LilFox");
+        }
+      });
 
     this.hearts = this.add.group({
       classType: Phaser.GameObjects.Image,
@@ -122,7 +156,9 @@ export default class GameUI extends Phaser.Scene {
   }
 
   handlePlayerCollectedBerry(collectedBerrys: number) {
-    this.pickupSound.play();
+    if (Singleton.getInstance().soundEffectsEnabled) {
+      this.pickupSound.play();
+    }
 
     // @ts-ignore
     this.berries.children.each((go, idx) => {
@@ -167,7 +203,11 @@ export default class GameUI extends Phaser.Scene {
 
   handleCharacterDied() {
     sceneEvents.emit(Events.STOP_MUSIC);
-    this.gameOverSound.play();
+
+    if (Singleton.getInstance().soundEffectsEnabled) {
+      this.gameOverSound.play();
+    }
+
     this.characterDiedDialog.showDialogModal();
   }
 }

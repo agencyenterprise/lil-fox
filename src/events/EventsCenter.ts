@@ -10,6 +10,8 @@ enum Events {
   WON_LEVEL_2 = "won-level-2",
   CHARACTER_DIED = "character-died",
   STOP_MUSIC = "stop-music",
+  PAUSE_MUSIC = "pause-music",
+  RESUME_MUSIC = "resume-music",
   CHANGE_MUSIC_VOLUME = "change-music-volume",
 }
 

@@ -455,6 +455,8 @@ export default class FoxGame extends Phaser.Scene {
     sceneEvents.on(Events.WON_LEVEL_1, this.handleWinLevel1, this);
     sceneEvents.on(Events.WON_LEVEL_2, this.handleWinLevel2, this);
     sceneEvents.on(Events.STOP_MUSIC, this.handleStopMusic, this);
+    sceneEvents.on(Events.PAUSE_MUSIC, this.handlePauseMusic, this);
+    sceneEvents.on(Events.RESUME_MUSIC, this.handleResumeMusic, this);
     sceneEvents.on(
       Events.CHANGE_MUSIC_VOLUME,
       this.handleChangeMusicVolume,
@@ -492,6 +494,14 @@ export default class FoxGame extends Phaser.Scene {
 
   handleStopMusic() {
     this.themeSound.stop();
+  }
+
+  handlePauseMusic() {
+    this.themeSound.pause();
+  }
+
+  handleResumeMusic() {
+    this.themeSound.resume();
   }
 
   handleChangeMusicVolume(volume: number) {

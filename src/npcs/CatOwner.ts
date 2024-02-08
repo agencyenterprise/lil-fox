@@ -75,7 +75,9 @@ export default class CatOwner extends Npc {
       }
     } else {
       if (this.direction) {
-        this.helloSound.play();
+        if (Singleton.getInstance().soundEffectsEnabled) {
+          this.helloSound.play();
+        }
       }
 
       this.stopMoving();

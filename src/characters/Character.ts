@@ -158,6 +158,10 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
   }
 
   stepSound() {
+    if (!Singleton.getInstance().soundEffectsEnabled) {
+      return;
+    }
+
     if (this.footsteps01Sound.isPlaying || this.footsteps02Sound.isPlaying) {
       return;
     }
@@ -298,7 +302,10 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       this.setTint(0xff0000);
       this.healthState = HealthState.DAMAGE;
       this.damageTime = 0;
-      this.ouchSound.play();
+
+      if (Singleton.getInstance().soundEffectsEnabled) {
+        this.ouchSound.play();
+      }
     }
   }
 
