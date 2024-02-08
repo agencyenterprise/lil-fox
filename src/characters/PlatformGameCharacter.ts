@@ -7,6 +7,7 @@ const BOOSTED_JUMP_SPEED = -4500
 
 export default class PlatformGameCharacter extends Character {
 
+  public isAlive = true
   public isJumping = false
   private jumpSpeed = NORMAL_JUMP_SPEED
   private speed = NORMAL_SPEED
@@ -16,6 +17,8 @@ export default class PlatformGameCharacter extends Character {
   }
 
   moveFox(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
+    if (!this.isAlive) return
+
     const leftDown = cursors.left?.isDown
     const rightDown = cursors.right?.isDown
     const upDown = cursors.up?.isDown
@@ -78,5 +81,12 @@ export default class PlatformGameCharacter extends Character {
     setTimeout(() => {
       this.setAccelerationY(0);
     }, 150)
+  }
+
+  die() {
+    this.setVelocityX(0);
+    this.jumpSpeed = NORMAL_JUMP_SPEED
+    this.jump()
+    this.isAlive = false
   }
 }

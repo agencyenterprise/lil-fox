@@ -56,7 +56,7 @@ export default class MarioScene extends Phaser.Scene {
     this.cameras.main.setBounds(25, 500, 3392, 100)
 
     this.terrainLayer?.setCollisionByProperty({ collides: true });
-    this.physics.add.collider(this.character, this.terrainLayer, this.handleTerrainCollision, undefined, this);
+    this.physics.add.collider(this.character, this.terrainLayer, this.handleTerrainCollision, () => this.character.isAlive, this);
 
     this.coins = this.add.group({
       classType: Phaser.GameObjects.Image,
@@ -104,6 +104,7 @@ export default class MarioScene extends Phaser.Scene {
     map.getObjectLayer('Enemies')!.objects.forEach(enemy => {
       this.slugs.get(enemy.x!, enemy.y!, enemy.name).setOrigin(0, 1)
     })
+    this.physics.add.collider(this.character, this.slugs, this.handleCharacterSlugCollision, () => this.character.isAlive, this);
   }
 
   update(time: number, delta: number) {
@@ -127,4 +128,7 @@ export default class MarioScene extends Phaser.Scene {
     this.character.isJumping = false
   }
 
+  handleCharacterSlugCollision(obj: any, obj2: any) {
+    this.character.die()
+  }
 }
