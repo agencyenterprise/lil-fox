@@ -168,9 +168,13 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
     const random = Math.random();
     if (random > 0.5) {
-      this.footsteps01Sound.play({ volume: 0.5 });
+      this.footsteps01Sound.play({
+        volume: Singleton.getInstance().soundEffectsVolume / 10,
+      });
     } else {
-      this.footsteps02Sound.play({ volume: 0.5 });
+      this.footsteps02Sound.play({
+        volume: Singleton.getInstance().soundEffectsVolume / 10,
+      });
     }
   }
 
@@ -304,7 +308,9 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       this.damageTime = 0;
 
       if (Singleton.getInstance().soundEffectsEnabled) {
-        this.ouchSound.play();
+        this.ouchSound.play({
+          volume: Singleton.getInstance().soundEffectsVolume / 10,
+        });
       }
     }
   }

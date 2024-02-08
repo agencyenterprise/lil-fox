@@ -157,7 +157,9 @@ export default class GameUI extends Phaser.Scene {
 
   handlePlayerCollectedBerry(collectedBerrys: number) {
     if (Singleton.getInstance().soundEffectsEnabled) {
-      this.pickupSound.play();
+      this.pickupSound.play({
+        volume: Singleton.getInstance().soundEffectsVolume / 10,
+      });
     }
 
     // @ts-ignore
@@ -205,7 +207,9 @@ export default class GameUI extends Phaser.Scene {
     sceneEvents.emit(Events.STOP_MUSIC);
 
     if (Singleton.getInstance().soundEffectsEnabled) {
-      this.gameOverSound.play();
+      this.gameOverSound.play({
+        volume: Singleton.getInstance().soundEffectsVolume / 10,
+      });
     }
 
     this.characterDiedDialog.showDialogModal();

@@ -14,6 +14,8 @@ export class Singleton {
   public playerTrack: Coordinate[] = [];
   public hasPlayerFoundCat = false;
   public soundEffectsEnabled = true;
+  public musicVolume = 3;
+  public soundEffectsVolume = 3;
 
   private constructor() {}
 
