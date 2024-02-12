@@ -10,6 +10,7 @@ enum Events {
   WON_LEVEL_1 = 'won-level-1',
   WON_LEVEL_2 = 'won-level-2',
   CHARACTER_DIED = 'character-died',
+  HIDE_CHARACTER_DIED_MODAL = 'hide-character-died-modal',
 }
 
 const sceneEvents = new Phaser.Events.EventEmitter()

@@ -70,6 +70,7 @@ export default class GameUI extends Phaser.Scene {
     sceneEvents.on(Events.SHOW_DIALOG, this.showDialog, this)
     sceneEvents.on(Events.SHOW_TIP, this.showTip, this)
     sceneEvents.on(Events.CHARACTER_DIED, this.handleCharacterDied, this)
+    sceneEvents.on(Events.HIDE_CHARACTER_DIED_MODAL, () => this.characterDiedDialog.hideDialogModal(), this)
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       sceneEvents.off(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
@@ -140,6 +141,6 @@ export default class GameUI extends Phaser.Scene {
   }
 
   handleCharacterDied() {
-    this.characterDiedDialog.showDialogModal()
+    this.characterDiedDialog.showDialogModal(false)
   }
 }

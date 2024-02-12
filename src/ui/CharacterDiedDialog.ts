@@ -1,4 +1,3 @@
-import { animateText } from "@/utils/textUtils"
 import Phaser from "phaser"
 
 const UI_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
@@ -57,7 +56,7 @@ export class CharacterDiedDialog {
     this.hideDialogModal()
   }
 
-  showDialogModal() {
+  showDialogModal(isMarioLikeLevel: boolean) {
     this.height - 10
     this.userInputCursorTween.restart()
     this.container.setAlpha(1)

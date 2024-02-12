@@ -1,3 +1,4 @@
+import { Events, sceneEvents } from "@/events/EventsCenter";
 import Character from "./Character";
 
 const NORMAL_SPEED = 110
@@ -14,6 +15,20 @@ export default class PlatformGameCharacter extends Character {
 
   constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
     super(scene, x, y, texture, frame)
+  }
+
+  update(
+    cursors: Phaser.Types.Input.Keyboard.CursorKeys,
+  ) {
+    if (!cursors) return;
+    const spaceJustDown = Phaser.Input.Keyboard.JustDown(cursors.space)
+
+    if (!this.isAlive && spaceJustDown) {
+      sceneEvents.emit(Events.HIDE_CHARACTER_DIED_MODAL)
+      this.scene.scene.restart()
+    }
+
+    this.moveFox(cursors)
   }
 
   moveFox(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
@@ -62,6 +77,10 @@ export default class PlatformGameCharacter extends Character {
     }
   }
 
+  handleInteraction(object: Phaser.Types.Tilemaps.TiledObject | Npc) {
+    console.log("test")
+  }
+
   drinkPotion(potionName: string) {
     if (potionName === "greenPotion") {
       this.speed = BOOSTED_SPEED
@@ -84,9 +103,14 @@ export default class PlatformGameCharacter extends Character {
   }
 
   die() {
+    this.anims.play(`hurt-${this.selectedSkin}`, true);
     this.setVelocityX(0);
     this.jumpSpeed = NORMAL_JUMP_SPEED
     this.jump()
     this.isAlive = false
+
+    setTimeout(() => {
+      sceneEvents.emit(Events.CHARACTER_DIED)
+    }, 900)
   }
 }

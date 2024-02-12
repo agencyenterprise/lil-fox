@@ -112,13 +112,6 @@ export default class FoxGame extends Phaser.Scene {
     const globalAccessSingleton = Singleton.getInstance()
     globalAccessSingleton.areas = this.areas
 
-    this.input.on('pointerdown', () => {
-      this.scene.pause("LilFox");
-      this.scene.setVisible(false, "LilFox");
-      this.scene.run("MarioScene")
-      this.scene.setVisible(true, "MarioScene");
-    });
-
     // const debugGraphics = this.add.graphics().setAlpha(0.75);
     // this.treesLayer?.renderDebug(debugGraphics, {
     //   tileColor: null,
@@ -463,6 +456,22 @@ export default class FoxGame extends Phaser.Scene {
     this.load.spritesheet(
       `walk-${skinName}`,
       `/assets/animations/fox/${skinName}/lilfox_walk_strip8.png`,
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      `die-${skinName}`,
+      `/assets/animations/fox/${skinName}/lilfox_die_strip8.png`,
+      {
+        frameWidth: 32,
+        frameHeight: 32,
+      }
+    );
+    this.load.spritesheet(
+      `hurt-${skinName}`,
+      `/assets/animations/fox/${skinName}/lilfox_hurt_strip5.png`,
       {
         frameWidth: 32,
         frameHeight: 32,

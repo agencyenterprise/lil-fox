@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="200" height="48" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="45">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="200" height="48" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="48">
  <editorsettings>
   <export target="public/tiles/platform-level.json" format="json"/>
  </editorsettings>
@@ -321,7 +321,7 @@
   <object id="38" name="orangePotion" gid="65" x="176" y="704" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="7" name="Enemies">
-  <object id="43" name="slug" x="64" y="704">
+  <object id="43" x="64" y="704">
    <point/>
   </object>
   <object id="44" name="slug" x="432" y="704">
