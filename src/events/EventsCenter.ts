@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import Phaser from "phaser"
 
 enum Events {
   PLAYER_HEALTH_CHANGED = "player-health-changed",
@@ -15,6 +15,6 @@ enum Events {
   CHANGE_MUSIC_VOLUME = "change-music-volume",
 }
 
-const sceneEvents = new Phaser.Events.EventEmitter();
+const sceneEvents = new Phaser.Events.EventEmitter()
 
-export { sceneEvents, Events };
+export { sceneEvents, Events }

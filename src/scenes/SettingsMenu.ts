@@ -1,92 +1,92 @@
-import Phaser from "phaser";
-import { Events, sceneEvents } from "@/events/EventsCenter";
-import { Singleton } from "@/utils/GlobalAccessSingleton";
+import Phaser from "phaser"
+import { Events, sceneEvents } from "@/events/EventsCenter"
+import { Singleton } from "@/utils/GlobalAccessSingleton"
 
 export default class SettingsMenu {
-  private container!: Phaser.GameObjects.Container;
-  private checkmarkMusic!: Phaser.GameObjects.Image;
-  private checkmarkSoundEffects!: Phaser.GameObjects.Image;
-  public musicVolumeText!: Phaser.GameObjects.Text;
-  public soundEffectsVolumeText!: Phaser.GameObjects.Text;
+  private container!: Phaser.GameObjects.Container
+  private checkmarkMusic!: Phaser.GameObjects.Image
+  private checkmarkSoundEffects!: Phaser.GameObjects.Image
+  public musicVolumeText!: Phaser.GameObjects.Text
+  public soundEffectsVolumeText!: Phaser.GameObjects.Text
 
-  private _opened = false;
+  private _opened = false
 
   get isOpen() {
-    return this._opened;
+    return this._opened
   }
 
   constructor(scene: Phaser.Scene) {
-    const { width } = scene.scale;
+    const { width } = scene.scale
 
-    this.container = scene.add.container(width - 5, 25);
-    this.container.setVisible(false);
+    this.container = scene.add.container(width - 5, 25)
+    this.container.setVisible(false)
 
     const panel = scene.add
       .nineslice(0, 0, "panel", 0, 150, 50, 24, 24)
-      .setOrigin(1, 0);
-    this.container.add(panel);
+      .setOrigin(1, 0)
+    this.container.add(panel)
 
-    this.createToggleMusicButton(scene, panel);
-    this.createToggleSoundEffectsButton(scene, panel);
-    this.createMusicVolumeButton(scene, panel);
-    this.createSoundEffectsVolumeButton(scene, panel);
+    this.createToggleMusicButton(scene, panel)
+    this.createToggleSoundEffectsButton(scene, panel)
+    this.createMusicVolumeButton(scene, panel)
+    this.createSoundEffectsVolumeButton(scene, panel)
   }
 
   show() {
-    this.container.setVisible(true);
-    this._opened = true;
+    this.container.setVisible(true)
+    this._opened = true
   }
 
   hide() {
-    this.container.setVisible(false);
-    this._opened = false;
+    this.container.setVisible(false)
+    this._opened = false
   }
 
   private createToggleMusicButton(
     scene: Phaser.Scene,
-    panel: Phaser.GameObjects.NineSlice
+    panel: Phaser.GameObjects.NineSlice,
   ) {
     const toggleMusicButton = scene.add
       .image(-panel.width + 15, 15, "small-button")
-      .setScale(0.4);
+      .setScale(0.4)
 
     this.checkmarkMusic = scene.add
       .image(-panel.width + 15, 15, "checkmark")
-      .setScale(0.4);
+      .setScale(0.4)
 
     const textMusic = scene.add.text(-panel.width + 25, 9, "Music", {
       color: "#000000",
       fontSize: "10px",
-    });
+    })
 
-    this.container.add(toggleMusicButton);
-    this.container.add(this.checkmarkMusic);
-    this.container.add(textMusic);
+    this.container.add(toggleMusicButton)
+    this.container.add(this.checkmarkMusic)
+    this.container.add(textMusic)
 
     toggleMusicButton
       .setInteractive()
       .on(Phaser.Input.Events.POINTER_UP, () => {
         if (this.checkmarkMusic.visible) {
-          this.checkmarkMusic.setVisible(false);
-          sceneEvents.emit(Events.PAUSE_MUSIC);
+          this.checkmarkMusic.setVisible(false)
+          sceneEvents.emit(Events.PAUSE_MUSIC)
         } else {
-          this.checkmarkMusic.setVisible(true);
-          sceneEvents.emit(Events.RESUME_MUSIC);
+          this.checkmarkMusic.setVisible(true)
+          sceneEvents.emit(Events.RESUME_MUSIC)
         }
-      });
+      })
   }
 
   private createToggleSoundEffectsButton(
     scene: Phaser.Scene,
-    panel: Phaser.GameObjects.NineSlice
+    panel: Phaser.GameObjects.NineSlice,
   ) {
     const toggleSoundEffectsButton = scene.add
       .image(-panel.width + 15, 30, "small-button")
-      .setScale(0.4);
+      .setScale(0.4)
 
     this.checkmarkSoundEffects = scene.add
       .image(-panel.width + 15, 30, "checkmark")
-      .setScale(0.4);
+      .setScale(0.4)
 
     const textSoundEffects = scene.add.text(
       -panel.width + 25,
@@ -95,29 +95,29 @@ export default class SettingsMenu {
       {
         color: "#000000",
         fontSize: "10px",
-      }
-    );
+      },
+    )
 
-    this.container.add(toggleSoundEffectsButton);
-    this.container.add(this.checkmarkSoundEffects);
-    this.container.add(textSoundEffects);
+    this.container.add(toggleSoundEffectsButton)
+    this.container.add(this.checkmarkSoundEffects)
+    this.container.add(textSoundEffects)
 
     toggleSoundEffectsButton
       .setInteractive()
       .on(Phaser.Input.Events.POINTER_UP, () => {
         if (this.checkmarkSoundEffects.visible) {
-          this.checkmarkSoundEffects.setVisible(false);
-          Singleton.getInstance().soundEffectsEnabled = false;
+          this.checkmarkSoundEffects.setVisible(false)
+          Singleton.getInstance().soundEffectsEnabled = false
         } else {
-          this.checkmarkSoundEffects.setVisible(true);
-          Singleton.getInstance().soundEffectsEnabled = true;
+          this.checkmarkSoundEffects.setVisible(true)
+          Singleton.getInstance().soundEffectsEnabled = true
         }
-      });
+      })
   }
 
   private createMusicVolumeButton(
     scene: Phaser.Scene,
-    panel: Phaser.GameObjects.NineSlice
+    panel: Phaser.GameObjects.NineSlice,
   ) {
     const headerMusicVolume = scene.add.text(
       -panel.width + 7,
@@ -126,12 +126,12 @@ export default class SettingsMenu {
       {
         color: "#000000",
         fontSize: "10px",
-      }
-    );
+      },
+    )
 
     const decreaseVolumeMusicButton = scene.add
       .image(-panel.width + 15, headerMusicVolume.y + 18, "small-button")
-      .setScale(0.4);
+      .setScale(0.4)
 
     const decreaseVolumeMusicText = scene.add.text(
       -panel.width + 10,
@@ -140,8 +140,8 @@ export default class SettingsMenu {
       {
         color: "#1da7e1",
         fontSize: "16px",
-      }
-    );
+      },
+    )
 
     this.musicVolumeText = scene.add.text(
       -panel.width + 32,
@@ -150,12 +150,12 @@ export default class SettingsMenu {
       {
         color: "#000000",
         fontSize: "10px",
-      }
-    );
+      },
+    )
 
     const increaseVolumeMusicButton = scene.add
       .image(-panel.width + 55, headerMusicVolume.y + 18, "small-button")
-      .setScale(0.4);
+      .setScale(0.4)
 
     const increaseVolumeMusicText = scene.add.text(
       -panel.width + 50,
@@ -164,60 +164,60 @@ export default class SettingsMenu {
       {
         color: "#1da7e1",
         fontSize: "16px",
-      }
-    );
+      },
+    )
 
-    this.container.add(headerMusicVolume);
-    this.container.add(decreaseVolumeMusicButton);
-    this.container.add(decreaseVolumeMusicText);
-    this.container.add(this.musicVolumeText);
-    this.container.add(increaseVolumeMusicButton);
-    this.container.add(increaseVolumeMusicText);
+    this.container.add(headerMusicVolume)
+    this.container.add(decreaseVolumeMusicButton)
+    this.container.add(decreaseVolumeMusicText)
+    this.container.add(this.musicVolumeText)
+    this.container.add(increaseVolumeMusicButton)
+    this.container.add(increaseVolumeMusicText)
 
     decreaseVolumeMusicButton
       .setInteractive()
       .on(Phaser.Input.Events.POINTER_UP, () => {
         if (Singleton.getInstance().musicVolume > 1) {
-          Singleton.getInstance().musicVolume--;
+          Singleton.getInstance().musicVolume--
           this.musicVolumeText.setText(
-            Singleton.getInstance().musicVolume.toString()
-          );
+            Singleton.getInstance().musicVolume.toString(),
+          )
 
           if (Singleton.getInstance().musicVolume !== 10) {
-            this.musicVolumeText.setX(-panel.width + 32);
+            this.musicVolumeText.setX(-panel.width + 32)
           }
 
           sceneEvents.emit(
             Events.CHANGE_MUSIC_VOLUME,
-            Singleton.getInstance().musicVolume / 10
-          );
+            Singleton.getInstance().musicVolume / 10,
+          )
         }
-      });
+      })
 
     increaseVolumeMusicButton
       .setInteractive()
       .on(Phaser.Input.Events.POINTER_UP, () => {
         if (Singleton.getInstance().musicVolume < 10) {
-          Singleton.getInstance().musicVolume++;
+          Singleton.getInstance().musicVolume++
           this.musicVolumeText.setText(
-            Singleton.getInstance().musicVolume.toString()
-          );
+            Singleton.getInstance().musicVolume.toString(),
+          )
 
           if (Singleton.getInstance().musicVolume === 10) {
-            this.musicVolumeText.setX(-panel.width + 28);
+            this.musicVolumeText.setX(-panel.width + 28)
           }
 
           sceneEvents.emit(
             Events.CHANGE_MUSIC_VOLUME,
-            Singleton.getInstance().musicVolume / 10
-          );
+            Singleton.getInstance().musicVolume / 10,
+          )
         }
-      });
+      })
   }
 
   private createSoundEffectsVolumeButton(
     scene: Phaser.Scene,
-    panel: Phaser.GameObjects.NineSlice
+    panel: Phaser.GameObjects.NineSlice,
   ) {
     const headerSoundEffectsVolume = scene.add.text(
       -panel.width + 7,
@@ -226,12 +226,12 @@ export default class SettingsMenu {
       {
         color: "#000000",
         fontSize: "10px",
-      }
-    );
+      },
+    )
 
     const decreaseVolumeSoundEffectsButton = scene.add
       .image(-panel.width + 15, headerSoundEffectsVolume.y + 18, "small-button")
-      .setScale(0.4);
+      .setScale(0.4)
 
     const decreaseVolumeSoundEffectsText = scene.add.text(
       -panel.width + 10,
@@ -240,8 +240,8 @@ export default class SettingsMenu {
       {
         color: "#1da7e1",
         fontSize: "16px",
-      }
-    );
+      },
+    )
 
     this.soundEffectsVolumeText = scene.add.text(
       -panel.width + 32,
@@ -250,12 +250,12 @@ export default class SettingsMenu {
       {
         color: "#000000",
         fontSize: "10px",
-      }
-    );
+      },
+    )
 
     const increaseVolumeSoundEffectsButton = scene.add
       .image(-panel.width + 55, headerSoundEffectsVolume.y + 18, "small-button")
-      .setScale(0.4);
+      .setScale(0.4)
 
     const increaseVolumeSoundEffectsText = scene.add.text(
       -panel.width + 50,
@@ -264,44 +264,44 @@ export default class SettingsMenu {
       {
         color: "#1da7e1",
         fontSize: "16px",
-      }
-    );
+      },
+    )
 
-    this.container.add(headerSoundEffectsVolume);
-    this.container.add(decreaseVolumeSoundEffectsButton);
-    this.container.add(decreaseVolumeSoundEffectsText);
-    this.container.add(this.soundEffectsVolumeText);
-    this.container.add(increaseVolumeSoundEffectsButton);
-    this.container.add(increaseVolumeSoundEffectsText);
+    this.container.add(headerSoundEffectsVolume)
+    this.container.add(decreaseVolumeSoundEffectsButton)
+    this.container.add(decreaseVolumeSoundEffectsText)
+    this.container.add(this.soundEffectsVolumeText)
+    this.container.add(increaseVolumeSoundEffectsButton)
+    this.container.add(increaseVolumeSoundEffectsText)
 
     decreaseVolumeSoundEffectsButton
       .setInteractive()
       .on(Phaser.Input.Events.POINTER_UP, () => {
         if (Singleton.getInstance().soundEffectsVolume > 1) {
-          Singleton.getInstance().soundEffectsVolume--;
+          Singleton.getInstance().soundEffectsVolume--
           this.soundEffectsVolumeText.setText(
-            Singleton.getInstance().soundEffectsVolume.toString()
-          );
+            Singleton.getInstance().soundEffectsVolume.toString(),
+          )
 
           if (Singleton.getInstance().soundEffectsVolume !== 10) {
-            this.soundEffectsVolumeText.setX(-panel.width + 32);
+            this.soundEffectsVolumeText.setX(-panel.width + 32)
           }
         }
-      });
+      })
 
     increaseVolumeSoundEffectsButton
       .setInteractive()
       .on(Phaser.Input.Events.POINTER_UP, () => {
         if (Singleton.getInstance().soundEffectsVolume < 10) {
-          Singleton.getInstance().soundEffectsVolume++;
+          Singleton.getInstance().soundEffectsVolume++
           this.soundEffectsVolumeText.setText(
-            Singleton.getInstance().soundEffectsVolume.toString()
-          );
+            Singleton.getInstance().soundEffectsVolume.toString(),
+          )
 
           if (Singleton.getInstance().soundEffectsVolume === 10) {
-            this.soundEffectsVolumeText.setX(-panel.width + 28);
+            this.soundEffectsVolumeText.setX(-panel.width + 28)
           }
         }
-      });
+      })
   }
 }
