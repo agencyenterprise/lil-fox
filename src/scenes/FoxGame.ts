@@ -60,11 +60,6 @@ export default class FoxGame extends Phaser.Scene {
   private currentLevel: number = 0
   private collectedBlueBerries: number = 0
 
-  private themeSound:
-    | Phaser.Sound.NoAudioSound
-    | Phaser.Sound.HTML5AudioSound
-    | Phaser.Sound.WebAudioSound
-
   preload() {
     this.loadSkinSpriteSheet(Skin.DEFAULT)
     this.loadSkinSpriteSheet(Skin.BLUE)
@@ -102,20 +97,6 @@ export default class FoxGame extends Phaser.Scene {
 
     const globalAccessSingleton = Singleton.getInstance()
     globalAccessSingleton.areas = this.areas
-
-    this.themeSound = this.sound.add("audio-theme")
-
-    const themeConfig = {
-      mute: false,
-      volume: Singleton.getInstance().musicVolume / 10,
-      rate: 1,
-      detune: 0,
-      seek: 0,
-      loop: true,
-      delay: 0,
-    }
-
-    this.themeSound.play(themeConfig)
 
     // this.input.on('pointerdown', () => {
     //   sceneEvents.emit(Events.CHARACTER_DIED)
@@ -454,25 +435,10 @@ export default class FoxGame extends Phaser.Scene {
   createEventListeners() {
     sceneEvents.on(Events.WON_LEVEL_1, this.handleWinLevel1, this)
     sceneEvents.on(Events.WON_LEVEL_2, this.handleWinLevel2, this)
-    sceneEvents.on(Events.STOP_MUSIC, this.handleStopMusic, this)
-    sceneEvents.on(Events.PAUSE_MUSIC, this.handlePauseMusic, this)
-    sceneEvents.on(Events.RESUME_MUSIC, this.handleResumeMusic, this)
-    sceneEvents.on(
-      Events.CHANGE_MUSIC_VOLUME,
-      this.handleChangeMusicVolume,
-      this,
-    )
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       sceneEvents.off(Events.WON_LEVEL_1, this.handleWinLevel1, this)
       sceneEvents.off(Events.WON_LEVEL_2, this.handleWinLevel2, this)
-      sceneEvents.off(
-        Events.CHANGE_MUSIC_VOLUME,
-        this.handleChangeMusicVolume,
-        this,
-      )
-
-      this.themeSound.stop()
     })
   }
 
@@ -490,22 +456,6 @@ export default class FoxGame extends Phaser.Scene {
     const wonLevels = getWonLevels()
     localStorage.setItem("wonLevels", JSON.stringify([...wonLevels, 2]))
     this.showGetNftDiv()
-  }
-
-  handleStopMusic() {
-    this.themeSound.stop()
-  }
-
-  handlePauseMusic() {
-    this.themeSound.pause()
-  }
-
-  handleResumeMusic() {
-    this.themeSound.resume()
-  }
-
-  handleChangeMusicVolume(volume: number) {
-    this.themeSound.setVolume(volume)
   }
 
   showGetNftDiv() {

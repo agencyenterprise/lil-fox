@@ -1,4 +1,6 @@
 import Phaser from "phaser"
+import { SoundEffects } from "@/utils/SoundSingleton"
+
 export default class Preloader extends Phaser.Scene {
   constructor() {
     super("preloader")
@@ -95,31 +97,31 @@ export default class Preloader extends Phaser.Scene {
 
     this.load.image("cursor", `ui/cursor.png`)
 
-    this.load.audio("audio-theme", [
+    this.load.audio(SoundEffects.THEME, [
       "assets/audio/theme.ogg",
       "assets/audio/theme.mp3",
     ])
-    this.load.audio("audio-game-over", [
+    this.load.audio(SoundEffects.GAME_OVER, [
       "assets/audio/game-over.ogg",
       "assets/audio/game-over.mp3",
     ])
-    this.load.audio("audio-ouch", [
+    this.load.audio(SoundEffects.DAMAGE, [
       "assets/audio/ouch.ogg",
       "assets/audio/ouch.mp3",
     ])
-    this.load.audio("audio-pickup", [
+    this.load.audio(SoundEffects.PICKUP, [
       "assets/audio/pickup.ogg",
       "assets/audio/pickup.mp3",
     ])
-    this.load.audio("audio-catowner-hello", [
+    this.load.audio(SoundEffects.CATOWNER_HELLO, [
       "assets/audio/catowner-hello.ogg",
       "assets/audio/catowner-hello.mp3",
     ])
-    this.load.audio("audio-footsteps-01", [
+    this.load.audio(SoundEffects.FOOTSTEPS1, [
       "assets/audio/footsteps-01.ogg",
       "assets/audio/footsteps-01.mp3",
     ])
-    this.load.audio("audio-footsteps-02", [
+    this.load.audio(SoundEffects.FOOTSTEPS2, [
       "assets/audio/footsteps-02.ogg",
       "assets/audio/footsteps-02.mp3",
     ])

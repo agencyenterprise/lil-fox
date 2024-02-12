@@ -4,6 +4,7 @@ import { Events, sceneEvents } from "@/events/EventsCenter"
 import { TILE_SIZE } from "@/utils/gridUtils"
 import { getWonLevels } from "@/utils/localStorageUtils"
 import { Singleton } from "@/utils/GlobalAccessSingleton"
+import { SoundSingleton, SoundEffects } from "@/utils/SoundSingleton"
 import Npc from "@/npcs/Npc"
 import { Area } from "@/types/Area"
 
@@ -45,19 +46,6 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
   private activeChest?: Chest
 
-  private ouchSound:
-    | Phaser.Sound.NoAudioSound
-    | Phaser.Sound.HTML5AudioSound
-    | Phaser.Sound.WebAudioSound
-  private footsteps01Sound:
-    | Phaser.Sound.NoAudioSound
-    | Phaser.Sound.HTML5AudioSound
-    | Phaser.Sound.WebAudioSound
-  private footsteps02Sound:
-    | Phaser.Sound.NoAudioSound
-    | Phaser.Sound.HTML5AudioSound
-    | Phaser.Sound.WebAudioSound
-
   get health() {
     return this._health
   }
@@ -90,10 +78,6 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
         this,
       )
     })
-
-    this.ouchSound = this.scene.sound.add("audio-ouch")
-    this.footsteps01Sound = this.scene.sound.add("audio-footsteps-01")
-    this.footsteps02Sound = this.scene.sound.add("audio-footsteps-02")
   }
 
   protected preUpdate(time: number, delta: number): void {
@@ -158,24 +142,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
   }
 
   stepSound() {
-    if (!Singleton.getInstance().soundEffectsEnabled) {
-      return
-    }
-
-    if (this.footsteps01Sound.isPlaying || this.footsteps02Sound.isPlaying) {
-      return
-    }
-
-    const random = Math.random()
-    if (random > 0.5) {
-      this.footsteps01Sound.play({
-        volume: Singleton.getInstance().soundEffectsVolume / 10,
-      })
-    } else {
-      this.footsteps02Sound.play({
-        volume: Singleton.getInstance().soundEffectsVolume / 10,
-      })
-    }
+    SoundSingleton.getInstance().playSoundEffect(SoundEffects.FOOTSTEPS1)
   }
 
   moveFox(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
@@ -307,11 +274,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       this.healthState = HealthState.DAMAGE
       this.damageTime = 0
 
-      if (Singleton.getInstance().soundEffectsEnabled) {
-        this.ouchSound.play({
-          volume: Singleton.getInstance().soundEffectsVolume / 10,
-        })
-      }
+      SoundSingleton.getInstance().playSoundEffect(SoundEffects.DAMAGE)
     }
   }
 

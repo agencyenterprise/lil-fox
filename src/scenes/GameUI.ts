@@ -5,7 +5,7 @@ import SettingsMenu from "./SettingsMenu"
 import { Dialog } from "@/ui/Dialog"
 import { Tip } from "@/ui/Tip"
 import { CharacterDiedDialog } from "@/ui/CharacterDiedDialog"
-import { Singleton } from "@/utils/GlobalAccessSingleton"
+import { SoundSingleton, SoundEffects } from "@/utils/SoundSingleton"
 
 export default class GameUI extends Phaser.Scene {
   private settingsMenu!: SettingsMenu
@@ -17,15 +17,6 @@ export default class GameUI extends Phaser.Scene {
   private tipUi: Tip
 
   private shouldHideTip: boolean = false
-
-  private gameOverSound:
-    | Phaser.Sound.NoAudioSound
-    | Phaser.Sound.HTML5AudioSound
-    | Phaser.Sound.WebAudioSound
-  private pickupSound:
-    | Phaser.Sound.NoAudioSound
-    | Phaser.Sound.HTML5AudioSound
-    | Phaser.Sound.WebAudioSound
 
   constructor() {
     super("game-ui")
@@ -97,13 +88,8 @@ export default class GameUI extends Phaser.Scene {
       quantity: 5,
     })
 
-    this.gameOverSound = this.sound.add("audio-game-over", {
-      volume: 0.5,
-    })
-
-    this.pickupSound = this.sound.add("audio-pickup", {
-      volume: 0.5,
-    })
+    SoundSingleton.getInstance().setSoundManager(this)
+    SoundSingleton.getInstance().playTheme()
 
     sceneEvents.on(
       Events.PLAYER_HEALTH_CHANGED,
@@ -136,9 +122,6 @@ export default class GameUI extends Phaser.Scene {
         this,
       )
       sceneEvents.off(Events.CHARACTER_DIED, this.handleCharacterDied, this)
-
-      this.gameOverSound.removeAllListeners("start")
-      this.gameOverSound.removeAllListeners("complete")
     })
   }
 
@@ -156,11 +139,7 @@ export default class GameUI extends Phaser.Scene {
   }
 
   handlePlayerCollectedBerry(collectedBerrys: number) {
-    if (Singleton.getInstance().soundEffectsEnabled) {
-      this.pickupSound.play({
-        volume: Singleton.getInstance().soundEffectsVolume / 10,
-      })
-    }
+    SoundSingleton.getInstance().playSoundEffect(SoundEffects.PICKUP)
 
     // @ts-ignore
     this.berries.children.each((go, idx) => {
@@ -205,12 +184,7 @@ export default class GameUI extends Phaser.Scene {
 
   handleCharacterDied() {
     sceneEvents.emit(Events.STOP_MUSIC)
-
-    if (Singleton.getInstance().soundEffectsEnabled) {
-      this.gameOverSound.play({
-        volume: Singleton.getInstance().soundEffectsVolume / 10,
-      })
-    }
+    SoundSingleton.getInstance().playSoundEffect(SoundEffects.GAME_OVER)
 
     this.characterDiedDialog.showDialogModal()
   }

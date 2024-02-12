@@ -4,16 +4,13 @@ import Npc from "./Npc"
 import Character from "@/characters/Character"
 import { Events, sceneEvents } from "@/events/EventsCenter"
 import { Singleton } from "@/utils/GlobalAccessSingleton"
+import { SoundSingleton, SoundEffects } from "@/utils/SoundSingleton"
 
 export default class CatOwner extends Npc {
   private direction: Direction | null = Direction.RIGHT
   private messages: string[] = []
   private moveEvent: Phaser.Time.TimerEvent
   private catDelivered = false
-  private helloSound:
-    | Phaser.Sound.NoAudioSound
-    | Phaser.Sound.HTML5AudioSound
-    | Phaser.Sound.WebAudioSound
 
   constructor(
     scene: Phaser.Scene,
@@ -31,8 +28,6 @@ export default class CatOwner extends Npc {
       loop: true,
       callback: () => this.changeDirection(),
     })
-
-    this.helloSound = this.scene.sound.add("audio-catowner-hello")
   }
 
   changeDirection() {
@@ -75,11 +70,9 @@ export default class CatOwner extends Npc {
       }
     } else {
       if (this.direction) {
-        if (Singleton.getInstance().soundEffectsEnabled) {
-          this.helloSound.play({
-            volume: Singleton.getInstance().soundEffectsVolume / 10,
-          })
-        }
+        SoundSingleton.getInstance().playSoundEffect(
+          SoundEffects.CATOWNER_HELLO,
+        )
       }
 
       this.stopMoving()

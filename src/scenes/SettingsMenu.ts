@@ -1,6 +1,6 @@
 import Phaser from "phaser"
 import { Events, sceneEvents } from "@/events/EventsCenter"
-import { Singleton } from "@/utils/GlobalAccessSingleton"
+import { SoundSingleton } from "@/utils/SoundSingleton"
 
 export default class SettingsMenu {
   private container!: Phaser.GameObjects.Container
@@ -107,10 +107,10 @@ export default class SettingsMenu {
       .on(Phaser.Input.Events.POINTER_UP, () => {
         if (this.checkmarkSoundEffects.visible) {
           this.checkmarkSoundEffects.setVisible(false)
-          Singleton.getInstance().soundEffectsEnabled = false
+          SoundSingleton.getInstance().soundEffectsEnabled = false
         } else {
           this.checkmarkSoundEffects.setVisible(true)
-          Singleton.getInstance().soundEffectsEnabled = true
+          SoundSingleton.getInstance().soundEffectsEnabled = true
         }
       })
   }
@@ -146,7 +146,7 @@ export default class SettingsMenu {
     this.musicVolumeText = scene.add.text(
       -panel.width + 32,
       headerMusicVolume.y + 13,
-      Singleton.getInstance().musicVolume.toString(),
+      SoundSingleton.getInstance().musicVolume.toString(),
       {
         color: "#000000",
         fontSize: "10px",
@@ -177,19 +177,19 @@ export default class SettingsMenu {
     decreaseVolumeMusicButton
       .setInteractive()
       .on(Phaser.Input.Events.POINTER_UP, () => {
-        if (Singleton.getInstance().musicVolume > 1) {
-          Singleton.getInstance().musicVolume--
+        if (SoundSingleton.getInstance().musicVolume > 1) {
+          SoundSingleton.getInstance().musicVolume--
           this.musicVolumeText.setText(
-            Singleton.getInstance().musicVolume.toString(),
+            SoundSingleton.getInstance().musicVolume.toString(),
           )
 
-          if (Singleton.getInstance().musicVolume !== 10) {
+          if (SoundSingleton.getInstance().musicVolume !== 10) {
             this.musicVolumeText.setX(-panel.width + 32)
           }
 
           sceneEvents.emit(
             Events.CHANGE_MUSIC_VOLUME,
-            Singleton.getInstance().musicVolume / 10,
+            SoundSingleton.getInstance().musicVolume / 10,
           )
         }
       })
@@ -197,19 +197,19 @@ export default class SettingsMenu {
     increaseVolumeMusicButton
       .setInteractive()
       .on(Phaser.Input.Events.POINTER_UP, () => {
-        if (Singleton.getInstance().musicVolume < 10) {
-          Singleton.getInstance().musicVolume++
+        if (SoundSingleton.getInstance().musicVolume < 10) {
+          SoundSingleton.getInstance().musicVolume++
           this.musicVolumeText.setText(
-            Singleton.getInstance().musicVolume.toString(),
+            SoundSingleton.getInstance().musicVolume.toString(),
           )
 
-          if (Singleton.getInstance().musicVolume === 10) {
+          if (SoundSingleton.getInstance().musicVolume === 10) {
             this.musicVolumeText.setX(-panel.width + 28)
           }
 
           sceneEvents.emit(
             Events.CHANGE_MUSIC_VOLUME,
-            Singleton.getInstance().musicVolume / 10,
+            SoundSingleton.getInstance().musicVolume / 10,
           )
         }
       })
@@ -246,7 +246,7 @@ export default class SettingsMenu {
     this.soundEffectsVolumeText = scene.add.text(
       -panel.width + 32,
       headerSoundEffectsVolume.y + 13,
-      Singleton.getInstance().soundEffectsVolume.toString(),
+      SoundSingleton.getInstance().soundEffectsVolume.toString(),
       {
         color: "#000000",
         fontSize: "10px",
@@ -277,13 +277,13 @@ export default class SettingsMenu {
     decreaseVolumeSoundEffectsButton
       .setInteractive()
       .on(Phaser.Input.Events.POINTER_UP, () => {
-        if (Singleton.getInstance().soundEffectsVolume > 1) {
-          Singleton.getInstance().soundEffectsVolume--
+        if (SoundSingleton.getInstance().soundEffectsVolume > 1) {
+          SoundSingleton.getInstance().soundEffectsVolume--
           this.soundEffectsVolumeText.setText(
-            Singleton.getInstance().soundEffectsVolume.toString(),
+            SoundSingleton.getInstance().soundEffectsVolume.toString(),
           )
 
-          if (Singleton.getInstance().soundEffectsVolume !== 10) {
+          if (SoundSingleton.getInstance().soundEffectsVolume !== 10) {
             this.soundEffectsVolumeText.setX(-panel.width + 32)
           }
         }
@@ -292,13 +292,13 @@ export default class SettingsMenu {
     increaseVolumeSoundEffectsButton
       .setInteractive()
       .on(Phaser.Input.Events.POINTER_UP, () => {
-        if (Singleton.getInstance().soundEffectsVolume < 10) {
-          Singleton.getInstance().soundEffectsVolume++
+        if (SoundSingleton.getInstance().soundEffectsVolume < 10) {
+          SoundSingleton.getInstance().soundEffectsVolume++
           this.soundEffectsVolumeText.setText(
-            Singleton.getInstance().soundEffectsVolume.toString(),
+            SoundSingleton.getInstance().soundEffectsVolume.toString(),
           )
 
-          if (Singleton.getInstance().soundEffectsVolume === 10) {
+          if (SoundSingleton.getInstance().soundEffectsVolume === 10) {
             this.soundEffectsVolumeText.setX(-panel.width + 28)
           }
         }
