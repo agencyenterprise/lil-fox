@@ -16,6 +16,8 @@ export default class MarioScene extends Phaser.Scene {
 
   private collectedCoins: number = 0
 
+  private countDownTimer: Phaser.Time.TimerEvent 
+
   constructor() {
     super({
 
@@ -105,9 +107,26 @@ export default class MarioScene extends Phaser.Scene {
       this.slugs.get(enemy.x!, enemy.y!, enemy.name).setOrigin(0, 1)
     })
     this.physics.add.collider(this.character, this.slugs, this.handleCharacterSlugCollision, () => this.character.isAlive, this);
+
+
+    const hearts = this.add.group({
+      classType: Phaser.GameObjects.Image,
+    })
+  
+    hearts.createMultiple({
+      key: 'ui-heart-full',
+      setXY: {
+        x: 20,
+        y: 10,
+        stepX: 16
+      },
+      quantity: 7
+    })
+
+    this.countDownTimer = this.time.addEvent({ delay: 1000, callback: this.updateTimer, callbackScope: this, repeat: 10 });
   }
 
-  update(time: number, delta: number) {
+  update() {
     this.character.update(this.cursors)
     this.physics.overlap(this.character, this.coins, this.handleCollectCoin, undefined, this)
     this.physics.overlap(this.character, this.potions, this.handleCollectPotion, undefined, this)
@@ -129,6 +148,16 @@ export default class MarioScene extends Phaser.Scene {
   }
 
   handleCharacterSlugCollision(obj: any, obj2: any) {
+    this.countDownTimer.remove()
     this.character.die()
+  }
+
+  updateTimer() {
+
+    sceneEvents.emit(Events.UPDATE_COUNTDOWN_TIMER, this.countDownTimer.getRepeatCount())
+    if (this.countDownTimer.getRepeatCount() === 0) {
+      this.countDownTimer.remove()
+      this.character.die()
+    }
   }
 }

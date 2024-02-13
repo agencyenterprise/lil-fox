@@ -11,6 +11,7 @@ enum Events {
   WON_LEVEL_2 = 'won-level-2',
   CHARACTER_DIED = 'character-died',
   HIDE_CHARACTER_DIED_MODAL = 'hide-character-died-modal',
+  UPDATE_COUNTDOWN_TIMER = 'update-countdown-timer',
 }
 
 const sceneEvents = new Phaser.Events.EventEmitter()

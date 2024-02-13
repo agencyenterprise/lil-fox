@@ -13,6 +13,7 @@ export default class GameUI extends Phaser.Scene {
   private hearts: Phaser.GameObjects.Group
   private berries: Phaser.GameObjects.Group
   private coinAmountText: Phaser.GameObjects.Text
+  private timeDownText: Phaser.GameObjects.Text
   private dialogUi: Dialog
   private characterDiedDialog: CharacterDiedDialog
   private tipUi: Tip
@@ -36,15 +37,15 @@ export default class GameUI extends Phaser.Scene {
       classType: Phaser.GameObjects.Image,
     })
 
-    this.hearts.createMultiple({
-      key: 'ui-heart-full',
-      setXY: {
-        x: 10,
-        y: 10,
-        stepX: 16
-      },
-      quantity: 5
-    })
+    // this.hearts.createMultiple({
+    //   key: 'ui-heart-full',
+    //   setXY: {
+    //     x: 10,
+    //     y: 10,
+    //     stepX: 16
+    //   },
+    //   quantity: 5
+    // })
 
     this.berries.createMultiple({
       key: 'berry-empty',
@@ -58,11 +59,20 @@ export default class GameUI extends Phaser.Scene {
 
     this.coinAmountText = this.add.text(30, 0, 'x1').setScale(0.8, 0.8).setOrigin(1, 0.45)
     this.add
-      .container(this.scale.width - 35, 10)
+      .container(this.scale.width - 35, 25)
       .setSize(50, 50)
       .add(this.add.image(0, 0, 'coin'))
       .add(this.coinAmountText)
 
+    this.timeDownText = this.add.text(30, 0, '00:00').setScale(0.8, 0.8).setOrigin(1, 0.45)
+    this.add
+      .container(this.scale.width - 35, 10)
+      .setSize(50, 50)
+      .add(this.timeDownText)
+
+
+    this.hearts.setVisible(false)
+    this.berries.setVisible(false)
 
     sceneEvents.on(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
     sceneEvents.on(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
@@ -71,6 +81,7 @@ export default class GameUI extends Phaser.Scene {
     sceneEvents.on(Events.SHOW_TIP, this.showTip, this)
     sceneEvents.on(Events.CHARACTER_DIED, this.handleCharacterDied, this)
     sceneEvents.on(Events.HIDE_CHARACTER_DIED_MODAL, () => this.characterDiedDialog.hideDialogModal(), this)
+    sceneEvents.on(Events.UPDATE_COUNTDOWN_TIMER, this.updateTimer, this)
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       sceneEvents.off(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
@@ -142,5 +153,9 @@ export default class GameUI extends Phaser.Scene {
 
   handleCharacterDied() {
     this.characterDiedDialog.showDialogModal(false)
+  }
+
+  updateTimer(nextTime: number) {
+    this.timeDownText.setText(`00:${nextTime}`)
   }
 }
