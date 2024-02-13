@@ -1,13 +1,13 @@
-import Phaser from "phaser";
+import Phaser from "phaser"
 
-import { Events, sceneEvents } from "../events/EventsCenter";
-import SettingsMenu from "./SettingsMenu";
-import { Dialog } from "@/ui/Dialog";
-import { Tip } from "@/ui/Tip";
-import { CharacterDiedDialog } from "@/ui/CharacterDiedDialog";
+import { Events, sceneEvents } from "../events/EventsCenter"
+import SettingsMenu from "./SettingsMenu"
+import { Dialog } from "@/ui/Dialog"
+import { Tip } from "@/ui/Tip"
+import { CharacterDiedDialog } from "@/ui/CharacterDiedDialog"
+import { SoundSingleton, SoundEffects } from "@/utils/SoundSingleton"
 
 export default class GameUI extends Phaser.Scene {
-
   private settingsMenu!: SettingsMenu
 
   private hearts: Phaser.GameObjects.Group
@@ -19,14 +19,47 @@ export default class GameUI extends Phaser.Scene {
   private shouldHideTip: boolean = false
 
   constructor() {
-    super("game-ui");
+    super("game-ui")
   }
 
   create() {
     this.dialogUi = new Dialog(this, 310)
     this.characterDiedDialog = new CharacterDiedDialog(this)
     this.tipUi = new Tip(this)
-    // this.settingsMenu = new SettingsMenu(this)
+    this.settingsMenu = new SettingsMenu(this)
+
+    const { width } = this.scale
+    const settingsButton = this.add
+      .image(width - 5, 5, "small-button")
+      .setScale(0.5)
+      .setOrigin(1, 0)
+    this.add
+      .image(width - 7, 4.5, "gear")
+      .setScale(0.35)
+      .setOrigin(1, 0)
+
+    settingsButton
+      .setInteractive()
+      .on(Phaser.Input.Events.POINTER_OVER, () => {
+        settingsButton.setTint(0xdedede)
+      })
+      .on(Phaser.Input.Events.POINTER_OUT, () => {
+        settingsButton.setTint(0xffffff)
+      })
+      .on(Phaser.Input.Events.POINTER_DOWN, () => {
+        settingsButton.setTint(0x8afbff)
+      })
+      .on(Phaser.Input.Events.POINTER_UP, () => {
+        settingsButton.setTint(0xffffff)
+
+        if (this.settingsMenu.isOpen) {
+          this.settingsMenu.hide()
+          this.scene.resume("LilFox")
+        } else {
+          this.settingsMenu.show()
+          this.scene.pause("LilFox")
+        }
+      })
 
     this.hearts = this.add.group({
       classType: Phaser.GameObjects.Image,
@@ -36,39 +69,59 @@ export default class GameUI extends Phaser.Scene {
     })
 
     this.hearts.createMultiple({
-      key: 'ui-heart-full',
+      key: "ui-heart-full",
       setXY: {
         x: 10,
         y: 10,
-        stepX: 16
+        stepX: 16,
       },
-      quantity: 5
+      quantity: 5,
     })
 
     this.berries.createMultiple({
-      key: 'berry-empty',
+      key: "berry-empty",
       setXY: {
         x: 10,
         y: 25,
-        stepX: 16
+        stepX: 16,
       },
-      quantity: 5
+      quantity: 5,
     })
 
+    SoundSingleton.getInstance().setSoundManager(this)
+    SoundSingleton.getInstance().playTheme()
 
-    sceneEvents.on(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
-    sceneEvents.on(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
+    sceneEvents.on(
+      Events.PLAYER_HEALTH_CHANGED,
+      this.handlePlayerHealthChanged,
+      this,
+    )
+    sceneEvents.on(
+      Events.PLAYER_COLLECTED_BERRY,
+      this.handlePlayerCollectedBerry,
+      this,
+    )
     sceneEvents.on(Events.SHOW_DIALOG, this.showDialog, this)
     sceneEvents.on(Events.SHOW_TIP, this.showTip, this)
     sceneEvents.on(Events.CHARACTER_DIED, this.handleCharacterDied, this)
 
-
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      sceneEvents.off(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
-      sceneEvents.off(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
-      sceneEvents.off(Events.SHOW_DIALOG, () => this.dialogUi.hideDialogModal(), this)
+      sceneEvents.off(
+        Events.PLAYER_COLLECTED_BERRY,
+        this.handlePlayerCollectedBerry,
+        this,
+      )
+      sceneEvents.off(
+        Events.PLAYER_HEALTH_CHANGED,
+        this.handlePlayerHealthChanged,
+        this,
+      )
+      sceneEvents.off(
+        Events.SHOW_DIALOG,
+        () => this.dialogUi.hideDialogModal(),
+        this,
+      )
       sceneEvents.off(Events.CHARACTER_DIED, this.handleCharacterDied, this)
-
     })
   }
 
@@ -78,22 +131,24 @@ export default class GameUI extends Phaser.Scene {
       const heart = go as Phaser.GameObjects.Image
 
       if (idx < health) {
-        heart.setTexture('ui-heart-full')
+        heart.setTexture("ui-heart-full")
       } else {
-        heart.setTexture('ui-heart-empty')
+        heart.setTexture("ui-heart-empty")
       }
     })
   }
 
   handlePlayerCollectedBerry(collectedBerrys: number) {
+    SoundSingleton.getInstance().playSoundEffect(SoundEffects.PICKUP)
+
     // @ts-ignore
     this.berries.children.each((go, idx) => {
       const berry = go as Phaser.GameObjects.Image
 
       if (idx < collectedBerrys) {
-        berry.setTexture('berry')
+        berry.setTexture("berry")
       } else {
-        berry.setTexture('berry-empty')
+        berry.setTexture("berry-empty")
       }
     })
   }
@@ -128,6 +183,9 @@ export default class GameUI extends Phaser.Scene {
   }
 
   handleCharacterDied() {
+    sceneEvents.emit(Events.STOP_MUSIC)
+    SoundSingleton.getInstance().playSoundEffect(SoundEffects.GAME_OVER)
+
     this.characterDiedDialog.showDialogModal()
   }
 }

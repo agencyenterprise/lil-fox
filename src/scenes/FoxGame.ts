@@ -1,22 +1,22 @@
-import { createLizardAnims } from "@/anims/EnemyAnims";
-import { createCharacterAnims } from "@/anims/CharacterAnims";
-import { createChestAnims } from "@/anims/TreasureAnims";
-import Lizard from "@/enemies/Lizard";
-import Character, { Skin } from "@/characters/Character";
-import { Events, sceneEvents } from "@/events/EventsCenter";
-import Chest from "@/items/Chest";
-import GreenArcher from "@/enemies/GreenArcher";
-import { createArcherAnims } from "@/anims/GreenArcherAnims";
-import { Dialog } from "@/ui/Dialog";
-import { getWonLevels } from "@/utils/localStorageUtils";
-import Cat from "@/npcs/Cat";
-import { createCatAnims, createCatOwnerAnims } from "@/anims/NpcAnims";
-import { SpawnPoints } from "@/types/SpawnPoints";
-import CatOwner from "@/npcs/CatOwner";
-import { Singleton } from "@/utils/GlobalAccessSingleton";
-import { TipArea } from "@/types/TipArea";
-import { Area } from "@/types/Area";
-import { CatArea } from "@/types/CatArea";
+import { createLizardAnims } from "@/anims/EnemyAnims"
+import { createCharacterAnims } from "@/anims/CharacterAnims"
+import { createChestAnims } from "@/anims/TreasureAnims"
+import Lizard from "@/enemies/Lizard"
+import Character, { Skin } from "@/characters/Character"
+import { Events, sceneEvents } from "@/events/EventsCenter"
+import Chest from "@/items/Chest"
+import GreenArcher from "@/enemies/GreenArcher"
+import { createArcherAnims } from "@/anims/GreenArcherAnims"
+import { Dialog } from "@/ui/Dialog"
+import { getWonLevels } from "@/utils/localStorageUtils"
+import Cat from "@/npcs/Cat"
+import { createCatAnims, createCatOwnerAnims } from "@/anims/NpcAnims"
+import { SpawnPoints } from "@/types/SpawnPoints"
+import CatOwner from "@/npcs/CatOwner"
+import { Singleton } from "@/utils/GlobalAccessSingleton"
+import { TipArea } from "@/types/TipArea"
+import { Area } from "@/types/Area"
+import { CatArea } from "@/types/CatArea"
 
 type CreateData = {
   levelNumber?: number
@@ -24,7 +24,7 @@ type CreateData = {
 
 export default class FoxGame extends Phaser.Scene {
   constructor() {
-    super({ key: 'LilFox' })
+    super({ key: "LilFox" })
   }
 
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
@@ -66,12 +66,12 @@ export default class FoxGame extends Phaser.Scene {
     this.loadSkinSpriteSheet(Skin.KUMAMON)
     this.loadSkinSpriteSheet(Skin.SUNGLASSES)
 
-    this.cursors = this.input.keyboard?.createCursorKeys()!;
+    this.cursors = this.input.keyboard?.createCursorKeys()!
   }
 
   create(data: CreateData) {
-    this.scene.run('game-ui')
-    this.scene.launch('settings-ui')
+    this.scene.run("game-ui")
+    this.scene.launch("settings-ui")
 
     createCharacterAnims(this.anims)
     createArcherAnims(this.anims)
@@ -80,14 +80,14 @@ export default class FoxGame extends Phaser.Scene {
     createCatAnims(this.anims)
     createCatOwnerAnims(this.anims)
 
-    const map = this.make.tilemap({ key: 'map' });
+    const map = this.make.tilemap({ key: "map" })
     this.createLayers(map)
 
     this.spawnCharacter(map, data)
     this.spawnEnemies(map)
     this.spawnNpcs(map)
 
-    this.signsObjects.objects.forEach(sign => {
+    this.signsObjects.objects.forEach((sign) => {
       Singleton.getInstance().interactiveObjects.push(sign)
     })
 
@@ -117,28 +117,30 @@ export default class FoxGame extends Phaser.Scene {
 
   spawnNpcs(map: Phaser.Tilemaps.Tilemap) {
     this.cats = this.physics.add.group({
-      classType: Cat
+      classType: Cat,
     })
 
     this.catOwners = this.physics.add.group({
       classType: CatOwner,
     })
 
-    this.npcsObjects.objects.forEach(npc => {
+    this.npcsObjects.objects.forEach((npc) => {
       const x = npc.x! + npc.width! * 0.5
       const y = npc.y! + npc.height! * 0.5
       const props = npc.properties
-      const messages = props.find((p: any) => p.name === 'message')?.value.split(";")
+      const messages = props
+        .find((p: any) => p.name === "message")
+        ?.value.split(";")
       switch (npc.name) {
-        case 'cat':
-          const cat: Cat = this.cats.get(x, y, 'cat')
+        case "cat":
+          const cat: Cat = this.cats.get(x, y, "cat")
           cat.setVisible(false)
           cat.setMessages(messages)
           Singleton.getInstance().cat = cat
           Singleton.getInstance().interactiveObjects.push(cat)
           break
-        case 'cat_owner':
-          const catOwner: CatOwner = this.catOwners.get(x, y, 'cat_owner')
+        case "cat_owner":
+          const catOwner: CatOwner = this.catOwners.get(x, y, "cat_owner")
           catOwner.setMessages(messages)
           Singleton.getInstance().catOwner = catOwner
           Singleton.getInstance().interactiveObjects.push(catOwner)
@@ -154,38 +156,43 @@ export default class FoxGame extends Phaser.Scene {
         const lizGo = go as Lizard
         if (!lizGo.body) return
         lizGo.body.onCollide = true
-        lizGo.setDepth(2);
-      }
+        lizGo.setDepth(2)
+      },
     })
 
     this.greenArchers = this.physics.add.group({
-      classType: GreenArcher
+      classType: GreenArcher,
     })
     this.arrows = this.physics.add.group({
       classType: Phaser.Physics.Arcade.Image,
     })
 
-    map.getObjectLayer('Enemies')!.objects.forEach(enemy => {
+    map.getObjectLayer("Enemies")!.objects.forEach((enemy) => {
       const wonLevels = getWonLevels()
       const x = enemy.x! + enemy.width! * 0.5
       const y = enemy.y! + enemy.height! * 0.5
       switch (enemy.name) {
-        case 'lizard':
+        case "lizard":
           if (wonLevels.includes(1)) break
-          this.lizards.get(x, y, 'lizard')
+          this.lizards.get(x, y, "lizard")
           break
-        case 'green_archer':
+        case "green_archer":
           if (wonLevels.includes(2)) break
           const props = enemy.properties
-          const facingDirection = props.find((p: any) => p.name === 'facing')?.value.split(";")[0]
-          this.greenArchers.get(x, y, 'greenArcher').setArrows(this.arrows).setFacingDirection(facingDirection)
+          const facingDirection = props
+            .find((p: any) => p.name === "facing")
+            ?.value.split(";")[0]
+          this.greenArchers
+            .get(x, y, "greenArcher")
+            .setArrows(this.arrows)
+            .setFacingDirection(facingDirection)
           break
       }
     })
   }
 
   spawnCharacter(map: Phaser.Tilemaps.Tilemap, data: CreateData) {
-    map.getObjectLayer('SpawnPoints')!.objects.forEach(spawnPoint => {
+    map.getObjectLayer("SpawnPoints")!.objects.forEach((spawnPoint) => {
       const x = spawnPoint.x
       const y = spawnPoint.y
       this.spawnPoints.set(spawnPoint.name, new Phaser.Geom.Point(x!, y!))
@@ -193,18 +200,34 @@ export default class FoxGame extends Phaser.Scene {
 
     if (data.levelNumber) {
       const levelSpawn = this.spawnPoints.get(`level${data.levelNumber}Spawn`)!
-      this.character = new Character(this, levelSpawn.x, levelSpawn.y, "character");
+      this.character = new Character(
+        this,
+        levelSpawn.x,
+        levelSpawn.y,
+        "character",
+      )
     } else {
       const mainSpawn = this.spawnPoints.get(SpawnPoints.MAIN_SPAWN)!
-      this.character = new Character(this, mainSpawn.x, mainSpawn.y, "character");
+      this.character = new Character(
+        this,
+        mainSpawn.x,
+        mainSpawn.y,
+        "character",
+      )
     }
 
-    this.character.setSize(this.character.width * 0.4, this.character.height * 0.4)
-    this.physics.add.existing(this.character, false);
-    this.add.existing(this.character);
-    this.physics.world.enableBody(this.character, Phaser.Physics.Arcade.DYNAMIC_BODY)
+    this.character.setSize(
+      this.character.width * 0.4,
+      this.character.height * 0.4,
+    )
+    this.physics.add.existing(this.character, false)
+    this.add.existing(this.character)
+    this.physics.world.enableBody(
+      this.character,
+      Phaser.Physics.Arcade.DYNAMIC_BODY,
+    )
 
-    this.cameras.main.startFollow(this.character, true, 0.05, 0.05);
+    this.cameras.main.startFollow(this.character, true, 0.05, 0.05)
   }
 
   createBlueberries(map: Phaser.Tilemaps.Tilemap) {
@@ -212,12 +235,18 @@ export default class FoxGame extends Phaser.Scene {
       classType: Phaser.GameObjects.Image,
       createCallback: (go) => {
         this.physics.world.enable(go)
-      }
+      },
     })
 
-    this.physics.add.collider(this.character, this.foods, this.handleCollectFood, undefined, this);
+    this.physics.add.collider(
+      this.character,
+      this.foods,
+      this.handleCollectFood,
+      undefined,
+      this,
+    )
 
-    map.getObjectLayer('Blueberries')!.objects.forEach(blueberry => {
+    map.getObjectLayer("Blueberries")!.objects.forEach((blueberry) => {
       const x = blueberry.x! + blueberry.width! * 0.5
       const y = blueberry.y! + blueberry.height! * 0.5
 
@@ -231,7 +260,7 @@ export default class FoxGame extends Phaser.Scene {
           start: y,
           to: y - 2,
         },
-        targets: this.foods.get(x, y, 'berry'),
+        targets: this.foods.get(x, y, "berry"),
       })
     })
   }
@@ -248,7 +277,7 @@ export default class FoxGame extends Phaser.Scene {
 
   private handleCharacterChestCollision(
     obj1: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile,
-    obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile
+    obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile,
   ) {
     const chest = obj2 as Chest
     this.character.setChest(chest)
@@ -256,7 +285,7 @@ export default class FoxGame extends Phaser.Scene {
 
   private handleCharacterLizardCollision(
     obj1: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile,
-    obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile
+    obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile,
   ) {
     const lizard = obj2 as Lizard
     const dx = this.character.x - lizard.x
@@ -278,7 +307,7 @@ export default class FoxGame extends Phaser.Scene {
 
   private handleCharacterArrowCollision(
     obj1: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile,
-    obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile
+    obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile,
   ) {
     const arrow = obj2 as Phaser.Physics.Arcade.Image
     const dx = this.character.x - arrow.x
@@ -300,7 +329,7 @@ export default class FoxGame extends Phaser.Scene {
 
   private handleObjectsArrowCollision(
     obj1: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile,
-    obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile
+    obj2: Phaser.Types.Physics.Arcade.GameObjectWithBody | Phaser.Tilemaps.Tile,
   ) {
     const arrow = obj1 as Phaser.Physics.Arcade.Image
     arrow.destroy()
@@ -312,31 +341,38 @@ export default class FoxGame extends Phaser.Scene {
   }
 
   createLayers(map: Phaser.Tilemaps.Tilemap) {
-    const tileset0 = map.addTilesetImage('punyworld-overworld-tileset', 'tiles0');
-    const tileset1 = map.addTilesetImage('Tileset 1', 'tiles1');
-    const tileset2 = map.addTilesetImage('DungeonTileset', 'tiles2');
+    const tileset0 = map.addTilesetImage(
+      "punyworld-overworld-tileset",
+      "tiles0",
+    )
+    const tileset1 = map.addTilesetImage("Tileset 1", "tiles1")
+    const tileset2 = map.addTilesetImage("DungeonTileset", "tiles2")
 
-    this.terrainLayer = map.createLayer('Terrain', tileset0!)!;
-    this.treesLayer = map.createLayer('Trees', tileset0!)!;
-    this.constructionsLayer = map.createLayer('Constructions', tileset0!)!;
+    this.terrainLayer = map.createLayer("Terrain", tileset0!)!
+    this.treesLayer = map.createLayer("Trees", tileset0!)!
+    this.constructionsLayer = map.createLayer("Constructions", tileset0!)!
     // this.treasuresLayer = map.createLayer('Treasures', tileset2!)!;
 
-    this.signsObjects = map.getObjectLayer('Signs')!
-    this.npcsObjects = map.getObjectLayer('Npcs')!
-    this.areasObjects = map.getObjectLayer('Area')!
+    this.signsObjects = map.getObjectLayer("Signs")!
+    this.npcsObjects = map.getObjectLayer("Npcs")!
+    this.areasObjects = map.getObjectLayer("Area")!
 
     const chests = this.physics.add.staticGroup({
-      classType: Chest
+      classType: Chest,
     })
-    const chestsLayer = map.getObjectLayer('Treasures')
-    chestsLayer?.objects.forEach(chestObj => {
-      chests.get(chestObj.x! + chestObj.width! * 0.5, chestObj.y! + chestObj.height! * 0.5, 'treasure')
+    const chestsLayer = map.getObjectLayer("Treasures")
+    chestsLayer?.objects.forEach((chestObj) => {
+      chests.get(
+        chestObj.x! + chestObj.width! * 0.5,
+        chestObj.y! + chestObj.height! * 0.5,
+        "treasure",
+      )
     })
 
-    this.areas = this.areasObjects.objects.map(area => {
-      if (area.name.startsWith('tip')) {
+    this.areas = this.areasObjects.objects.map((area) => {
+      if (area.name.startsWith("tip")) {
         return new TipArea(area.x!, area.y!, area.width!, area.height!)
-      } else if (area.name.startsWith('cat')) {
+      } else if (area.name.startsWith("cat")) {
         return new CatArea(area.x!, area.y!, area.width!, area.height!)
       } else {
         return new Area(area.x!, area.y!, area.width!, area.height!)
@@ -345,27 +381,51 @@ export default class FoxGame extends Phaser.Scene {
   }
 
   addColliders() {
-    this.treesLayer?.setCollisionByProperty({ collides: true });
-    this.constructionsLayer?.setCollisionByProperty({ collides: true });
-    this.terrainLayer?.setCollisionByProperty({ collides: true });
+    this.treesLayer?.setCollisionByProperty({ collides: true })
+    this.constructionsLayer?.setCollisionByProperty({ collides: true })
+    this.terrainLayer?.setCollisionByProperty({ collides: true })
 
-    this.physics.add.collider(this.character, this.terrainLayer);
-    this.physics.add.collider(this.lizards, this.terrainLayer);
-    this.physics.add.collider(this.character, this.treesLayer);
-    this.physics.add.collider(this.lizards, this.treesLayer);
-    this.physics.add.collider(this.character, this.constructionsLayer);
-    this.physics.add.collider(this.lizards, this.constructionsLayer);
-    this.physics.add.collider(this.character, this.objectsLayer);
-    this.physics.add.collider(this.lizards, this.objectsLayer);
+    this.physics.add.collider(this.character, this.terrainLayer)
+    this.physics.add.collider(this.lizards, this.terrainLayer)
+    this.physics.add.collider(this.character, this.treesLayer)
+    this.physics.add.collider(this.lizards, this.treesLayer)
+    this.physics.add.collider(this.character, this.constructionsLayer)
+    this.physics.add.collider(this.lizards, this.constructionsLayer)
+    this.physics.add.collider(this.character, this.objectsLayer)
+    this.physics.add.collider(this.lizards, this.objectsLayer)
 
     // this.physics.add.collider(this.character, chests, this.handleCharacterChestCollision, undefined, this)
     // this.physics.add.collider(this.lizards, chests)
 
     // this.physics.add.collider(this.catOwners, this.character);-
-    this.playerLizardsCollider = this.physics.add.collider(this.lizards, this.character, this.handleCharacterLizardCollision, undefined, this);
-    this.playerArrowsCollider = this.physics.add.collider(this.arrows, this.character, this.handleCharacterArrowCollision, undefined, this);
-    this.physics.add.collider(this.arrows, this.treesLayer, this.handleObjectsArrowCollision, undefined, this);
-    this.physics.add.collider(this.arrows, this.constructionsLayer, this.handleObjectsArrowCollision, undefined, this);
+    this.playerLizardsCollider = this.physics.add.collider(
+      this.lizards,
+      this.character,
+      this.handleCharacterLizardCollision,
+      undefined,
+      this,
+    )
+    this.playerArrowsCollider = this.physics.add.collider(
+      this.arrows,
+      this.character,
+      this.handleCharacterArrowCollision,
+      undefined,
+      this,
+    )
+    this.physics.add.collider(
+      this.arrows,
+      this.treesLayer,
+      this.handleObjectsArrowCollision,
+      undefined,
+      this,
+    )
+    this.physics.add.collider(
+      this.arrows,
+      this.constructionsLayer,
+      this.handleObjectsArrowCollision,
+      undefined,
+      this,
+    )
   }
 
   changeSkin(skin: Skin) {
@@ -378,31 +438,30 @@ export default class FoxGame extends Phaser.Scene {
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       sceneEvents.off(Events.WON_LEVEL_1, this.handleWinLevel1, this)
+      sceneEvents.off(Events.WON_LEVEL_2, this.handleWinLevel2, this)
     })
   }
-
 
   handleWinLevel1() {
     this.currentLevel = 1
     this.lizards.clear(true, true)
     const wonLevels = getWonLevels()
-    localStorage.setItem("wonLevels", JSON.stringify([...wonLevels, 1]));
-    this.showGetNftDiv();
+    localStorage.setItem("wonLevels", JSON.stringify([...wonLevels, 1]))
+    this.showGetNftDiv()
   }
 
   handleWinLevel2() {
     this.currentLevel = 2
     this.greenArchers.clear(true, true)
     const wonLevels = getWonLevels()
-    localStorage.setItem("wonLevels", JSON.stringify([...wonLevels, 2]));
-    this.showGetNftDiv();
+    localStorage.setItem("wonLevels", JSON.stringify([...wonLevels, 2]))
+    this.showGetNftDiv()
   }
 
   showGetNftDiv() {
-    const sendNftDiv = document.getElementById('GetNFT')!;
-    sendNftDiv.style.display = 'block';
+    const sendNftDiv = document.getElementById("GetNFT")!
+    sendNftDiv.style.display = "block"
   }
-
 
   getCurrentLevel() {
     return this.currentLevel
@@ -415,41 +474,41 @@ export default class FoxGame extends Phaser.Scene {
       {
         frameWidth: 32,
         frameHeight: 32,
-      }
-    );
+      },
+    )
     this.load.spritesheet(
       `crouch-${skinName}`,
       `/assets/animations/fox/${skinName}/lilfox_crouch_strip8.png`,
-      { frameWidth: 32, frameHeight: 32 }
-    );
+      { frameWidth: 32, frameHeight: 32 },
+    )
     this.load.spritesheet(
       `sit-${skinName}`,
       `/assets/animations/fox/${skinName}/lilfox_sit_strip8.png`,
       {
         frameWidth: 32,
         frameHeight: 32,
-      }
-    );
+      },
+    )
     this.load.spritesheet(
       `sneak-${skinName}`,
       `/assets/animations/fox/${skinName}/lilfox_sneak_strip4.png`,
-      { frameWidth: 32, frameHeight: 32 }
-    );
+      { frameWidth: 32, frameHeight: 32 },
+    )
     this.load.spritesheet(
       `run-${skinName}`,
       `/assets/animations/fox/${skinName}/lilfox_run_strip4.png`,
       {
         frameWidth: 32,
         frameHeight: 32,
-      }
-    );
+      },
+    )
     this.load.spritesheet(
       `walk-${skinName}`,
       `/assets/animations/fox/${skinName}/lilfox_walk_strip8.png`,
       {
         frameWidth: 32,
         frameHeight: 32,
-      }
-    );
+      },
+    )
   }
 }
