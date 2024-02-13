@@ -6,7 +6,7 @@ const UI_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
   wordWrap: { width: 0 },
 })
 
-export class CharacterDiedDialog {
+export class GameOverDialog {
   private scene: Phaser.Scene
   private padding: number
   private width: number

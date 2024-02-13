@@ -24,7 +24,7 @@ export default class PlatformGameCharacter extends Character {
     const spaceJustDown = Phaser.Input.Keyboard.JustDown(cursors.space)
 
     if (!this.isAlive && spaceJustDown) {
-      sceneEvents.emit(Events.HIDE_CHARACTER_DIED_MODAL)
+      sceneEvents.emit(Events.HIDE_GAME_OVER_MODAL)
       this.scene.scene.restart()
     }
 
@@ -110,7 +110,7 @@ export default class PlatformGameCharacter extends Character {
     this.isAlive = false
 
     setTimeout(() => {
-      sceneEvents.emit(Events.CHARACTER_DIED)
+      sceneEvents.emit(Events.GAME_OVER)
     }, 900)
   }
 }

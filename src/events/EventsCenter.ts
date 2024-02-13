@@ -9,8 +9,8 @@ enum Events {
   SHOW_TIP = 'show-tip',
   WON_LEVEL_1 = 'won-level-1',
   WON_LEVEL_2 = 'won-level-2',
-  CHARACTER_DIED = 'character-died',
-  HIDE_CHARACTER_DIED_MODAL = 'hide-character-died-modal',
+  GAME_OVER = 'game-over',
+  HIDE_GAME_OVER_MODAL = 'hide-game-over-modal',
   UPDATE_COUNTDOWN_TIMER = 'update-countdown-timer',
 }
 

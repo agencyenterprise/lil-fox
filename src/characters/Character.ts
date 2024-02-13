@@ -234,7 +234,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       this.healthState = HealthState.DEAD
       this.anims.play(`idle-${this.selectedSkin}`);
       this.setVelocity(0, 0)
-      sceneEvents.emit(Events.CHARACTER_DIED)
+      sceneEvents.emit(Events.GAME_OVER)
     } else {
       this.setVelocity(dir.x, dir.y)
       this.setTint(0xff0000)

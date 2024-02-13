@@ -4,7 +4,7 @@ import { Events, sceneEvents } from "../events/EventsCenter";
 import SettingsMenu from "./SettingsMenu";
 import { Dialog } from "@/ui/Dialog";
 import { Tip } from "@/ui/Tip";
-import { CharacterDiedDialog } from "@/ui/CharacterDiedDialog";
+import { GameOverDialog } from "@/ui/GameOverDialog";
 
 export default class GameUI extends Phaser.Scene {
 
@@ -15,7 +15,7 @@ export default class GameUI extends Phaser.Scene {
   private coinAmountText: Phaser.GameObjects.Text
   private timeDownText: Phaser.GameObjects.Text
   private dialogUi: Dialog
-  private characterDiedDialog: CharacterDiedDialog
+  private gameOverDialog: GameOverDialog
   private tipUi: Tip
 
   private shouldHideTip: boolean = false
@@ -26,7 +26,7 @@ export default class GameUI extends Phaser.Scene {
 
   create() {
     this.dialogUi = new Dialog(this, 310)
-    this.characterDiedDialog = new CharacterDiedDialog(this)
+    this.gameOverDialog = new GameOverDialog(this)
     this.tipUi = new Tip(this)
     // this.settingsMenu = new SettingsMenu(this)
 
@@ -79,8 +79,8 @@ export default class GameUI extends Phaser.Scene {
     sceneEvents.on(Events.PLAYER_COLLECTED_COIN, this.handlePlayerCollectedCoin, this)
     sceneEvents.on(Events.SHOW_DIALOG, this.showDialog, this)
     sceneEvents.on(Events.SHOW_TIP, this.showTip, this)
-    sceneEvents.on(Events.CHARACTER_DIED, this.handleCharacterDied, this)
-    sceneEvents.on(Events.HIDE_CHARACTER_DIED_MODAL, () => this.characterDiedDialog.hideDialogModal(), this)
+    sceneEvents.on(Events.GAME_OVER, this.handleCharacterDied, this)
+    sceneEvents.on(Events.HIDE_GAME_OVER_MODAL, () => this.gameOverDialog.hideDialogModal(), this)
     sceneEvents.on(Events.UPDATE_COUNTDOWN_TIMER, this.updateTimer, this)
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
@@ -88,7 +88,7 @@ export default class GameUI extends Phaser.Scene {
       sceneEvents.off(Events.PLAYER_COLLECTED_COIN, this.handlePlayerCollectedCoin, this)
       sceneEvents.off(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
       sceneEvents.off(Events.SHOW_DIALOG, () => this.dialogUi.hideDialogModal(), this)
-      sceneEvents.off(Events.CHARACTER_DIED, this.handleCharacterDied, this)
+      sceneEvents.off(Events.GAME_OVER, this.handleCharacterDied, this)
     })
   }
 
@@ -152,7 +152,7 @@ export default class GameUI extends Phaser.Scene {
   }
 
   handleCharacterDied() {
-    this.characterDiedDialog.showDialogModal(false)
+    this.gameOverDialog.showDialogModal(false)
   }
 
   updateTimer(nextTime: number) {
