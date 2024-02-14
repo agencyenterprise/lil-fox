@@ -21,14 +21,6 @@ export default class PlatformGameCharacter extends Character {
   update(
     cursors: Phaser.Types.Input.Keyboard.CursorKeys,
   ) {
-    if (!cursors) return;
-    const spaceJustDown = Phaser.Input.Keyboard.JustDown(cursors.space)
-
-    if ((!this.isAlive || this.isGameOver) && spaceJustDown) {
-      sceneEvents.emit(Events.HIDE_GAME_OVER_MODAL)
-      this.scene.scene.restart()
-    }
-
     this.moveFox(cursors)
   }
 

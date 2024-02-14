@@ -91,7 +91,6 @@ export default class GameUI extends Phaser.Scene {
     sceneEvents.on(Events.SHOW_DIALOG, this.showDialog, this)
     sceneEvents.on(Events.SHOW_TIP, this.showTip, this)
     sceneEvents.on(Events.GAME_OVER, this.handleGameOver, this)
-    sceneEvents.on(Events.HIDE_GAME_OVER_MODAL, () => this.gameOverModal.hideDialogModal(), this)
     sceneEvents.on(Events.WIN_MARIO_LIKE_LEVEL, this.handleWinMarioLikeLevel, this)
     sceneEvents.on(Events.UPDATE_COUNTDOWN_TIMER, this.updateTimer, this)
 
@@ -187,6 +186,7 @@ export default class GameUI extends Phaser.Scene {
   }
 
   handleGameOver(message1: string, message2: string) {
+    this.currentOpenModal = this.gameOverModal
     this.gameOverModal.showDialogModal(message1, message2)
   }
 

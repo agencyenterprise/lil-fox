@@ -1,3 +1,4 @@
+import { Modal } from "@/types/Modal"
 import Phaser from "phaser"
 
 const UI_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
@@ -9,7 +10,7 @@ const UI_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
 const TEXT_1 = "YOU DIED!"
 const TEXT_2 = "Press space to respawn"
 
-export class GameOverModal {
+export class GameOverModal implements Modal {
   private scene: Phaser.Scene
   private padding: number
   private width: number
@@ -55,6 +56,16 @@ export class GameOverModal {
 
     this.hideDialogModal()
   }
+
+  select(): void {
+    this.hideDialogModal()
+    this.scene.scene.get("MarioScene").scene.restart()
+  }
+  
+  downDown(): void {}
+  upDown(): void {}
+  leftDown(): void {}
+  rightDown(): void {}
 
   showDialogModal(message1: string, message2: string) {
     if (message1) {

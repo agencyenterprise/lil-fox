@@ -2,7 +2,7 @@ import PlatformGameCharacter from "@/characters/PlatformGameCharacter";
 import Slug from "@/enemies/Slug";
 import { Events, sceneEvents } from "@/events/EventsCenter";
 
-const NECESSARY_COINS = 1
+const NECESSARY_COINS = 10
 
 export default class MarioScene extends Phaser.Scene {
 
