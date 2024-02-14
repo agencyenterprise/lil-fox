@@ -82,6 +82,11 @@ export default class FoxGame extends Phaser.Scene {
     this.scene.run("game-ui")
     this.scene.launch("settings-ui")
 
+    this.scene.pause()
+    this.scene.setVisible(false)
+    this.scene.run("MarioScene")
+    this.scene.setVisible(true, "MarioScene");
+
     createCharacterAnims(this.anims)
     createArcherAnims(this.anims)
     createLizardAnims(this.anims)

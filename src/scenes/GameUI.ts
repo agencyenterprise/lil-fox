@@ -101,6 +101,21 @@ export default class GameUI extends Phaser.Scene {
       quantity: 5
     })
 
+    this.coinAmountText = this.add.text(30, 0, 'x1').setScale(0.8, 0.8).setOrigin(1, 0.45)
+    this.add
+      .container(this.scale.width - 35, 25)
+      .setSize(50, 50)
+      .add(this.add.image(0, 0, 'coin'))
+      .add(this.coinAmountText)
+
+    this.timeDownText = this.add.text(30, 0, '00:00').setScale(0.8, 0.8).setOrigin(1, 0.45)
+    this.add
+      .container(this.scale.width - 35, 10)
+      .setSize(50, 50)
+      .add(this.timeDownText)
+
+
+
     SoundSingleton.getInstance().setSoundManager(this)
     SoundSingleton.getInstance().playTheme()
 
@@ -115,7 +130,6 @@ export default class GameUI extends Phaser.Scene {
     sceneEvents.on(Events.GAME_OVER, this.handleGameOver, this)
     sceneEvents.on(Events.WIN_MARIO_LIKE_LEVEL, this.handleWinMarioLikeLevel, this)
     sceneEvents.on(Events.UPDATE_COUNTDOWN_TIMER, this.updateTimer, this)
-
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       sceneEvents.off(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
