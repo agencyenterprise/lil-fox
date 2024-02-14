@@ -1,3 +1,4 @@
+import { Modal } from "@/types/Modal"
 import Phaser from "phaser"
 
 const UI_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
@@ -11,7 +12,7 @@ const TEXT_2 = "You won the level by collecting XX coins!"
 const OPTION_1 = "Try to get even more coins"
 const OPTION_2 = "Leave"
 
-export class WinMarioLikeLevelModal {
+export class WinMarioLikeLevelModal implements Modal {
   private scene: Phaser.Scene
   private padding: number
   private width: number
@@ -24,6 +25,7 @@ export class WinMarioLikeLevelModal {
   private uiText2: Phaser.GameObjects.Text
   private uiOption1: Phaser.GameObjects.Text
   private uiOption2: Phaser.GameObjects.Text
+  private selectedOption: number = 1
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene
@@ -56,7 +58,7 @@ export class WinMarioLikeLevelModal {
       ...UI_TEXT_STYLE,
       ...{ wordWrap: { width: this.width - 18 } },
     }).setOrigin(0.5)
-    
+
     this.uiOption2 = this.scene.add.text(this.width / 2, 105, "", {
       ...UI_TEXT_STYLE,
       ...{ wordWrap: { width: this.width - 18 } },
@@ -76,6 +78,28 @@ export class WinMarioLikeLevelModal {
 
     this.hideDialogModal()
   }
+
+  select() {
+    if (this.selectedOption === 1) {
+      this.scene.scene.get("MarioScene").scene.restart()
+    } else {
+      this.scene.scene.get("MarioScene").scene.stop()
+    }
+    this.hideDialogModal()
+  }
+
+  downDown() {
+    this.selectedOption = 2
+    this.userInputCursor.setPosition(this.width / 2 - 90, 105)
+  }
+
+  upDown() {
+    this.selectedOption = 1
+    this.userInputCursor.setPosition(this.width / 2 - 90, 90)
+  }
+
+  leftDown() { }
+  rightDown() { }
 
   showDialogModal() {
     this.height - 10

@@ -6,6 +6,7 @@ import { Dialog } from "@/ui/Dialog";
 import { Tip } from "@/ui/Tip";
 import { GameOverModal } from "@/ui/GameOverModal";
 import { WinMarioLikeLevelModal } from "@/ui/WinMarioLikeLevelModal";
+import { Modal } from "@/types/Modal";
 
 export default class GameUI extends Phaser.Scene {
 
@@ -21,6 +22,7 @@ export default class GameUI extends Phaser.Scene {
   private gameOverModal: GameOverModal
   private winMarioLikeLevelModal: WinMarioLikeLevelModal
   private tipUi: Tip
+  private currentOpenModal?: Modal
 
   private shouldHideTip: boolean = false
 
@@ -104,9 +106,24 @@ export default class GameUI extends Phaser.Scene {
   }
 
   update() {
-    const downJustDown = Phaser.Input.Keyboard.JustDown(this.cursors.down)
-    if (downJustDown) {
-      console.log("down down down")
+    if (!this.currentOpenModal) return
+
+    const leftDown = this.cursors.left?.isDown
+    const rightDown = this.cursors.right?.isDown
+    const upDown = this.cursors.up?.isDown
+    const downDown = this.cursors.down?.isDown
+    const spaceDown = this.cursors.space?.isDown
+
+    if (leftDown) {
+      this.currentOpenModal.leftDown()
+    } else if (rightDown) {
+      this.currentOpenModal.rightDown()
+    } else if (upDown) {
+      this.currentOpenModal.upDown()
+    } else if (downDown) {
+      this.currentOpenModal.downDown()
+    } else if (spaceDown) {
+      this.currentOpenModal.select()
     }
   }
 
@@ -174,6 +191,7 @@ export default class GameUI extends Phaser.Scene {
   }
 
   handleWinMarioLikeLevel() {
+    this.currentOpenModal = this.winMarioLikeLevelModal
     this.winMarioLikeLevelModal.showDialogModal()
   }
 
