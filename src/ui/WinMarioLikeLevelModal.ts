@@ -84,6 +84,7 @@ export class WinMarioLikeLevelModal implements Modal {
       this.scene.scene.get("MarioScene").scene.restart()
     } else {
       this.scene.scene.get("MarioScene").scene.stop()
+      this.scene.scene.get("LilFox").scene.resume().bringToTop()
     }
     this.hideDialogModal()
   }

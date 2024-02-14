@@ -50,6 +50,7 @@ export default class MarioScene extends Phaser.Scene {
 
 
     this.character = new PlatformGameCharacter(this, 30, 650, "character");
+    this.collectedCoins = 0
 
     this.character.setSize(this.character.width * 0.4, this.character.height * 0.4)
     this.physics.add.existing(this.character, false);
@@ -115,8 +116,8 @@ export default class MarioScene extends Phaser.Scene {
 
   update() {
     this.character.update(this.cursors)
-    this.physics.overlap(this.character, this.coins, this.handleCollectCoin, undefined, this)
-    this.physics.overlap(this.character, this.potions, this.handleCollectPotion, undefined, this)
+    this.physics.overlap(this.character, this.coins, this.handleCollectCoin, () => this.character.isAlive, this)
+    this.physics.overlap(this.character, this.potions, this.handleCollectPotion, () => this.character.isAlive, this)
   }
 
   handleCollectCoin(character: any, coin: any) {
