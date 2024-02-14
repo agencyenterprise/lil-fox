@@ -91,12 +91,38 @@ export class WinMarioLikeLevelModal implements Modal {
 
   downDown() {
     this.selectedOption = 2
-    this.userInputCursor.setPosition(this.width / 2 - 90, 105)
+    const [x, y] = [this.width / 2 - 30, 105]
+    this.userInputCursor.setPosition(x, y)
+    this.userInputCursorTween.destroy()
+    this.userInputCursorTween = this.scene.add.tween({
+      delay: 0,
+      duration: 500,
+      repeat: -1,
+      x: {
+        from: x,
+        start: x,
+        to: x + 2,
+      },
+      targets: this.userInputCursor,
+    })
   }
 
   upDown() {
     this.selectedOption = 1
-    this.userInputCursor.setPosition(this.width / 2 - 90, 90)
+    const [x, y] = [this.width / 2 - 93, 90]
+    this.userInputCursor.setPosition(x, y)
+    this.userInputCursorTween.destroy()
+    this.userInputCursorTween = this.scene.add.tween({
+      delay: 0,
+      duration: 500,
+      repeat: -1,
+      x: {
+        from: x,
+        start: x,
+        to: x + 2,
+      },
+      targets: this.userInputCursor,
+    })
   }
 
   leftDown() { }
@@ -116,8 +142,7 @@ export class WinMarioLikeLevelModal implements Modal {
   }
 
   createPlayerInputCursor() {
-    const y = 90
-    const x = this.width / 2 - 90
+    const [x, y] = [this.width / 2 - 93, 90]
     this.userInputCursor = this.scene.add.image(x, y, 'cursor')
     this.userInputCursor.setScale(3, 1)
 

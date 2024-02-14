@@ -2,7 +2,7 @@ import PlatformGameCharacter from "@/characters/PlatformGameCharacter";
 import Slug from "@/enemies/Slug";
 import { Events, sceneEvents } from "@/events/EventsCenter";
 
-const NECESSARY_COINS = 10
+const NECESSARY_COINS = 30
 
 export default class MarioScene extends Phaser.Scene {
 
@@ -42,14 +42,13 @@ export default class MarioScene extends Phaser.Scene {
   create() {
     const map = this.make.tilemap({ key: 'platform-level-map' });
 
-
     this.createLayers(map)
     this.spawnCharacter(map)
     this.spawnEnemies(map)
     this.spawnCollectables(map)
     this.addColliders()
 
-    this.countDownTimer = this.time.addEvent({ delay: 1000, callback: this.updateTimer, callbackScope: this, repeat: 3 });
+    this.countDownTimer = this.time.addEvent({ delay: 1000, callback: this.updateTimer, callbackScope: this, repeat: 50 });
   }
 
   createLayers(map: Phaser.Tilemaps.Tilemap) {
@@ -151,7 +150,7 @@ export default class MarioScene extends Phaser.Scene {
     this.character.isJumping = false
   }
 
-  handleCharacterSlugCollision(obj: any, obj2: any) {
+  handleCharacterSlugCollision() {
     this.countDownTimer.remove()
     this.character.die()
   }
@@ -160,9 +159,10 @@ export default class MarioScene extends Phaser.Scene {
     sceneEvents.emit(Events.UPDATE_COUNTDOWN_TIMER, this.countDownTimer.getRepeatCount())
     if (this.countDownTimer.getRepeatCount() === 0) {
       if (this.collectedCoins >= NECESSARY_COINS) {
-        sceneEvents.emit(Events.WIN_MARIO_LIKE_LEVEL, "Game Over!", "You ran out of time!")
+        sceneEvents.emit(Events.WIN_MARIO_LIKE_LEVEL)
         this.scene.pause()
       } else {
+        this.scene.pause() 
         this.character.gameOver()
         sceneEvents.emit(Events.GAME_OVER, "Game Over!", "You ran out of time!")
       }

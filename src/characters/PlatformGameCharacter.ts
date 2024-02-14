@@ -18,9 +18,7 @@ export default class PlatformGameCharacter extends Character {
     super(scene, x, y, texture, frame)
   }
 
-  update(
-    cursors: Phaser.Types.Input.Keyboard.CursorKeys,
-  ) {
+  update(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
     this.moveFox(cursors)
   }
 

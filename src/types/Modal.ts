@@ -4,4 +4,5 @@ export interface Modal {
   upDown(): void;
   leftDown(): void;
   rightDown(): void;
+  isVisible: boolean;
 }
