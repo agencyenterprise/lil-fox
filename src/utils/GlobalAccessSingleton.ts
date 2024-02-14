@@ -1,11 +1,11 @@
-import Cat from "@/npcs/Cat";
-import CatOwner from "@/npcs/CatOwner";
-import Npc from "@/npcs/Npc";
-import { Area } from "@/types/Area";
-import { Coordinate } from "./gridUtils";
+import Cat from "@/npcs/Cat"
+import CatOwner from "@/npcs/CatOwner"
+import Npc from "@/npcs/Npc"
+import { Area } from "@/types/Area"
+import { Coordinate } from "./gridUtils"
 
 export class Singleton {
-  private static instance: Singleton | null = null;
+  private static instance: Singleton | null = null
 
   public interactiveObjects: (Phaser.Types.Tilemaps.TiledObject | Npc)[] = []
   public catOwner: CatOwner
@@ -14,14 +14,13 @@ export class Singleton {
   public playerTrack: Coordinate[] = []
   public hasPlayerFoundCat = false
 
-  private constructor() {
-  }
+  private constructor() {}
 
   public static getInstance(): Singleton {
     if (!Singleton.instance) {
-      Singleton.instance = new Singleton();
+      Singleton.instance = new Singleton()
     }
-    return Singleton.instance;
+    return Singleton.instance
   }
 
   public addToPlayerTrack(coordinate: Coordinate) {

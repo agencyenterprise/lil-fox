@@ -1,15 +1,15 @@
-import Phaser from "phaser";
+import Phaser from "phaser"
 
-import { Events, sceneEvents } from "../events/EventsCenter";
-import SettingsMenu from "./SettingsMenu";
-import { Dialog } from "@/ui/Dialog";
-import { Tip } from "@/ui/Tip";
+import { Events, sceneEvents } from "../events/EventsCenter"
+import SettingsMenu from "./SettingsMenu"
+import { Dialog } from "@/ui/Dialog"
+import { Tip } from "@/ui/Tip"
+import { SoundSingleton, SoundEffects } from "@/utils/SoundSingleton"
 import { GameOverModal } from "@/ui/GameOverModal";
 import { WinMarioLikeLevelModal } from "@/ui/WinMarioLikeLevelModal";
 import { Modal } from "@/types/Modal";
 
 export default class GameUI extends Phaser.Scene {
-
   private settingsMenu!: SettingsMenu
 
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
@@ -27,7 +27,7 @@ export default class GameUI extends Phaser.Scene {
   private shouldHideTip: boolean = false
 
   constructor() {
-    super("game-ui");
+    super("game-ui")
   }
 
   preload() {
@@ -39,7 +39,40 @@ export default class GameUI extends Phaser.Scene {
     this.gameOverModal = new GameOverModal(this)
     this.winMarioLikeLevelModal = new WinMarioLikeLevelModal(this)
     this.tipUi = new Tip(this)
-    // this.settingsMenu = new SettingsMenu(this)
+    this.settingsMenu = new SettingsMenu(this)
+
+    const { width } = this.scale
+    const settingsButton = this.add
+      .image(width - 5, 5, "small-button")
+      .setScale(0.5)
+      .setOrigin(1, 0)
+    this.add
+      .image(width - 7, 4.5, "gear")
+      .setScale(0.35)
+      .setOrigin(1, 0)
+
+    settingsButton
+      .setInteractive()
+      .on(Phaser.Input.Events.POINTER_OVER, () => {
+        settingsButton.setTint(0xdedede)
+      })
+      .on(Phaser.Input.Events.POINTER_OUT, () => {
+        settingsButton.setTint(0xffffff)
+      })
+      .on(Phaser.Input.Events.POINTER_DOWN, () => {
+        settingsButton.setTint(0x8afbff)
+      })
+      .on(Phaser.Input.Events.POINTER_UP, () => {
+        settingsButton.setTint(0xffffff)
+
+        if (this.settingsMenu.isOpen) {
+          this.settingsMenu.hide()
+          this.scene.resume("LilFox")
+        } else {
+          this.settingsMenu.show()
+          this.scene.pause("LilFox")
+        }
+      })
 
     this.hearts = this.add.group({
       classType: Phaser.GameObjects.Image,
@@ -49,58 +82,46 @@ export default class GameUI extends Phaser.Scene {
     })
 
     this.hearts.createMultiple({
-      key: 'ui-heart-full',
+      key: "ui-heart-full",
       setXY: {
         x: 10,
         y: 10,
-        stepX: 16
+        stepX: 16,
       },
-      quantity: 5
+      quantity: 5,
     })
 
     this.berries.createMultiple({
-      key: 'berry-empty',
+      key: "berry-empty",
       setXY: {
         x: 15,
         y: 25,
-        stepX: 16
+        stepX: 16,
       },
       quantity: 5
     })
 
-    this.coinAmountText = this.add.text(30, 0, 'x1').setScale(0.8, 0.8).setOrigin(1, 0.45)
-    this.add
-      .container(this.scale.width - 35, 25)
-      .setSize(50, 50)
-      .add(this.add.image(0, 0, 'coin'))
-      .add(this.coinAmountText)
-
-    this.timeDownText = this.add.text(30, 0, '00:00').setScale(0.8, 0.8).setOrigin(1, 0.45)
-    this.add
-      .container(this.scale.width - 35, 10)
-      .setSize(50, 50)
-      .add(this.timeDownText)
-
-
-    this.hearts.setVisible(false)
-    this.berries.setVisible(false)
+    SoundSingleton.getInstance().setSoundManager(this)
+    SoundSingleton.getInstance().playTheme()
 
     sceneEvents.on(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
     sceneEvents.on(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
-    sceneEvents.on(Events.PLAYER_COLLECTED_COIN, this.handlePlayerCollectedCoin, this)
+    sceneEvents.on(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
+    sceneEvents.on(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
     sceneEvents.on(Events.SHOW_DIALOG, this.showDialog, this)
     sceneEvents.on(Events.SHOW_TIP, this.showTip, this)
+    sceneEvents.on(Events.CHARACTER_DIED, this.handleCharacterDied, this)
+    sceneEvents.on(Events.PLAYER_COLLECTED_COIN, this.handlePlayerCollectedCoin, this)
     sceneEvents.on(Events.GAME_OVER, this.handleGameOver, this)
     sceneEvents.on(Events.WIN_MARIO_LIKE_LEVEL, this.handleWinMarioLikeLevel, this)
     sceneEvents.on(Events.UPDATE_COUNTDOWN_TIMER, this.updateTimer, this)
 
+
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       sceneEvents.off(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
-      sceneEvents.off(Events.PLAYER_COLLECTED_COIN, this.handlePlayerCollectedCoin, this)
       sceneEvents.off(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
       sceneEvents.off(Events.SHOW_DIALOG, () => this.dialogUi.hideDialogModal(), this)
-      sceneEvents.off(Events.GAME_OVER, this.handleGameOver, this)
-      sceneEvents.off(Events.WIN_MARIO_LIKE_LEVEL, this.handleWinMarioLikeLevel, this)
+      sceneEvents.off(Events.CHARACTER_DIED, this.handleCharacterDied, this)
     })
   }
 
@@ -132,14 +153,16 @@ export default class GameUI extends Phaser.Scene {
       const heart = go as Phaser.GameObjects.Image
 
       if (idx < health) {
-        heart.setTexture('ui-heart-full')
+        heart.setTexture("ui-heart-full")
       } else {
-        heart.setTexture('ui-heart-empty')
+        heart.setTexture("ui-heart-empty")
       }
     })
   }
 
   handlePlayerCollectedBerry(collectedBerries: number) {
+    SoundSingleton.getInstance().playSoundEffect(SoundEffects.PICKUP)
+
     // @ts-ignore
     this.berries.children.each((go, idx) => {
       const berry = go as Phaser.GameObjects.Image
@@ -147,7 +170,7 @@ export default class GameUI extends Phaser.Scene {
       if (idx < collectedBerries) {
         berry.setTexture('berry')
       } else {
-        berry.setTexture('berry-empty')
+        berry.setTexture("berry-empty")
       }
     })
   }
@@ -187,8 +210,9 @@ export default class GameUI extends Phaser.Scene {
 
   handleGameOver(message1: string, message2: string) {
     this.currentOpenModal = this.gameOverModal
-    this.gameOverModal.showModal({message1, message2})
+    this.gameOverModal.showModal({ message1, message2 })
   }
+
 
   handleWinMarioLikeLevel() {
     this.currentOpenModal = this.winMarioLikeLevelModal
@@ -197,5 +221,11 @@ export default class GameUI extends Phaser.Scene {
 
   updateTimer(nextTime: number) {
     this.timeDownText.setText(`00:${nextTime}`)
+  }
+
+  handleCharacterDied() {
+    sceneEvents.emit(Events.STOP_MUSIC)
+    SoundSingleton.getInstance().playSoundEffect(SoundEffects.GAME_OVER)
+    this.characterDiedDialog.showDialogModal()
   }
 }

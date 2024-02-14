@@ -1,11 +1,12 @@
-import Chest from "@/items/Chest";
-import Phaser from "phaser";
-import { Events, sceneEvents } from "@/events/EventsCenter";
-import { TILE_SIZE } from "@/utils/gridUtils";
-import { getWonLevels } from "@/utils/localStorageUtils";
-import { Singleton } from "@/utils/GlobalAccessSingleton";
-import Npc from "@/npcs/Npc";
-import { Area } from "@/types/Area";
+import Chest from "@/items/Chest"
+import Phaser from "phaser"
+import { Events, sceneEvents } from "@/events/EventsCenter"
+import { TILE_SIZE } from "@/utils/gridUtils"
+import { getWonLevels } from "@/utils/localStorageUtils"
+import { Singleton } from "@/utils/GlobalAccessSingleton"
+import { SoundSingleton, SoundEffects } from "@/utils/SoundSingleton"
+import Npc from "@/npcs/Npc"
+import { Area } from "@/types/Area"
 
 declare global {
   namespace Phaser.GameObjects {
@@ -14,8 +15,8 @@ declare global {
         x: number,
         y: number,
         texture: string,
-        frame?: string | number
-      ): Character;
+        frame?: string | number,
+      ): Character
     }
   }
 }
@@ -25,17 +26,16 @@ export enum Skin {
   BLUE = "blue",
   FLASK = "flask",
   KUMAMON = "kumamon",
-  SUNGLASSES = "sunglasses"
+  SUNGLASSES = "sunglasses",
 }
 
 enum HealthState {
   IDLE,
   DAMAGE,
-  DEAD
+  DEAD,
 }
 
 export default class Character extends Phaser.Physics.Arcade.Sprite {
-
   private isTracking = false
   public selectedSkin: Skin = Skin.DEFAULT
   private healthState = HealthState.IDLE
@@ -54,15 +54,29 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     this.selectedSkin = skin
   }
 
-  constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
+  constructor(
+    scene: Phaser.Scene,
+    x: number,
+    y: number,
+    texture: string,
+    frame?: string | number,
+  ) {
     super(scene, x, y, texture, frame)
 
-    this.anims.play(`idle-${this.selectedSkin}`);
-    scene.physics.add.existing(this, false);
+    this.anims.play(`idle-${this.selectedSkin}`)
+    scene.physics.add.existing(this, false)
 
-    sceneEvents.on(Events.LOCK_PLAYER_MOVEMENT, this.handleLockPlayerMovement, this)
+    sceneEvents.on(
+      Events.LOCK_PLAYER_MOVEMENT,
+      this.handleLockPlayerMovement,
+      this,
+    )
     scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      sceneEvents.off(Events.LOCK_PLAYER_MOVEMENT, this.handleLockPlayerMovement, this)
+      sceneEvents.off(
+        Events.LOCK_PLAYER_MOVEMENT,
+        this.handleLockPlayerMovement,
+        this,
+      )
     })
   }
 
@@ -71,7 +85,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
     switch (this.healthState) {
       case HealthState.IDLE:
-        break;
+        break
 
       case HealthState.DAMAGE:
         this.damageTime += delta
@@ -80,31 +94,33 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
           this.setTint(0xffffff)
           this.damageTime = 0
         }
-        break;
+        break
     }
   }
 
-  update(
-    cursors: Phaser.Types.Input.Keyboard.CursorKeys,
-  ) {
+  update(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
     const interactiveObjects = Singleton.getInstance().interactiveObjects
     const areas = Singleton.getInstance().areas
 
-    if (!cursors) return;
+    if (!cursors) return
     const spaceJustDown = Phaser.Input.Keyboard.JustDown(cursors.space)
 
     if (this.healthState === HealthState.DEAD && spaceJustDown) {
       this.scene.scene.restart()
     }
 
-    if (this.healthState === HealthState.DAMAGE || this.healthState === HealthState.DEAD) return
+    if (
+      this.healthState === HealthState.DAMAGE ||
+      this.healthState === HealthState.DEAD
+    )
+      return
 
     this.isCharacterInArea(areas)
 
     if (spaceJustDown) {
       const nearbyArea = new Phaser.Geom.Circle(this.x, this.y, TILE_SIZE)
 
-      const nearbyObject = interactiveObjects.find(obj => {
+      const nearbyObject = interactiveObjects.find((obj) => {
         return nearbyArea.contains(obj.x!, obj.y!)
       })
 
@@ -114,8 +130,8 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     }
 
     if (this.isPlayerMovementLocked) {
-      this.anims.play(`idle-${this.selectedSkin}`);
-      this.setVelocity(0, 0);
+      this.anims.play(`idle-${this.selectedSkin}`)
+      this.setVelocity(0, 0)
       return
     }
 
@@ -123,6 +139,10 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     if (this.isTracking) {
       Singleton.getInstance().addToPlayerTrack({ x: this.x, y: this.y })
     }
+  }
+
+  stepSound() {
+    SoundSingleton.getInstance().playSoundEffect(SoundEffects.FOOTSTEPS1)
   }
 
   moveFox(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
@@ -134,56 +154,57 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     const downDown = cursors.down?.isDown
 
     if (rightDown && upDown) {
-      this.anims.play(`run-${this.selectedSkin}`, true);
-      this.setVelocity(speed / 1.65, -speed / 1.65);
-      this.scaleX = 1;
-      this.body?.offset.setTo(8, 12);
-
+      this.anims.play(`run-${this.selectedSkin}`, true)
+      this.setVelocity(speed / 1.65, -speed / 1.65)
+      this.scaleX = 1
+      this.body?.offset.setTo(8, 12)
+      this.stepSound()
     } else if (rightDown && downDown) {
-      this.anims.play(`run-${this.selectedSkin}`, true);
-      this.setVelocity(speed / 1.65, speed / 1.65);
-      this.scaleX = 1;
-      this.body?.offset.setTo(8, 12);
-
+      this.anims.play(`run-${this.selectedSkin}`, true)
+      this.setVelocity(speed / 1.65, speed / 1.65)
+      this.scaleX = 1
+      this.body?.offset.setTo(8, 12)
+      this.stepSound()
     } else if (leftDown && upDown) {
-      this.anims.play(`run-${this.selectedSkin}`, true);
-      this.setVelocity(-speed / 1.65, -speed / 1.65);
-      this.scaleX = -1;
-      this.body?.offset.setTo(24, 12);
-
+      this.anims.play(`run-${this.selectedSkin}`, true)
+      this.setVelocity(-speed / 1.65, -speed / 1.65)
+      this.scaleX = -1
+      this.body?.offset.setTo(24, 12)
+      this.stepSound()
     } else if (leftDown && downDown) {
-      this.anims.play(`run-${this.selectedSkin}`, true);
-      this.setVelocity(-speed / 1.65, speed / 1.65);
-      this.scaleX = -1;
-      this.body?.offset.setTo(24, 12);
-
+      this.anims.play(`run-${this.selectedSkin}`, true)
+      this.setVelocity(-speed / 1.65, speed / 1.65)
+      this.scaleX = -1
+      this.body?.offset.setTo(24, 12)
+      this.stepSound()
     } else if (leftDown) {
-      this.anims.play(`run-${this.selectedSkin}`, true);
-      this.setVelocity(-speed, 0);
-      this.scaleX = -1;
-      this.body?.offset.setTo(24, 12);
+      this.anims.play(`run-${this.selectedSkin}`, true)
+      this.setVelocity(-speed, 0)
+      this.scaleX = -1
+      this.body?.offset.setTo(24, 12)
+      this.stepSound()
     } else if (rightDown) {
-      this.anims.play(`run-${this.selectedSkin}`, true);
-      this.setVelocity(speed, 0);
-      this.scaleX = 1;
-      this.body?.offset.setTo(8, 12);
-
+      this.anims.play(`run-${this.selectedSkin}`, true)
+      this.setVelocity(speed, 0)
+      this.scaleX = 1
+      this.body?.offset.setTo(8, 12)
+      this.stepSound()
     } else if (upDown) {
-      this.anims.play(`run-${this.selectedSkin}`);
-      this.setVelocity(0, -speed);
-
+      this.anims.play(`run-${this.selectedSkin}`)
+      this.setVelocity(0, -speed)
+      this.stepSound()
     } else if (downDown) {
-      this.anims.play(`run-${this.selectedSkin}`);
-      this.setVelocity(0, speed);
-
+      this.anims.play(`run-${this.selectedSkin}`)
+      this.setVelocity(0, speed)
+      this.stepSound()
     } else {
-      this.anims.play(`idle-${this.selectedSkin}`);
-      this.setVelocity(0, 0);
+      this.anims.play(`idle-${this.selectedSkin}`)
+      this.setVelocity(0, 0)
     }
   }
 
   isCharacterInArea(areas: Area[]) {
-    const area = areas.find(area => area.contains(this.x, this.y))
+    const area = areas.find((area) => area.contains(this.x, this.y))
     if (area) {
       area.handleCharacterInArea(this)
     }
@@ -195,19 +216,31 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     } else {
       const wonLevels = getWonLevels()
       const props = object.properties
-      const messages = props.find((p: any) => p.name === 'message')?.value.split(";")
-      const isFinishLevelSign = props.find((p: any) => p.name === 'isFinishLevelSign')?.value
-      const levelNumber = props.find((p: any) => p.name === 'levelNumber')?.value
+      const messages = props
+        .find((p: any) => p.name === "message")
+        ?.value.split(";")
+      const isFinishLevelSign = props.find(
+        (p: any) => p.name === "isFinishLevelSign",
+      )?.value
+      const levelNumber = props.find((p: any) => p.name === "levelNumber")
+        ?.value
 
       if (isFinishLevelSign) {
-        const correctAlternative = props.find((p: any) => p.name === 'correctAlternative')?.value
-        const levelNumber = props.find((p: any) => p.name === 'levelNumber')?.value
+        const correctAlternative = props.find(
+          (p: any) => p.name === "correctAlternative",
+        )?.value
+        const levelNumber = props.find((p: any) => p.name === "levelNumber")
+          ?.value
 
         if (wonLevels.includes(levelNumber)) {
           sceneEvents.emit(Events.SHOW_DIALOG, ["You already won this level!"])
         } else {
-          this.scene.scene.pause("LilFox");
-          this.scene.scene.launch('QuizScene', { messages, correctAlternative, levelNumber });
+          this.scene.scene.pause("LilFox")
+          this.scene.scene.launch("QuizScene", {
+            messages,
+            correctAlternative,
+            levelNumber,
+          })
         }
       } else {
         if (levelNumber && wonLevels.includes(levelNumber)) {
@@ -232,7 +265,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
     if (this._health <= 0) {
       this.healthState = HealthState.DEAD
-      this.anims.play(`idle-${this.selectedSkin}`);
+      this.anims.play(`idle-${this.selectedSkin}`)
       this.setVelocity(0, 0)
       sceneEvents.emit(Events.GAME_OVER)
     } else {
@@ -240,6 +273,8 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       this.setTint(0xff0000)
       this.healthState = HealthState.DAMAGE
       this.damageTime = 0
+
+      SoundSingleton.getInstance().playSoundEffect(SoundEffects.DAMAGE)
     }
   }
 
