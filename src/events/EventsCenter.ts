@@ -12,6 +12,7 @@ enum Events {
   GAME_OVER = 'game-over',
   HIDE_GAME_OVER_MODAL = 'hide-game-over-modal',
   UPDATE_COUNTDOWN_TIMER = 'update-countdown-timer',
+  WIN_MARIO_LIKE_LEVEL = 'win-mario-like-level',
 }
 
 const sceneEvents = new Phaser.Events.EventEmitter()

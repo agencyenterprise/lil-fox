@@ -9,6 +9,7 @@ const BOOSTED_JUMP_SPEED = -4500
 export default class PlatformGameCharacter extends Character {
 
   public isAlive = true
+  public isGameOver = false
   public isJumping = false
   private jumpSpeed = NORMAL_JUMP_SPEED
   private speed = NORMAL_SPEED
@@ -23,7 +24,7 @@ export default class PlatformGameCharacter extends Character {
     if (!cursors) return;
     const spaceJustDown = Phaser.Input.Keyboard.JustDown(cursors.space)
 
-    if (!this.isAlive && spaceJustDown) {
+    if ((!this.isAlive || this.isGameOver) && spaceJustDown) {
       sceneEvents.emit(Events.HIDE_GAME_OVER_MODAL)
       this.scene.scene.restart()
     }
@@ -32,7 +33,7 @@ export default class PlatformGameCharacter extends Character {
   }
 
   moveFox(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
-    if (!this.isAlive) return
+    if (!this.isAlive || this.isGameOver) return
 
     const leftDown = cursors.left?.isDown
     const rightDown = cursors.right?.isDown
@@ -77,10 +78,6 @@ export default class PlatformGameCharacter extends Character {
     }
   }
 
-  handleInteraction(object: Phaser.Types.Tilemaps.TiledObject | Npc) {
-    console.log("test")
-  }
-
   drinkPotion(potionName: string) {
     if (potionName === "greenPotion") {
       this.speed = BOOSTED_SPEED
@@ -112,5 +109,12 @@ export default class PlatformGameCharacter extends Character {
     setTimeout(() => {
       sceneEvents.emit(Events.GAME_OVER)
     }, 900)
+  }
+
+  gameOver() {
+    this.anims.play(`idle-${this.selectedSkin}`);
+    this.setVelocity(0, 0)
+    this.setAcceleration(0, 0)
+    this.isGameOver = true
   }
 }

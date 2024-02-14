@@ -6,7 +6,10 @@ const UI_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
   wordWrap: { width: 0 },
 })
 
-export class GameOverDialog {
+const TEXT_1 = "YOU DIED!"
+const TEXT_2 = "Press space to respawn"
+
+export class GameOverModal {
   private scene: Phaser.Scene
   private padding: number
   private width: number
@@ -45,9 +48,6 @@ export class GameOverDialog {
       ...{ wordWrap: { width: this.width - 18 } },
     })
 
-    this.uiText1.setText("YOU DIED!")
-    this.uiText2.setText("Press space to respawn")
-
     this.container.add(this.uiText1)
     this.container.add(this.uiText2)
 
@@ -56,7 +56,15 @@ export class GameOverDialog {
     this.hideDialogModal()
   }
 
-  showDialogModal(isMarioLikeLevel: boolean) {
+  showDialogModal(message1: string, message2: string) {
+    if (message1) {
+      this.uiText1.setText(message1)
+      this.uiText2.setText(message2)
+    } else {
+      this.uiText1.setText(TEXT_1)
+      this.uiText2.setText(TEXT_2)
+    }
+
     this.height - 10
     this.userInputCursorTween.restart()
     this.container.setAlpha(1)

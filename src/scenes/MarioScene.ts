@@ -2,6 +2,8 @@ import PlatformGameCharacter from "@/characters/PlatformGameCharacter";
 import Slug from "@/enemies/Slug";
 import { Events, sceneEvents } from "@/events/EventsCenter";
 
+const NECESSARY_COINS = 1
+
 export default class MarioScene extends Phaser.Scene {
 
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
@@ -16,7 +18,7 @@ export default class MarioScene extends Phaser.Scene {
 
   private collectedCoins: number = 0
 
-  private countDownTimer: Phaser.Time.TimerEvent 
+  private countDownTimer: Phaser.Time.TimerEvent
 
   constructor() {
     super({
@@ -108,22 +110,7 @@ export default class MarioScene extends Phaser.Scene {
     })
     this.physics.add.collider(this.character, this.slugs, this.handleCharacterSlugCollision, () => this.character.isAlive, this);
 
-
-    const hearts = this.add.group({
-      classType: Phaser.GameObjects.Image,
-    })
-  
-    hearts.createMultiple({
-      key: 'ui-heart-full',
-      setXY: {
-        x: 20,
-        y: 10,
-        stepX: 16
-      },
-      quantity: 7
-    })
-
-    this.countDownTimer = this.time.addEvent({ delay: 1000, callback: this.updateTimer, callbackScope: this, repeat: 10 });
+    this.countDownTimer = this.time.addEvent({ delay: 1000, callback: this.updateTimer, callbackScope: this, repeat: 3 });
   }
 
   update() {
@@ -153,11 +140,16 @@ export default class MarioScene extends Phaser.Scene {
   }
 
   updateTimer() {
-
     sceneEvents.emit(Events.UPDATE_COUNTDOWN_TIMER, this.countDownTimer.getRepeatCount())
     if (this.countDownTimer.getRepeatCount() === 0) {
+      if (this.collectedCoins >= NECESSARY_COINS) {
+        sceneEvents.emit(Events.WIN_MARIO_LIKE_LEVEL, "Game Over!", "You ran out of time!")
+        this.scene.pause()
+      } else {
+        this.character.gameOver()
+        sceneEvents.emit(Events.GAME_OVER, "Game Over!", "You ran out of time!")
+      }
       this.countDownTimer.remove()
-      this.character.die()
     }
   }
 }
