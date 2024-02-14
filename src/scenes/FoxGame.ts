@@ -370,7 +370,6 @@ export default class FoxGame extends Phaser.Scene {
     // this.physics.add.collider(this.character, chests, this.handleCharacterChestCollision, undefined, this)
     // this.physics.add.collider(this.lizards, chests)
 
-    // this.physics.add.collider(this.catOwners, this.character);
     this.playerLizardsCollider = this.physics.add.collider(this.lizards, this.character, this.handleCharacterLizardCollision, undefined, this);
     this.playerArrowsCollider = this.physics.add.collider(this.arrows, this.character, this.handleCharacterArrowCollision, undefined, this);
     this.physics.add.collider(this.arrows, this.treesLayer, this.handleObjectsArrowCollision, undefined, this);
