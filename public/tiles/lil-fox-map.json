@@ -880,8 +880,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1043.455,
-                 "y":1230.034
+                 "x":915.95,
+                 "y":426.53
                 }, 
                 {
                  "height":0,
@@ -991,14 +991,14 @@
                  "y":295.812
                 }, 
                 {
-                 "height":429,
+                 "height":435.5,
                  "id":96,
                  "name":"soundGreenArcherArea",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":485,
-                 "x":634,
+                 "width":543,
+                 "x":576,
                  "y":1034
                 }],
          "opacity":1,
