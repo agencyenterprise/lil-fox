@@ -41,14 +41,26 @@ export default class MarioScene extends Phaser.Scene {
 
   create() {
     const map = this.make.tilemap({ key: 'platform-level-map' });
-    const tileset0 = map.addTilesetImage('nature-paltformer-tileset-16x16', 'tiles3');
 
+
+    this.createLayers(map)
+    this.spawnCharacter(map)
+    this.spawnEnemies(map)
+    this.spawnCollectables(map)
+    this.addColliders()
+
+    this.countDownTimer = this.time.addEvent({ delay: 1000, callback: this.updateTimer, callbackScope: this, repeat: 3 });
+  }
+
+  createLayers(map: Phaser.Tilemaps.Tilemap) {
+    const tileset0 = map.addTilesetImage('nature-paltformer-tileset-16x16', 'tiles3');
 
     map.createLayer('Sky', tileset0!)!;
     this.waterLayer = map.createLayer('Water', tileset0!)!;
     this.terrainLayer = map.createLayer('Terrain', tileset0!)!;
+  }
 
-
+  spawnCharacter(map: Phaser.Tilemaps.Tilemap) {
     this.character = new PlatformGameCharacter(this, 30, 650, "character");
     this.collectedCoins = 0
 
@@ -59,10 +71,23 @@ export default class MarioScene extends Phaser.Scene {
 
     this.cameras.main.startFollow(this.character, true, 0.05, 0.05);
     this.cameras.main.setBounds(25, 500, 3392, 100)
+  }
 
-    this.terrainLayer?.setCollisionByProperty({ collides: true });
-    this.physics.add.collider(this.character, this.terrainLayer, this.handleTerrainCollision, () => this.character.isAlive, this);
+  spawnEnemies(map: Phaser.Tilemaps.Tilemap) {
+    this.slugs = this.add.group({
+      classType: Slug,
+      createCallback: (go) => {
+        this.physics.world.enable(go);
+        (go as any).body.allowGravity = false;
+      }
+    })
 
+    map.getObjectLayer('Enemies')!.objects.forEach(enemy => {
+      this.slugs.get(enemy.x!, enemy.y!, enemy.name).setOrigin(0, 1)
+    })
+  }
+
+  spawnCollectables(map: Phaser.Tilemaps.Tilemap) {
     this.coins = this.add.group({
       classType: Phaser.GameObjects.Image,
       createCallback: (go) => {
@@ -97,21 +122,12 @@ export default class MarioScene extends Phaser.Scene {
     map.getObjectLayer('Potions')!.objects.forEach(potion => {
       this.potions.get(potion.x!, potion.y!, potion.name).setOrigin(0, 1)
     })
+  }
 
-    this.slugs = this.add.group({
-      classType: Slug,
-      createCallback: (go) => {
-        this.physics.world.enable(go);
-        (go as any).body.allowGravity = false;
-      }
-    })
-
-    map.getObjectLayer('Enemies')!.objects.forEach(enemy => {
-      this.slugs.get(enemy.x!, enemy.y!, enemy.name).setOrigin(0, 1)
-    })
+  addColliders() {
+    this.terrainLayer?.setCollisionByProperty({ collides: true });
+    this.physics.add.collider(this.character, this.terrainLayer, this.handleTerrainCollision, () => this.character.isAlive, this);
     this.physics.add.collider(this.character, this.slugs, this.handleCharacterSlugCollision, () => this.character.isAlive, this);
-
-    this.countDownTimer = this.time.addEvent({ delay: 1000, callback: this.updateTimer, callbackScope: this, repeat: 3 });
   }
 
   update() {
