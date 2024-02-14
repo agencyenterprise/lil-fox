@@ -125,6 +125,10 @@ export default class Preloader extends Phaser.Scene {
       "assets/audio/footsteps-02.ogg",
       "assets/audio/footsteps-02.mp3",
     ])
+    this.load.audio(SoundEffects.ARROW, [
+      "assets/audio/arrow.ogg",
+      "assets/audio/arrow.mp3",
+    ])
   }
 
   create() {

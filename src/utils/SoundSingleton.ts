@@ -1,6 +1,7 @@
 import { Events, sceneEvents } from "@/events/EventsCenter"
 
 export enum SoundEffects {
+  ARROW = "audio-arrow",
   CATOWNER_HELLO = "audio-hello",
   DAMAGE = "audio-damage",
   FOOTSTEPS1 = "audio-footsteps1",
@@ -24,6 +25,7 @@ export class SoundSingleton {
   public soundEffectsEnabled = true
   public musicVolume = 3
   public soundEffectsVolume = 3
+  public area = ""
 
   private constructor() {}
 
@@ -81,8 +83,12 @@ export class SoundSingleton {
     this.theme.setVolume(volume)
   }
 
-  public playSoundEffect(soundEffect: SoundEffects) {
+  public playSoundEffect(soundEffect: SoundEffects, area?: string) {
     if (!this.soundEffectsEnabled) {
+      return
+    }
+
+    if (area && area !== this.area) {
       return
     }
 

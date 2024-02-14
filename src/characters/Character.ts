@@ -204,10 +204,13 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
   }
 
   isCharacterInArea(areas: Area[]) {
-    const area = areas.find((area) => area.contains(this.x, this.y))
-    if (area) {
-      area.handleCharacterInArea(this)
-    }
+    areas.forEach((area) => {
+      if (area.contains(this.x, this.y)) {
+        area.handleCharacterInArea(this)
+      } else {
+        area.handleCharacterNotInArea(this)
+      }
+    })
   }
 
   handleInteraction(object: Phaser.Types.Tilemaps.TiledObject | Npc) {
