@@ -187,12 +187,12 @@ export default class GameUI extends Phaser.Scene {
 
   handleGameOver(message1: string, message2: string) {
     this.currentOpenModal = this.gameOverModal
-    this.gameOverModal.showDialogModal(message1, message2)
+    this.gameOverModal.showModal({message1, message2})
   }
 
   handleWinMarioLikeLevel() {
     this.currentOpenModal = this.winMarioLikeLevelModal
-    this.winMarioLikeLevelModal.showDialogModal()
+    this.winMarioLikeLevelModal.showModal()
   }
 
   updateTimer(nextTime: number) {

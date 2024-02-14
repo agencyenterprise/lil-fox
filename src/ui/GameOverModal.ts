@@ -54,11 +54,11 @@ export class GameOverModal implements Modal {
 
     this.createPlayerInputCursor()
 
-    this.hideDialogModal()
+    this.hideModal()
   }
 
   select(): void {
-    this.hideDialogModal()
+    this.hideModal()
     this.scene.scene.get("MarioScene").scene.restart()
   }
   
@@ -67,7 +67,7 @@ export class GameOverModal implements Modal {
   leftDown(): void {}
   rightDown(): void {}
 
-  showDialogModal(message1: string, message2: string) {
+  showModal({message1, message2}: {message1: string, message2: string}) {
     if (message1) {
       this.uiText1.setText(message1)
       this.uiText2.setText(message2)
@@ -82,7 +82,7 @@ export class GameOverModal implements Modal {
     this._isVisible = true
   }
 
-  hideDialogModal() {
+  hideModal() {
     this.container.setAlpha(0)
     this.userInputCursorTween.pause()
     this._isVisible = false

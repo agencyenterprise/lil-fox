@@ -76,7 +76,7 @@ export class WinMarioLikeLevelModal implements Modal {
 
     this.createPlayerInputCursor()
 
-    this.hideDialogModal()
+    this.hideModal()
   }
 
   select() {
@@ -86,7 +86,7 @@ export class WinMarioLikeLevelModal implements Modal {
       this.scene.scene.get("MarioScene").scene.stop()
       this.scene.scene.get("LilFox").scene.resume().bringToTop()
     }
-    this.hideDialogModal()
+    this.hideModal()
   }
 
   downDown() {
@@ -128,14 +128,14 @@ export class WinMarioLikeLevelModal implements Modal {
   leftDown() { }
   rightDown() { }
 
-  showDialogModal() {
+  showModal() {
     this.height - 10
     this.userInputCursorTween.restart()
     this.container.setAlpha(1)
     this._isVisible = true
   }
 
-  hideDialogModal() {
+  hideModal() {
     this.container.setAlpha(0)
     this.userInputCursorTween.pause()
     this._isVisible = false
