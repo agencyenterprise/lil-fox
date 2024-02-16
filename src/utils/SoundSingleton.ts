@@ -9,6 +9,7 @@ export enum SoundEffects {
   GAME_OVER = "audio-game-over",
   PICKUP = "audio-pickup",
   THEME = "audio-theme",
+  ROAR = "audio-roar",
 }
 
 export class SoundSingleton {
