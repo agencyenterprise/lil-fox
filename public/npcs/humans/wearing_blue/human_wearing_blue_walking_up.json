@@ -1,0 +1,104 @@
+{
+	"textures": [
+		{
+			"image": "human_wearing_blue_walking_up.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 50,
+				"h": 21
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "tile117.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 8,
+						"y": 5,
+						"w": 16,
+						"h": 19
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 16,
+						"h": 19
+					}
+				},
+				{
+					"filename": "tile119.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 8,
+						"y": 5,
+						"w": 16,
+						"h": 19
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 16,
+						"h": 19
+					}
+				},
+				{
+					"filename": "tile118.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 9,
+						"y": 6,
+						"w": 14,
+						"h": 19
+					},
+					"frame": {
+						"x": 19,
+						"y": 1,
+						"w": 14,
+						"h": 19
+					}
+				},
+				{
+					"filename": "tile120.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 9,
+						"y": 6,
+						"w": 14,
+						"h": 19
+					},
+					"frame": {
+						"x": 35,
+						"y": 1,
+						"w": 14,
+						"h": 19
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:c04619ce7507f4f00a9fd4e2969912c7:c37a46f7f8b9c38c2c2888aff6a7d93a:b67d805ec5466905a3ecc0137b792639$"
+	}
+}

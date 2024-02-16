@@ -10,13 +10,14 @@ import { createArcherAnims } from "@/anims/GreenArcherAnims"
 import { Dialog } from "@/ui/Dialog"
 import { getWonLevels } from "@/utils/localStorageUtils"
 import Cat from "@/npcs/Cat"
-import { createCatAnims, createCatOwnerAnims } from "@/anims/NpcAnims"
+import { createCatAnims, createCatOwnerAnims, createHumanInBlueAnims } from "@/anims/NpcAnims"
 import { SpawnPoints } from "@/types/SpawnPoints"
 import CatOwner from "@/npcs/CatOwner"
 import { Singleton } from "@/utils/GlobalAccessSingleton"
 import { TipArea } from "@/types/TipArea"
 import { Area } from "@/types/Area"
 import { CatArea } from "@/types/CatArea"
+import HumanInBlue from "@/npcs/HumanInBlue"
 
 type CreateData = {
   levelNumber?: number
@@ -59,6 +60,7 @@ export default class FoxGame extends Phaser.Scene {
   private greenArchers: Phaser.GameObjects.Group
   private cats: Phaser.GameObjects.Group
   private catOwners: Phaser.GameObjects.Group
+  private humansInBlue: Phaser.GameObjects.Group
   private arrows: Phaser.GameObjects.Group
 
   private playerLizardsCollider?: Phaser.Physics.Arcade.Collider
@@ -82,17 +84,13 @@ export default class FoxGame extends Phaser.Scene {
     this.scene.run("game-ui")
     this.scene.launch("settings-ui")
 
-    this.scene.pause()
-    this.scene.setVisible(false)
-    this.scene.run("MarioScene")
-    this.scene.setVisible(true, "MarioScene");
-
     createCharacterAnims(this.anims)
     createArcherAnims(this.anims)
     createLizardAnims(this.anims)
     createChestAnims(this.anims)
     createCatAnims(this.anims)
     createCatOwnerAnims(this.anims)
+    createHumanInBlueAnims(this.anims)
 
     const map = this.make.tilemap({ key: "map" })
     this.createLayers(map)
@@ -134,6 +132,10 @@ export default class FoxGame extends Phaser.Scene {
       classType: CatOwner,
     })
 
+    this.humansInBlue = this.physics.add.group({
+      classType: HumanInBlue,
+    })
+
     this.npcsObjects.objects.forEach((npc) => {
       const x = npc.x! + npc.width! * 0.5
       const y = npc.y! + npc.height! * 0.5
@@ -155,6 +157,10 @@ export default class FoxGame extends Phaser.Scene {
           Singleton.getInstance().catOwner = catOwner
           Singleton.getInstance().interactiveObjects.push(catOwner)
           break
+        case "human_in_blue":
+          const humanInBlue: HumanInBlue = this.humansInBlue.get(x, y, "human_in_blue")
+          humanInBlue.setMessages(messages)
+          Singleton.getInstance().interactiveObjects.push(humanInBlue)
       }
     })
   }

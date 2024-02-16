@@ -17,6 +17,8 @@ enum Events {
   RESUME_MUSIC = "resume-music",
   CHANGE_MUSIC_VOLUME = "change-music-volume",
   CHARACTER_DIED = "character-died",
+  MARIO_LIKE_LEVEL_STARTED = "mario-like-level-started",
+  MARIO_LIKE_LEVEL_FINISHED = "mario-like-level-finished",
 }
 
 const sceneEvents = new Phaser.Events.EventEmitter()

@@ -1,3 +1,4 @@
+import { Events, sceneEvents } from "@/events/EventsCenter"
 import { Modal } from "@/types/Modal"
 import Phaser from "phaser"
 
@@ -83,8 +84,11 @@ export class WinMarioLikeLevelModal implements Modal {
     if (this.selectedOption === 1) {
       this.scene.scene.get("MarioScene").scene.restart()
     } else {
-      this.scene.scene.get("MarioScene").scene.stop()
-      this.scene.scene.get("LilFox").scene.resume().bringToTop()
+      this.scene.scene.stop("MarioScene")
+      this.scene.scene.setVisible(false, "MarioScene")
+      this.scene.scene.resume("LilFox")
+      this.scene.scene.setVisible(true, "LilFox")
+      sceneEvents.emit(Events.MARIO_LIKE_LEVEL_FINISHED)
     }
     this.hideModal()
   }
