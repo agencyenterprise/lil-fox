@@ -55,6 +55,7 @@ export default class MarioScene extends Phaser.Scene {
     const tileset0 = map.addTilesetImage('nature-paltformer-tileset-16x16', 'tiles3');
 
     map.createLayer('Sky', tileset0!)!;
+    map.createLayer('Trees', tileset0!)!;
     this.waterLayer = map.createLayer('Water', tileset0!)!;
     this.terrainLayer = map.createLayer('Terrain', tileset0!)!;
   }
@@ -162,7 +163,7 @@ export default class MarioScene extends Phaser.Scene {
         sceneEvents.emit(Events.WIN_MARIO_LIKE_LEVEL)
         this.scene.pause()
       } else {
-        this.scene.pause() 
+        this.scene.pause()
         this.character.gameOver()
         sceneEvents.emit(Events.GAME_OVER, "Game Over!", "You ran out of time!")
       }
