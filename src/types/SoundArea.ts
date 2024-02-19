@@ -18,14 +18,10 @@ export class SoundArea extends Area {
   }
 
   handleCharacterInArea(character?: Character): void {
-    if (SoundSingleton.getInstance().area !== this.name) {
-      SoundSingleton.getInstance().area = this.name
-    }
+    SoundSingleton.getInstance().addPlayerCurrentArea(this.name)
   }
 
   handleCharacterNotInArea(character?: Character): void {
-    if (SoundSingleton.getInstance().area) {
-      SoundSingleton.getInstance().area = ""
-    }
+    SoundSingleton.getInstance().removePlayerCurrentArea(this.name)
   }
 }

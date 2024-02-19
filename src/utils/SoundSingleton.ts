@@ -1,4 +1,5 @@
 import { Events, sceneEvents } from "@/events/EventsCenter"
+import { getGameSetting } from "@/utils/localStorageUtils"
 
 export enum SoundEffects {
   ARROW = "audio-arrow",
@@ -23,10 +24,12 @@ export class SoundSingleton {
     | Phaser.Sound.HTML5AudioSoundManager
     | Phaser.Sound.WebAudioSoundManager
 
-  public soundEffectsEnabled = true
-  public musicVolume = 3
-  public soundEffectsVolume = 3
-  public area = ""
+  public musicEnabled = getGameSetting("musicEnabled") ?? true
+  public musicVolume = getGameSetting("musicVolume") ?? 3
+  public soundEffectsEnabled = getGameSetting("soundEffectsEnabled") ?? true
+  public soundEffectsVolume = getGameSetting("soundEffectsVolume") ?? 3
+
+  public playerCurrentAreas: string[] = []
 
   private constructor() {}
 
@@ -66,6 +69,10 @@ export class SoundSingleton {
     })
 
     this.theme.play()
+
+    if (!this.musicEnabled) {
+      this.theme.pause()
+    }
   }
 
   stopTheme() {
@@ -89,7 +96,7 @@ export class SoundSingleton {
       return
     }
 
-    if (area && area !== this.area) {
+    if (area && !this.playerCurrentAreas.includes(area)) {
       return
     }
 
@@ -103,5 +110,19 @@ export class SoundSingleton {
     this.soundManager.play(soundEffect, {
       volume: this.soundEffectsVolume / 10,
     })
+  }
+
+  public addPlayerCurrentArea(area: string) {
+    if (!this.playerCurrentAreas.includes(area)) {
+      this.playerCurrentAreas.push(area)
+    }
+  }
+
+  public removePlayerCurrentArea(area: string) {
+    if (this.playerCurrentAreas.includes(area)) {
+      this.playerCurrentAreas = this.playerCurrentAreas.filter(
+        (a) => a !== area,
+      )
+    }
   }
 }
