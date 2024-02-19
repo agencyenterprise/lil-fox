@@ -1,4 +1,5 @@
 import { Events, sceneEvents } from "@/events/EventsCenter"
+import { GameSettings } from "@/scenes/SettingsMenu"
 import { getGameSetting } from "@/utils/localStorageUtils"
 
 export enum SoundEffects {
@@ -24,10 +25,12 @@ export class SoundSingleton {
     | Phaser.Sound.HTML5AudioSoundManager
     | Phaser.Sound.WebAudioSoundManager
 
-  public musicEnabled = getGameSetting("musicEnabled") ?? true
-  public musicVolume = getGameSetting("musicVolume") ?? 3
-  public soundEffectsEnabled = getGameSetting("soundEffectsEnabled") ?? true
-  public soundEffectsVolume = getGameSetting("soundEffectsVolume") ?? 3
+  public musicEnabled = getGameSetting(GameSettings.MUSIC_ENABLED) ?? true
+  public musicVolume = getGameSetting(GameSettings.MUSIC_VOLUME) ?? 3
+  public soundEffectsEnabled =
+    getGameSetting(GameSettings.SOUND_EFFECTS_ENABLED) ?? true
+  public soundEffectsVolume =
+    getGameSetting(GameSettings.SOUND_EFFECTS_VOLUME) ?? 3
 
   public playerCurrentAreas: string[] = []
 

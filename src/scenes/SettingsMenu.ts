@@ -3,6 +3,13 @@ import { Events, sceneEvents } from "@/events/EventsCenter"
 import { SoundSingleton } from "@/utils/SoundSingleton"
 import { setGameSettings } from "@/utils/localStorageUtils"
 
+export enum GameSettings {
+  MUSIC_ENABLED = "music-enabled",
+  MUSIC_VOLUME = "music-volume",
+  SOUND_EFFECTS_ENABLED = "sound-effects-enabled",
+  SOUND_EFFECTS_VOLUME = "sound-effects-volume",
+}
+
 export default class SettingsMenu {
   private container!: Phaser.GameObjects.Container
   private checkmarkMusic!: Phaser.GameObjects.Image
@@ -72,12 +79,12 @@ export default class SettingsMenu {
           this.checkmarkMusic.setVisible(false)
           sceneEvents.emit(Events.PAUSE_MUSIC)
           SoundSingleton.getInstance().musicEnabled = false
-          setGameSettings("musicEnabled", false)
+          setGameSettings(GameSettings.MUSIC_ENABLED, false)
         } else {
           this.checkmarkMusic.setVisible(true)
           sceneEvents.emit(Events.RESUME_MUSIC)
           SoundSingleton.getInstance().musicEnabled = true
-          setGameSettings("musicEnabled", true)
+          setGameSettings(GameSettings.MUSIC_ENABLED, true)
         }
       })
   }
@@ -115,11 +122,11 @@ export default class SettingsMenu {
         if (this.checkmarkSoundEffects.visible) {
           this.checkmarkSoundEffects.setVisible(false)
           SoundSingleton.getInstance().soundEffectsEnabled = false
-          setGameSettings("soundEffectsEnabled", false)
+          setGameSettings(GameSettings.SOUND_EFFECTS_ENABLED, false)
         } else {
           this.checkmarkSoundEffects.setVisible(true)
           SoundSingleton.getInstance().soundEffectsEnabled = true
-          setGameSettings("soundEffectsEnabled", true)
+          setGameSettings(GameSettings.SOUND_EFFECTS_ENABLED, true)
         }
       })
   }
@@ -189,7 +196,7 @@ export default class SettingsMenu {
         if (SoundSingleton.getInstance().musicVolume > 1) {
           SoundSingleton.getInstance().musicVolume--
           setGameSettings(
-            "musicVolume",
+            GameSettings.MUSIC_VOLUME,
             SoundSingleton.getInstance().musicVolume,
           )
 
@@ -214,7 +221,7 @@ export default class SettingsMenu {
         if (SoundSingleton.getInstance().musicVolume < 10) {
           SoundSingleton.getInstance().musicVolume++
           setGameSettings(
-            "musicVolume",
+            GameSettings.MUSIC_VOLUME,
             SoundSingleton.getInstance().musicVolume,
           )
 
@@ -299,7 +306,7 @@ export default class SettingsMenu {
         if (SoundSingleton.getInstance().soundEffectsVolume > 1) {
           SoundSingleton.getInstance().soundEffectsVolume--
           setGameSettings(
-            "soundEffectsVolume",
+            GameSettings.SOUND_EFFECTS_VOLUME,
             SoundSingleton.getInstance().musicVolume,
           )
 
@@ -319,7 +326,7 @@ export default class SettingsMenu {
         if (SoundSingleton.getInstance().soundEffectsVolume < 10) {
           SoundSingleton.getInstance().soundEffectsVolume++
           setGameSettings(
-            "soundEffectsVolume",
+            GameSettings.SOUND_EFFECTS_VOLUME,
             SoundSingleton.getInstance().musicVolume,
           )
 
