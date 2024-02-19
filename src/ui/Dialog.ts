@@ -44,27 +44,32 @@ export class Dialog {
 
     this.container.add(this.uiText)
     this.createPlayerInputCursor()
-    
+
     this.hideDialogModal()
   }
 
-  showDialogModal(messages: string[]) {
-    this.messagesToShow = [...messages]
+  // showDialogModal(messages: string[]) {
+  //   this.messagesToShow = [...messages]
 
+  //   this.height - 10
+  //   this.container.setPosition(50, 185)
+  //   this.userInputCursorTween.restart()
+  //   this.container.setAlpha(1)
+  //   this._isVisible = true
+
+  //   this.showNextMessage();
+  // }
+
+  showMessage(message: string) {
     this.height - 10
     this.container.setPosition(50, 185)
     this.userInputCursorTween.restart()
     this.container.setAlpha(1)
     this._isVisible = true
 
-    this.showNextMessage();
-  }
-
-  showNextMessage() {
-    if (this.messagesToShow.length === 0) return
-
+    console.log("showing text")
     this.uiText.setText("").setAlpha(1)
-    animateText(this.scene, this.uiText, this.messagesToShow.shift()!, {
+    animateText(this.scene, this.uiText, message, {
       delay: 30,
       callback: () => {
         this.textAnimationPlaying = false

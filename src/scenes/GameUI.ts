@@ -195,28 +195,37 @@ export default class GameUI extends Phaser.Scene {
     this.coinAmountText.setText(`x${amount}`)
   }
 
-  showDialog(messages: string[]) {
-    if (this.dialogUi.isAnimationPlaying) return
-
-    if (this.dialogUi.isVisible && !this.dialogUi.moreMessagesToShow) {
-      this.dialogUi.hideDialogModal()
-      sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, false)
-      this.shouldHideTip = false
-      return
-    }
-
-    if (this.dialogUi.isVisible && this.dialogUi.moreMessagesToShow) {
-      this.tipUi.hideTip()
-      this.dialogUi.showNextMessage()
-      sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, true)
-      return
-    }
-
-    this.dialogUi.hideDialogModal()
+  public showDialog(message: string) {
+    console.log("GameUI message", message)
     this.tipUi.hideTip()
-    this.dialogUi.showDialogModal(messages)
-    sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, true)
-    this.shouldHideTip = true
+    this.dialogUi.showMessage(message)
+
+   
+    // if (this.dialogUi.isAnimationPlaying) return
+
+    // if (this.dialogUi.isVisible && !this.dialogUi.moreMessagesToShow) {
+    //   this.dialogUi.hideDialogModal()
+    //   sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, false)
+    //   this.shouldHideTip = false
+    //   return
+    // }
+
+    // if (this.dialogUi.isVisible && this.dialogUi.moreMessagesToShow) {
+    //   this.tipUi.hideTip()
+    //   this.dialogUi.showNextMessage()
+    //   sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, true)
+    //   return
+    // }
+
+    // this.dialogUi.hideDialogModal()
+    // this.tipUi.hideTip()
+    // this.dialogUi.showDialogModal(messages)
+    // sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, true)
+    // this.shouldHideTip = true
+  }
+
+  public hideDialog() {
+    this.dialogUi.hideDialogModal()
   }
 
   showTip() {

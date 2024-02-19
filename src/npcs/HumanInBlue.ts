@@ -3,13 +3,17 @@ import Phaser from "phaser"
 import Npc from "./Npc"
 import Character from "@/characters/Character"
 import { Events, sceneEvents } from "@/events/EventsCenter"
-import { Singleton } from "@/utils/GlobalAccessSingleton"
 import { SoundSingleton, SoundEffects } from "@/utils/SoundSingleton"
+import GameUI from "@/scenes/GameUI"
 
 export default class HumanInBlue extends Npc {
   private direction: Direction | null = Direction.UP
-  private messages: string[] = []
   private moveEvent: Phaser.Time.TimerEvent
+
+  private messages = [
+    "Hey you! I have a quest for you, do you think you can handle it?", 
+    "You need to collect as many coins as you can in under 50 seconds, but don't even bother showing me your face again if don't collect at least 100."
+  ]
 
   constructor(
     scene: Phaser.Scene,
@@ -47,24 +51,43 @@ export default class HumanInBlue extends Npc {
   }
 
   handleInteraction(character?: Character): void {
-    console.log("HumanInBlue handleInteraction", this.interactionCount)
+    console.log("interaction count", this.interactionCount)
     this.stopMoving()
 
     if (this.interactionCount === 0) {
       SoundSingleton.getInstance().playSoundEffect(
         SoundEffects.CATOWNER_HELLO,
       )
-    } else if (this.interactionCount === 2) {
+      sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, true)
+    } 
+    
+    if (this.interactionCount === 2) {
       this.scene.scene.pause("LilFox")
       this.scene.scene.setVisible(false, "LilFox")
       this.scene.scene.run("MarioScene")
       this.scene.scene.setVisible(true, "MarioScene");
       sceneEvents.emit(Events.MARIO_LIKE_LEVEL_STARTED)
+    } else {
+      this.showMessage()
+    }
+    
+    if (this.interactionCount === this.messages.length) {
+      this.interactionCount = 0
+      sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, false)
+      this.hideDialog()
     }
 
-    sceneEvents.emit(Events.SHOW_DIALOG, this.messages)
-
     super.handleInteraction()
+  }
+
+  showMessage() {
+    const gameUi: GameUI = this.scene.scene.get("game-ui") as GameUI
+    gameUi.showDialog(this.messages[this.interactionCount])
+  }
+
+  hideDialog() {
+    const gameUi: GameUI = this.scene.scene.get("game-ui") as GameUI
+    gameUi.hideDialog()
   }
 
   protected preUpdate(time: number, delta: number): void {
