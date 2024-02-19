@@ -3,16 +3,19 @@ import CatOwner from "@/npcs/CatOwner"
 import Npc from "@/npcs/Npc"
 import { Area } from "@/types/Area"
 import { Coordinate } from "./gridUtils"
+import GameUI from "@/scenes/GameUI"
+import Sign from "@/types/Sign"
 
 export class Singleton {
   private static instance: Singleton | null = null
 
-  public interactiveObjects: (Phaser.Types.Tilemaps.TiledObject | Npc)[] = []
+  public interactiveObjects: (Phaser.Types.Tilemaps.TiledObject | Npc | Sign)[] = []
   public catOwner: CatOwner
   public cat: Cat
   public areas: Area[]
   public playerTrack: Coordinate[] = []
   public hasPlayerFoundCat = false
+  public gameUi: GameUI
 
   private constructor() {}
 

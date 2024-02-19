@@ -7,6 +7,7 @@ import { Singleton } from "@/utils/GlobalAccessSingleton"
 import { SoundSingleton, SoundEffects } from "@/utils/SoundSingleton"
 import Npc from "@/npcs/Npc"
 import { Area } from "@/types/Area"
+import Sign from "@/types/Sign"
 
 declare global {
   namespace Phaser.GameObjects {
@@ -213,9 +214,12 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     })
   }
 
-  handleInteraction(object: Phaser.Types.Tilemaps.TiledObject | Npc) {
+  handleInteraction(object: Phaser.Types.Tilemaps.TiledObject | Npc | Sign) {
+    console.log('Oia eu aqui')
     if (object instanceof Npc) {
       object.handleInteraction(this)
+    } else if (object instanceof Sign) {
+      object.handleInteraction()
     } else {
       const wonLevels = getWonLevels()
       const props = object.properties
