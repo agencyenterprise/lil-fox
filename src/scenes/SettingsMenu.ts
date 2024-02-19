@@ -1,6 +1,14 @@
 import Phaser from "phaser"
 import { Events, sceneEvents } from "@/events/EventsCenter"
 import { SoundSingleton } from "@/utils/SoundSingleton"
+import { setGameSettings } from "@/utils/localStorageUtils"
+
+export enum GameSettings {
+  MUSIC_ENABLED = "music-enabled",
+  MUSIC_VOLUME = "music-volume",
+  SOUND_EFFECTS_ENABLED = "sound-effects-enabled",
+  SOUND_EFFECTS_VOLUME = "sound-effects-volume",
+}
 
 export default class SettingsMenu {
   private container!: Phaser.GameObjects.Container
@@ -53,6 +61,7 @@ export default class SettingsMenu {
     this.checkmarkMusic = scene.add
       .image(-panel.width + 15, 15, "checkmark")
       .setScale(0.4)
+      .setVisible(SoundSingleton.getInstance().musicEnabled)
 
     const textMusic = scene.add.text(-panel.width + 25, 9, "Music", {
       color: "#000000",
@@ -69,9 +78,13 @@ export default class SettingsMenu {
         if (this.checkmarkMusic.visible) {
           this.checkmarkMusic.setVisible(false)
           sceneEvents.emit(Events.PAUSE_MUSIC)
+          SoundSingleton.getInstance().musicEnabled = false
+          setGameSettings(GameSettings.MUSIC_ENABLED, false)
         } else {
           this.checkmarkMusic.setVisible(true)
           sceneEvents.emit(Events.RESUME_MUSIC)
+          SoundSingleton.getInstance().musicEnabled = true
+          setGameSettings(GameSettings.MUSIC_ENABLED, true)
         }
       })
   }
@@ -87,6 +100,7 @@ export default class SettingsMenu {
     this.checkmarkSoundEffects = scene.add
       .image(-panel.width + 15, 30, "checkmark")
       .setScale(0.4)
+      .setVisible(SoundSingleton.getInstance().soundEffectsEnabled)
 
     const textSoundEffects = scene.add.text(
       -panel.width + 25,
@@ -108,9 +122,11 @@ export default class SettingsMenu {
         if (this.checkmarkSoundEffects.visible) {
           this.checkmarkSoundEffects.setVisible(false)
           SoundSingleton.getInstance().soundEffectsEnabled = false
+          setGameSettings(GameSettings.SOUND_EFFECTS_ENABLED, false)
         } else {
           this.checkmarkSoundEffects.setVisible(true)
           SoundSingleton.getInstance().soundEffectsEnabled = true
+          setGameSettings(GameSettings.SOUND_EFFECTS_ENABLED, true)
         }
       })
   }
@@ -179,6 +195,11 @@ export default class SettingsMenu {
       .on(Phaser.Input.Events.POINTER_UP, () => {
         if (SoundSingleton.getInstance().musicVolume > 1) {
           SoundSingleton.getInstance().musicVolume--
+          setGameSettings(
+            GameSettings.MUSIC_VOLUME,
+            SoundSingleton.getInstance().musicVolume,
+          )
+
           this.musicVolumeText.setText(
             SoundSingleton.getInstance().musicVolume.toString(),
           )
@@ -199,6 +220,11 @@ export default class SettingsMenu {
       .on(Phaser.Input.Events.POINTER_UP, () => {
         if (SoundSingleton.getInstance().musicVolume < 10) {
           SoundSingleton.getInstance().musicVolume++
+          setGameSettings(
+            GameSettings.MUSIC_VOLUME,
+            SoundSingleton.getInstance().musicVolume,
+          )
+
           this.musicVolumeText.setText(
             SoundSingleton.getInstance().musicVolume.toString(),
           )
@@ -279,6 +305,11 @@ export default class SettingsMenu {
       .on(Phaser.Input.Events.POINTER_UP, () => {
         if (SoundSingleton.getInstance().soundEffectsVolume > 1) {
           SoundSingleton.getInstance().soundEffectsVolume--
+          setGameSettings(
+            GameSettings.SOUND_EFFECTS_VOLUME,
+            SoundSingleton.getInstance().musicVolume,
+          )
+
           this.soundEffectsVolumeText.setText(
             SoundSingleton.getInstance().soundEffectsVolume.toString(),
           )
@@ -294,6 +325,11 @@ export default class SettingsMenu {
       .on(Phaser.Input.Events.POINTER_UP, () => {
         if (SoundSingleton.getInstance().soundEffectsVolume < 10) {
           SoundSingleton.getInstance().soundEffectsVolume++
+          setGameSettings(
+            GameSettings.SOUND_EFFECTS_VOLUME,
+            SoundSingleton.getInstance().musicVolume,
+          )
+
           this.soundEffectsVolumeText.setText(
             SoundSingleton.getInstance().soundEffectsVolume.toString(),
           )
