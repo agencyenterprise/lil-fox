@@ -880,8 +880,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":915.455497382199,
-                 "y":430.534031413613
+                 "x":1488,
+                 "y":640
                 }, 
                 {
                  "height":0,
@@ -987,8 +987,19 @@
                  "type":"",
                  "visible":true,
                  "width":68.5864,
-                 "x":231.413361256545,
-                 "y":295.811837696335
+                 "x":231.413,
+                 "y":295.812
+                }, 
+                {
+                 "height":435.5,
+                 "id":96,
+                 "name":"soundGreenArcherArea",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":543,
+                 "x":576,
+                 "y":1034
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1096,8 +1107,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":30,
- "nextobjectid":94,
+ "nextlayerid":31,
+ "nextobjectid":98,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",
