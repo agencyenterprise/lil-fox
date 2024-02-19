@@ -1,12 +1,18 @@
-import Phaser from 'phaser'
+import Phaser from "phaser"
+import { SoundEffects, SoundSingleton } from "@/utils/SoundSingleton"
 
 export default class GreenArcher extends Phaser.Physics.Arcade.Sprite {
-
   private arrows?: Phaser.Physics.Arcade.Group
   private moveEvent?: Phaser.Time.TimerEvent
-  private facingDirection = 'right'
+  private facingDirection = "right"
 
-  constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
+  constructor(
+    scene: Phaser.Scene,
+    x: number,
+    y: number,
+    texture: string,
+    frame?: string | number,
+  ) {
     super(scene, x, y, texture, frame)
 
     this.moveEvent = this.scene.time.addEvent({
@@ -14,7 +20,7 @@ export default class GreenArcher extends Phaser.Physics.Arcade.Sprite {
       callback: this.shootArrow,
       callbackScope: this,
       loop: true,
-    });
+    })
   }
 
   destroy(fromScene?: boolean | undefined) {
@@ -25,9 +31,15 @@ export default class GreenArcher extends Phaser.Physics.Arcade.Sprite {
   shootArrow() {
     if (!this.arrows) return
 
-    const arrow = this.arrows.get(this.x, this.y, 'arrow') as Phaser.Physics.Arcade.Image
+    const arrow = this.arrows.get(
+      this.x,
+      this.y,
+      "arrow",
+    ) as Phaser.Physics.Arcade.Image
+
     arrow.setSize(16, 6)
-    if (this.facingDirection === 'right') {
+
+    if (this.facingDirection === "right") {
       arrow.angle = 90
     } else {
       arrow.angle = 270
@@ -47,10 +59,15 @@ export default class GreenArcher extends Phaser.Physics.Arcade.Sprite {
 
     this.anims.play(`green_archer_shooting_${this.facingDirection}`)
     arrow.setVelocity(vec.x * 250, vec.y * 250)
+
+    SoundSingleton.getInstance().playSoundEffect(
+      SoundEffects.ARROW,
+      "soundGreenArcherArea",
+    )
   }
 
   getArrowVector(): Phaser.Math.Vector2 {
-    if (this.facingDirection === 'right') {
+    if (this.facingDirection === "right") {
       return new Phaser.Math.Vector2(1, 0)
     } else {
       return new Phaser.Math.Vector2(-1, 0)

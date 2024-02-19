@@ -18,6 +18,7 @@ import { TipArea } from "@/types/TipArea"
 import { Area } from "@/types/Area"
 import { CatArea } from "@/types/CatArea"
 import HumanInBlue from "@/npcs/HumanInBlue"
+import { SoundArea } from "@/types/SoundArea"
 
 type CreateData = {
   levelNumber?: number
@@ -390,6 +391,14 @@ export default class FoxGame extends Phaser.Scene {
         return new TipArea(area.x!, area.y!, area.width!, area.height!)
       } else if (area.name.startsWith("cat")) {
         return new CatArea(area.x!, area.y!, area.width!, area.height!)
+      } else if (area.name.startsWith("sound")) {
+        return new SoundArea(
+          area.name,
+          area.x!,
+          area.y!,
+          area.width!,
+          area.height!,
+        )
       } else {
         return new Area(area.x!, area.y!, area.width!, area.height!)
       }

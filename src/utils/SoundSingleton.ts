@@ -1,6 +1,9 @@
 import { Events, sceneEvents } from "@/events/EventsCenter"
+import { GameSettings } from "@/scenes/SettingsMenu"
+import { getGameSetting } from "@/utils/localStorageUtils"
 
 export enum SoundEffects {
+  ARROW = "audio-arrow",
   CATOWNER_HELLO = "audio-hello",
   DAMAGE = "audio-damage",
   FOOTSTEPS1 = "audio-footsteps1",
@@ -8,6 +11,7 @@ export enum SoundEffects {
   GAME_OVER = "audio-game-over",
   PICKUP = "audio-pickup",
   THEME = "audio-theme",
+  ROAR = "audio-roar",
 }
 
 export class SoundSingleton {
@@ -21,9 +25,14 @@ export class SoundSingleton {
     | Phaser.Sound.HTML5AudioSoundManager
     | Phaser.Sound.WebAudioSoundManager
 
-  public soundEffectsEnabled = true
-  public musicVolume = 3
-  public soundEffectsVolume = 3
+  public musicEnabled = getGameSetting(GameSettings.MUSIC_ENABLED) ?? true
+  public musicVolume = getGameSetting(GameSettings.MUSIC_VOLUME) ?? 3
+  public soundEffectsEnabled =
+    getGameSetting(GameSettings.SOUND_EFFECTS_ENABLED) ?? true
+  public soundEffectsVolume =
+    getGameSetting(GameSettings.SOUND_EFFECTS_VOLUME) ?? 3
+
+  public playerCurrentAreas: string[] = []
 
   private constructor() {}
 
@@ -63,6 +72,10 @@ export class SoundSingleton {
     })
 
     this.theme.play()
+
+    if (!this.musicEnabled) {
+      this.theme.pause()
+    }
   }
 
   stopTheme() {
@@ -81,8 +94,12 @@ export class SoundSingleton {
     this.theme.setVolume(volume)
   }
 
-  public playSoundEffect(soundEffect: SoundEffects) {
+  public playSoundEffect(soundEffect: SoundEffects, area?: string) {
     if (!this.soundEffectsEnabled) {
+      return
+    }
+
+    if (area && !this.playerCurrentAreas.includes(area)) {
       return
     }
 
@@ -96,5 +113,19 @@ export class SoundSingleton {
     this.soundManager.play(soundEffect, {
       volume: this.soundEffectsVolume / 10,
     })
+  }
+
+  public addPlayerCurrentArea(area: string) {
+    if (!this.playerCurrentAreas.includes(area)) {
+      this.playerCurrentAreas.push(area)
+    }
+  }
+
+  public removePlayerCurrentArea(area: string) {
+    if (this.playerCurrentAreas.includes(area)) {
+      this.playerCurrentAreas = this.playerCurrentAreas.filter(
+        (a) => a !== area,
+      )
+    }
   }
 }
