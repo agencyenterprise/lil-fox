@@ -22,6 +22,7 @@ import { SoundArea } from "@/types/SoundArea"
 import GameUI from "./GameUI"
 import Sign from "@/types/Sign"
 import EnterLevelSign from "@/types/EnterLevelSign"
+import { SignType, createSign } from "@/factory/SignFactory"
 
 type CreateData = {
   levelNumber?: number
@@ -106,7 +107,7 @@ export default class FoxGame extends Phaser.Scene {
     this.spawnNpcs(map)
 
     this.signsObjects.objects.forEach((s) => {
-      const sign = new EnterLevelSign(s.x!, s.y!, ["Oi", "Cara de boi"], 1)
+      const sign = createSign(s.x!, s.y!, s.name as SignType)
       Singleton.getInstance().interactiveObjects.push(sign)
     })
 

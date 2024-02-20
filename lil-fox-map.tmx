@@ -3568,13 +3568,8 @@
   </object>
  </objectgroup>
  <objectgroup id="21" name="Signs">
-  <object id="16" name="enter_sign_level_1" gid="1920" x="1248" y="576" width="16" height="16">
-   <properties>
-    <property name="levelNumber" type="int" value="1"/>
-    <property name="message" value="This village has been raided by Phising Lizards, sneak into it dodging the lizards and get to the end of the village to acquire the knowledge of how to defeat them."/>
-   </properties>
-  </object>
-  <object id="25" name="end_sign_level_1" gid="1920" x="1648" y="416" width="16" height="16">
+  <object id="16" name="ENTER_LEVEL_SIGN_LEVEL_1" gid="1920" x="1248" y="576" width="16" height="16"/>
+  <object id="25" name="FINISH_LEVEL_SIGN_LEVEL_1" gid="1920" x="1648" y="416" width="16" height="16">
    <properties>
     <property name="correctAlternative" type="int" value="1"/>
     <property name="isFinishLevelSign" type="bool" value="true"/>
@@ -3622,7 +3617,7 @@ Remember, the decentralized nature of blockchain provides security, but individu
 4) Responding immediately to urgent requests in emails.</property>
    </properties>
   </object>
-  <object id="65" name="end_sign_level_2" gid="1920" x="848.019" y="1151.98" width="16" height="16">
+  <object id="65" name="FINISH_LEVEL_SIGN_LEVEL_2" gid="1920" x="848.019" y="1151.98" width="16" height="16">
    <properties>
     <property name="correctAlternative" type="int" value="2"/>
     <property name="isFinishLevelSign" type="bool" value="true"/>
@@ -3654,7 +3649,7 @@ Transaction Timing: Monitoring network activity helps in choosing the right time
 Choose the correct option that explains the relationship between network demand and gas fees, along with an effective strategy for transaction timing.</property>
    </properties>
   </object>
-  <object id="66" name="enter_sign_level_2" gid="1920" x="880.054" y="1375.98" width="16" height="16">
+  <object id="66" name="ENTER_LEVEL_SIGN_LEVEL_2" gid="1920" x="880.054" y="1375.98" width="16" height="16">
    <properties>
     <property name="levelNumber" type="int" value="2"/>
     <property name="message" value="The castle has been dominated by Gas fees archers, they are blocking the way and extorting who tries to get to the palace.;Try to get to the palace by avoiding the arrows to find out how to defeat them."/>
@@ -3662,7 +3657,7 @@ Choose the correct option that explains the relationship between network demand 
   </object>
  </objectgroup>
  <objectgroup id="29" name="SpawnPoints">
-  <object id="83" name="mainSpawn" x="1488" y="640">
+  <object id="83" name="mainSpawn" x="896" y="1424">
    <point/>
   </object>
   <object id="84" name="level1Spawn" x="1206.34" y="584.351">
