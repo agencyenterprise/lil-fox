@@ -217,47 +217,6 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
   interactWithObject(object: Interactable) {
     object.handleInteraction(this)
-    // if (object instanceof Npc) {
-    //   object.handleInteraction(this)
-    // } else if (object instanceof Sign) {
-    //   object.handleInteraction()
-    // } else {
-    //   const wonLevels = getWonLevels()
-    //   const props = object.properties
-    //   const messages = props
-    //     .find((p: any) => p.name === "message")
-    //     ?.value.split(";")
-    //   const isFinishLevelSign = props.find(
-    //     (p: any) => p.name === "isFinishLevelSign",
-    //   )?.value
-    //   const levelNumber = props.find((p: any) => p.name === "levelNumber")
-    //     ?.value
-
-    //   if (isFinishLevelSign) {
-    //     const correctAlternative = props.find(
-    //       (p: any) => p.name === "correctAlternative",
-    //     )?.value
-    //     const levelNumber = props.find((p: any) => p.name === "levelNumber")
-    //       ?.value
-
-    //     if (wonLevels.includes(levelNumber)) {
-    //       sceneEvents.emit(Events.SHOW_DIALOG, ["You already won this level!"])
-    //     } else {
-    //       this.scene.scene.pause("LilFox")
-    //       this.scene.scene.launch("QuizScene", {
-    //         messages,
-    //         correctAlternative,
-    //         levelNumber,
-    //       })
-    //     }
-    //   } else {
-    //     if (levelNumber && wonLevels.includes(levelNumber)) {
-    //       sceneEvents.emit(Events.SHOW_DIALOG, ["You already won this level!"])
-    //     } else {
-    //       sceneEvents.emit(Events.SHOW_DIALOG, messages)
-    //     }
-    //   }
-    // }
   }
 
   handleLockPlayerMovement(lock: boolean) {

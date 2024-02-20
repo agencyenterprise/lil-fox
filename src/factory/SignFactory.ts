@@ -1,4 +1,5 @@
 import EnterLevelSign from "@/types/EnterLevelSign"
+import FinishLevelSign from "@/types/FinishLevelSign"
 import Sign from "@/types/Sign"
 
 export enum SignType {
@@ -12,8 +13,12 @@ export const createSign = (x: number, y: number, signType: SignType): Sign => {
   console.log('Creating sign', signType)
   if (signType === SignType.ENTER_LEVEL_SIGN_LEVEL_1) {
     return new EnterLevelSign(x, y, signMessages[signType], 1)
-  } else {
+  } else if (signType === SignType.ENTER_LEVEL_SIGN_LEVEL_2) {
     return new EnterLevelSign(x, y, signMessages[signType], 2)
+  } else if (signType === SignType.FINISH_LEVEL_SIGN_LEVEL_1) {
+    return new FinishLevelSign(x, y, signMessages[signType], 1, 1)
+  } else {
+    return new FinishLevelSign(x, y, signMessages[signType], 2, 2)
   }
 }
 
