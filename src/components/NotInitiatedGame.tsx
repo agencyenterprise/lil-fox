@@ -34,13 +34,6 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
         parent: 'phaser-container',
         width: 400,
         height: 250,
-        // physics: {
-        //   default: 'arcade',
-        //   arcade: {
-        //     gravity: { y: 0 },
-        //     // debug: true
-        //   },
-        // },
         scene: [Preloader, FoxGame, MarioScene, GameUI, QuizScene],
         scale: {
           zoom: 2,
