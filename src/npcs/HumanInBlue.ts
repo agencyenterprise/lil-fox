@@ -5,6 +5,7 @@ import Character from "@/characters/Character"
 import { Events, sceneEvents } from "@/events/EventsCenter"
 import { SoundSingleton, SoundEffects } from "@/utils/SoundSingleton"
 import GameUI from "@/scenes/GameUI"
+import { isTextAnimationBeingPlayed } from "@/utils/DialogUtils"
 
 export default class HumanInBlue extends Npc {
   private direction: Direction | null = Direction.UP
@@ -51,7 +52,8 @@ export default class HumanInBlue extends Npc {
   }
 
   handleInteraction(character?: Character): void {
-    console.log("interaction count", this.interactionCount)
+    if (isTextAnimationBeingPlayed()) return
+
     this.stopMoving()
 
     if (this.interactionCount === 0) {

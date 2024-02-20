@@ -48,26 +48,15 @@ export class Dialog {
     this.hideDialogModal()
   }
 
-  // showDialogModal(messages: string[]) {
-  //   this.messagesToShow = [...messages]
-
-  //   this.height - 10
-  //   this.container.setPosition(50, 185)
-  //   this.userInputCursorTween.restart()
-  //   this.container.setAlpha(1)
-  //   this._isVisible = true
-
-  //   this.showNextMessage();
-  // }
-
   showMessage(message: string) {
+    if (this.textAnimationPlaying) return
+
     this.height - 10
     this.container.setPosition(50, 185)
     this.userInputCursorTween.restart()
     this.container.setAlpha(1)
     this._isVisible = true
 
-    console.log("showing text")
     this.uiText.setText("").setAlpha(1)
     animateText(this.scene, this.uiText, message, {
       delay: 30,

@@ -18,7 +18,7 @@ export default class GameUI extends Phaser.Scene {
   private berries: Phaser.GameObjects.Group
   private coinAmountText: Phaser.GameObjects.Text
   private timeDownText: Phaser.GameObjects.Text
-  private dialogUi: Dialog
+  public dialogUi: Dialog
   private gameOverModal: GameOverModal
   private winMarioLikeLevelModal: WinMarioLikeLevelModal
   private tipUi: Tip

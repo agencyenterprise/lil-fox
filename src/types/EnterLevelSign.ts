@@ -1,5 +1,6 @@
 import { getWonLevels } from "@/utils/localStorageUtils";
 import Sign from "./Sign";
+import { isTextAnimationBeingPlayed } from "@/utils/DialogUtils";
 
 export default class EnterLevelSign extends Sign {
   private levelNumber?: number
@@ -10,8 +11,9 @@ export default class EnterLevelSign extends Sign {
     this.levelNumber = levelNumber
   }
 
-
   handleInteraction(): void {
+    if (isTextAnimationBeingPlayed()) return
+
     const wonLevels = getWonLevels()
     if (this.levelNumber && wonLevels.includes(this.levelNumber)) {
       this.showMessage("Level already won.")
