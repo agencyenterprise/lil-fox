@@ -1,0 +1,62 @@
+{
+	"textures": [
+		{
+			"image": "human_wearing_blue_looking_left.png",
+			"format": "RGBA8888",
+			"size": {
+				"w": 15,
+				"h": 41
+			},
+			"scale": 1,
+			"frames": [
+				{
+					"filename": "tile175.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 10,
+						"y": 5,
+						"w": 13,
+						"h": 19
+					},
+					"frame": {
+						"x": 1,
+						"y": 1,
+						"w": 13,
+						"h": 19
+					}
+				},
+				{
+					"filename": "tile174.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 32,
+						"h": 32
+					},
+					"spriteSourceSize": {
+						"x": 10,
+						"y": 6,
+						"w": 13,
+						"h": 18
+					},
+					"frame": {
+						"x": 1,
+						"y": 22,
+						"w": 13,
+						"h": 18
+					}
+				}
+			]
+		}
+	],
+	"meta": {
+		"app": "https://www.codeandweb.com/texturepacker",
+		"version": "3.0",
+		"smartupdate": "$TexturePacker:SmartUpdate:5dd2c7a7d15b6d46ec9e89d1c33b35c5:23ada82fc21922a65c94dfed3bce821c:b7f50b26826adc82239a2d68c2e857eb$"
+	}
+}

@@ -10,6 +10,8 @@ export default class Preloader extends Phaser.Scene {
     this.load.image("tiles0", "tiles/punyworld-overworld-tileset.png")
     this.load.image("tiles1", "tiles/16oga.png")
     this.load.image("tiles2", "tiles/DungeonTileset.png")
+    this.load.image("tiles3", "tiles/nature-paltformer-tileset-16x16.png")
+
     this.load.tilemapTiledJSON("map", "tiles/lil-fox-map.json")
     this.load.tilemapTiledJSON(
       "platform-level-map",
@@ -42,8 +44,16 @@ export default class Preloader extends Phaser.Scene {
       "enemies/lizard_run.png",
       "enemies/lizard_run.json",
     )
-    this.load.atlas("treasure", "items/treasure.png", "items/treasure.json")
-
+    this.load.atlas(
+      "slug",
+      "enemies/slug.png",
+      "enemies/slug.json"
+    )
+    this.load.atlas(
+      "treasure",
+      "items/treasure.png",
+      "items/treasure.json"
+    )
     this.load.atlas(
       "cat_swinging_tail",
       "npcs/cat/cat_swinging_tail.png",
@@ -81,9 +91,29 @@ export default class Preloader extends Phaser.Scene {
       "npcs/cat-owner/cat-owner-standing.json",
     )
 
+    this.load.atlas(
+      "human_in_blue_walking_up",
+      "npcs/humans/wearing_blue/human_wearing_blue_walking_up.png",
+      "npcs/humans/wearing_blue/human_wearing_blue_walking_up.json",
+    )
+    this.load.atlas(
+      "human_in_blue_walking_down",
+      "npcs/humans/wearing_blue/human_wearing_blue_walking_down.png",
+      "npcs/humans/wearing_blue/human_wearing_blue_walking_down.json",
+    )
+    this.load.atlas(
+      "human_in_blue_looking_left",
+      "npcs/humans/wearing_blue/human_wearing_blue_looking_left.png",
+      "npcs/humans/wearing_blue/human_wearing_blue_looking_left.json",
+    )
+
     this.load.image("ui-heart-empty", "ui/ui_heart_empty.png")
     this.load.image("ui-heart-full", "ui/ui_heart_full.png")
     this.load.image("ui-heart-half", "ui/ui_heart_half.png")
+
+    this.load.image("coin", "items/coin.png")
+    this.load.image("greenPotion", "items/greenPotion.png")
+    this.load.image("orangePotion", "items/orangePotion.png")
 
     this.load.image("berry", "food/blueberry.png")
     this.load.image("berry-empty", "food/blueberry-empty.png")

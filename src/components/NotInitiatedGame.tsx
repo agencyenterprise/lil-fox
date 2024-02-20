@@ -26,6 +26,7 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
 
       const { default: Preloader } = await import("../scenes/Preloader")
       const { default: FoxGame } = await import("../scenes/FoxGame")
+      const { default: MarioScene } = await import("../scenes/MarioScene")
       const { default: GameUI } = await import("../scenes/GameUI")
       const { default: QuizScene } = await import("../scenes/QuizScene")
 
@@ -33,14 +34,7 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
         parent: 'phaser-container',
         width: 400,
         height: 250,
-        physics: {
-          default: 'arcade',
-          arcade: {
-            gravity: { y: 0 },
-            // debug: true
-          },
-        },
-        scene: [Preloader, FoxGame, GameUI, QuizScene],
+        scene: [Preloader, FoxGame, MarioScene, GameUI, QuizScene],
         scale: {
           zoom: 2,
         },

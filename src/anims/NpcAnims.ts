@@ -68,7 +68,38 @@ const createCatOwnerAnims = (anims: Phaser.Animations.AnimationManager) => {
   })
 }
 
+const createHumanInBlueAnims = (anims: Phaser.Animations.AnimationManager) => {
+  anims.create({
+    key: 'human_in_blue_walking_up',
+    frames: anims.generateFrameNames('human_in_blue_walking_up', {
+      start: 17, end: 20, prefix: 'tile1', suffix: '.png'
+    }),
+    repeat: -1,
+    frameRate: 8
+  })
+
+  anims.create({
+    key: 'human_in_blue_walking_down',
+    frames: anims.generateFrameNames('human_in_blue_walking_down', {
+      start: 1, end: 4, prefix: 'tile00', suffix: '.png'
+    }),
+    repeat: -1,
+    frameRate: 8
+  })
+
+  anims.create({
+    key: 'human_in_blue_looking_left',
+    duration: 1000,
+    frames: anims.generateFrameNames('human_in_blue_looking_left', {
+      start: 4, end: 5, prefix: 'tile17', suffix: '.png'
+    }),
+    repeat: -1,
+    frameRate: 4
+  })
+}
+
 export {
   createCatAnims,
   createCatOwnerAnims,
+  createHumanInBlueAnims,
 } 
