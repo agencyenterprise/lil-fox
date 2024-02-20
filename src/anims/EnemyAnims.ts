@@ -1,6 +1,6 @@
 import Phaser from "phaser";
 
-const createLizardAnims = (anims: Phaser.Animations.AnimationManager) => {
+const createEnemyAnims = (anims: Phaser.Animations.AnimationManager) => {
   anims.create({
     key: 'lizard-idle',
     frames: anims.generateFrameNames('lizard_idle', {
@@ -30,5 +30,5 @@ const createLizardAnims = (anims: Phaser.Animations.AnimationManager) => {
 }
 
 export {
-  createLizardAnims
+  createEnemyAnims
 } 

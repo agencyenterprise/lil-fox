@@ -1,4 +1,4 @@
-import { createLizardAnims } from "@/anims/EnemyAnims"
+import { createEnemyAnims } from "@/anims/EnemyAnims"
 import { createCharacterAnims } from "@/anims/CharacterAnims"
 import { createChestAnims } from "@/anims/TreasureAnims"
 import Lizard from "@/enemies/Lizard"
@@ -93,7 +93,7 @@ export default class FoxGame extends Phaser.Scene {
 
     createCharacterAnims(this.anims)
     createArcherAnims(this.anims)
-    createLizardAnims(this.anims)
+    createEnemyAnims(this.anims)
     createChestAnims(this.anims)
     createCatAnims(this.anims)
     createCatOwnerAnims(this.anims)
