@@ -6,6 +6,11 @@ const BOOSTED_SPEED = 200
 const NORMAL_JUMP_SPEED = -3500
 const BOOSTED_JUMP_SPEED = -4500
 
+enum Potions {
+  GREEN_POTION = "greenPotion",
+  ORANGE_POTION = "orangePotion"
+}
+
 export default class PlatformGameCharacter extends Character {
 
   public isAlive = true
@@ -69,12 +74,12 @@ export default class PlatformGameCharacter extends Character {
   }
 
   drinkPotion(potionName: string) {
-    if (potionName === "greenPotion") {
+    if (potionName === Potions.GREEN_POTION) {
       this.speed = BOOSTED_SPEED
       setTimeout(() => {
         this.speed = NORMAL_SPEED
       }, 10000)
-    } else if (potionName === "orangePotion") {
+    } else if (potionName === Potions.ORANGE_POTION) {
       this.jumpSpeed = BOOSTED_JUMP_SPEED
       setTimeout(() => {
         this.jumpSpeed = NORMAL_JUMP_SPEED
