@@ -12,8 +12,8 @@ export default class HumanInBlue extends Npc {
   private moveEvent: Phaser.Time.TimerEvent
 
   private messages = [
-    "Hey you! I have a quest for you, do you think you can handle it?", 
-    "You need to collect as many coins as you can in under 50 seconds, but don't even bother showing me your face again if don't collect at least 100."
+    "Hey you! I have at?",
+    "You need to cost 100."
   ]
 
   constructor(
@@ -61,8 +61,8 @@ export default class HumanInBlue extends Npc {
         SoundEffects.CATOWNER_HELLO,
       )
       sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, true)
-    } 
-    
+    }
+
     if (this.interactionCount === 2) {
       const gameUi: GameUI = this.scene.scene.get("game-ui") as GameUI
       gameUi.dialogUi.askQuestion(
@@ -85,7 +85,7 @@ export default class HumanInBlue extends Npc {
     } else {
       this.showMessage()
     }
-    
+
     // if (this.interactionCount === this.messages.length) {
     //   this.interactionCount = 0
     //   sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, false)
@@ -94,7 +94,7 @@ export default class HumanInBlue extends Npc {
 
     super.handleInteraction()
   }
- 
+
   showMessage() {
     const gameUi: GameUI = this.scene.scene.get("game-ui") as GameUI
     gameUi.showDialog(this.messages[this.interactionCount])

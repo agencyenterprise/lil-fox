@@ -142,7 +142,7 @@ export default class GameUI extends Phaser.Scene {
   }
 
   update() {
-    if (!this.currentOpenModal || !this.currentOpenModal.isVisible) return
+    if (!this.currentOpenModal || !this.currentOpenModal.isVisible || !this.dialogUi.isVisible) return
 
     const leftDown = this.cursors.left?.isDown
     const rightDown = this.cursors.right?.isDown

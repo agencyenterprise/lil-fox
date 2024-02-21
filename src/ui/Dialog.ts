@@ -83,15 +83,15 @@ export class Dialog {
     this.container.setAlpha(1)
     this._isVisible = true
 
-    const { width, height } = this.scene.scale
-    const halfWidth = width / 2
-    this.optionsContainer = this.scene.add.container(0, 0, [
-      this.scene.add.text(halfWidth - 60, height - 35, "OPTION 1", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5),
-      this.scene.add.text(halfWidth - 60, height - 15, "OPTION 2", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5),
-      this.scene.add.text(halfWidth + 40, height - 35, "OPTION 3", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5),
-      this.scene.add.text(halfWidth + 40, height - 15, "OPTION 4", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5),
-    ])
+    this.uiText.setText("").setAlpha(1)
 
+    const halfHeight = this.height / 2
+
+    options.forEach((option, index) => {
+      const x = this.getXCoordinatesForOption(index)
+      const text: Phaser.GameObjects.Text = new Phaser.GameObjects.Text(this.scene, x, halfHeight, option, { ...UI_TEXT_STYLE }).setOrigin(0.5, 0.5)
+      this.container.add(text)
+    })
   }
 
   createPlayerInputCursor() {
@@ -113,6 +113,18 @@ export class Dialog {
 
     this.userInputCursorTween.pause()
     this.container.add(this.userInputCursor)
+  }
+
+  getXCoordinatesForOption(index: number): number {
+    if (index === 0) {
+      return this.width / 2 - 25
+    } else if (index === 1) {
+      return this.width / 2 + 25
+    } else if (index === 2) {
+      return this.width / 2 - 90
+    } else {
+      return this.width / 2 + 90
+    }
   }
 
   get isVisible() {
