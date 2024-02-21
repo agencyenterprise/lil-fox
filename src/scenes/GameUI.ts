@@ -7,7 +7,7 @@ import { Tip } from "@/ui/Tip"
 import { SoundSingleton, SoundEffects } from "@/utils/SoundSingleton"
 import { GameOverModal } from "@/ui/GameOverModal";
 import { WinMarioLikeLevelModal } from "@/ui/WinMarioLikeLevelModal";
-import { Modal } from "@/types/Modal";
+import { Modal, ReceivesInstructions } from "@/types/Modal";
 
 export default class GameUI extends Phaser.Scene {
   private settingsMenu!: SettingsMenu
@@ -142,7 +142,9 @@ export default class GameUI extends Phaser.Scene {
   }
 
   update() {
-    if (!this.currentOpenModal || !this.currentOpenModal.isVisible || !this.dialogUi.isVisible) return
+    if ((!this.currentOpenModal || !this.currentOpenModal.isVisible) && !this.dialogUi.isVisible) return
+
+    const instructionReceiver: ReceivesInstructions = this.currentOpenModal?.isVisible ? this.currentOpenModal : this.dialogUi
 
     const leftDown = this.cursors.left?.isDown
     const rightDown = this.cursors.right?.isDown
@@ -151,15 +153,15 @@ export default class GameUI extends Phaser.Scene {
     const spaceDown = this.cursors.space?.isDown
 
     if (leftDown) {
-      this.currentOpenModal.leftDown()
+      instructionReceiver.leftDown()
     } else if (rightDown) {
-      this.currentOpenModal.rightDown()
+      instructionReceiver.rightDown()
     } else if (upDown) {
-      this.currentOpenModal.upDown()
+      instructionReceiver.upDown()
     } else if (downDown) {
-      this.currentOpenModal.downDown()
+      instructionReceiver.downDown()
     } else if (spaceDown) {
-      this.currentOpenModal.select()
+      instructionReceiver.select()
     }
   }
 

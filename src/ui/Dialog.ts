@@ -1,3 +1,4 @@
+import { ReceivesInstructions } from "@/types/Modal"
 import { animateText } from "@/utils/textUtils"
 import Phaser from "phaser"
 
@@ -7,7 +8,7 @@ const UI_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
   wordWrap: { width: 0 },
 })
 
-export class Dialog {
+export class Dialog implements ReceivesInstructions {
   private scene: Phaser.Scene
   private padding: number
   private width: number
@@ -47,6 +48,39 @@ export class Dialog {
     this.createPlayerInputCursor()
 
     this.hideDialogModal()
+  }
+
+  select(): void {
+    console.log("SELECT")
+  }
+
+  downDown(): void {
+    console.log("downDown")
+    // this.selectedOption = 2
+    const [x, y] = [this.width / 2 - 30, 105]
+    this.userInputCursor.setPosition(x, y)
+    this.userInputCursorTween.destroy()
+    this.userInputCursorTween = this.scene.add.tween({
+      delay: 0,
+      duration: 500,
+      repeat: -1,
+      x: {
+        from: x,
+        start: x,
+        to: x + 2,
+      },
+      targets: this.userInputCursor,
+    })
+  }
+
+  upDown(): void {
+    throw new Error("Method not implemented.")
+  }
+  leftDown(): void {
+    throw new Error("Method not implemented.")
+  }
+  rightDown(): void {
+    throw new Error("Method not implemented.")
   }
 
   showMessage(message: string) {
