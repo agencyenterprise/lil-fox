@@ -21,6 +21,7 @@ export class Dialog implements ReceivesInstructions {
   private textAnimationPlaying: boolean = false
   private messagesToShow: string[] = []
   private optionsContainer: Phaser.GameObjects.Container
+  private selectedOption = 0
 
   constructor(scene: Phaser.Scene, width: number) {
     this.scene = scene
@@ -51,14 +52,26 @@ export class Dialog implements ReceivesInstructions {
   }
 
   select(): void {
-    console.log("SELECT")
+    console.log("SELECT", this.selectedOption)
   }
 
   downDown(): void {
-    console.log("downDown")
-    // this.selectedOption = 2
-    const [x, y] = [this.width / 2 - 30, 105]
+    console.log("SELECT", this.selectedOption)
+  }
+
+  upDown(): void {
+  }
+
+  leftDown(): void {
+    console.log("left")
+
+    if (this.selectedOption > 0) this.selectedOption--
+
+    const x = this.getXCoordinatesForOption(this.selectedOption)
+    const y = this.height / 2
+
     this.userInputCursor.setPosition(x, y)
+    this.userInputCursor.setAngle(0)
     this.userInputCursorTween.destroy()
     this.userInputCursorTween = this.scene.add.tween({
       delay: 0,
@@ -73,14 +86,27 @@ export class Dialog implements ReceivesInstructions {
     })
   }
 
-  upDown(): void {
-    throw new Error("Method not implemented.")
-  }
-  leftDown(): void {
-    throw new Error("Method not implemented.")
-  }
   rightDown(): void {
-    throw new Error("Method not implemented.")
+    console.log("right")
+
+    if (this.selectedOption < 4) this.selectedOption++
+
+    const x = this.getXCoordinatesForOption(this.selectedOption)
+    const y = this.height / 2
+
+    this.userInputCursor.setPosition(x, y)
+    this.userInputCursorTween.destroy()
+    this.userInputCursorTween = this.scene.add.tween({
+      delay: 0,
+      duration: 500,
+      repeat: -1,
+      x: {
+        from: x,
+        start: x,
+        to: x + 2,
+      },
+      targets: this.userInputCursor,
+    })
   }
 
   showMessage(message: string) {
@@ -123,7 +149,7 @@ export class Dialog implements ReceivesInstructions {
 
     options.forEach((option, index) => {
       const x = this.getXCoordinatesForOption(index)
-      const text: Phaser.GameObjects.Text = new Phaser.GameObjects.Text(this.scene, x, halfHeight, option, { ...UI_TEXT_STYLE }).setOrigin(0.5, 0.5)
+      const text: Phaser.GameObjects.Text = new Phaser.GameObjects.Text(this.scene, x, halfHeight, option, { ...UI_TEXT_STYLE })
       this.container.add(text)
     })
   }

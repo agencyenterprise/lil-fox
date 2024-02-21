@@ -146,11 +146,11 @@ export default class GameUI extends Phaser.Scene {
 
     const instructionReceiver: ReceivesInstructions = this.currentOpenModal?.isVisible ? this.currentOpenModal : this.dialogUi
 
-    const leftDown = this.cursors.left?.isDown
-    const rightDown = this.cursors.right?.isDown
-    const upDown = this.cursors.up?.isDown
-    const downDown = this.cursors.down?.isDown
-    const spaceDown = this.cursors.space?.isDown
+    const leftDown = Phaser.Input.Keyboard.JustDown(this.cursors.left)
+    const rightDown = Phaser.Input.Keyboard.JustDown(this.cursors.right)
+    const upDown = Phaser.Input.Keyboard.JustDown(this.cursors.up)
+    const downDown = Phaser.Input.Keyboard.JustDown(this.cursors.down)
+    const spaceDown = Phaser.Input.Keyboard.JustDown(this.cursors.space)
 
     if (leftDown) {
       instructionReceiver.leftDown()
