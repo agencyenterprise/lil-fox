@@ -18,7 +18,7 @@ export default class GameUI extends Phaser.Scene {
   private berries: Phaser.GameObjects.Group
   private coinAmountText: Phaser.GameObjects.Text
   private timeDownText: Phaser.GameObjects.Text
-  private dialogUi: Dialog
+  public dialogUi: Dialog
   private gameOverModal: GameOverModal
   private winMarioLikeLevelModal: WinMarioLikeLevelModal
   private tipUi: Tip
@@ -195,28 +195,17 @@ export default class GameUI extends Phaser.Scene {
     this.coinAmountText.setText(`x${amount}`)
   }
 
-  showDialog(messages: string[]) {
-    if (this.dialogUi.isAnimationPlaying) return
-
-    if (this.dialogUi.isVisible && !this.dialogUi.moreMessagesToShow) {
-      this.dialogUi.hideDialogModal()
-      sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, false)
-      this.shouldHideTip = false
-      return
-    }
-
-    if (this.dialogUi.isVisible && this.dialogUi.moreMessagesToShow) {
-      this.tipUi.hideTip()
-      this.dialogUi.showNextMessage()
-      sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, true)
-      return
-    }
-
-    this.dialogUi.hideDialogModal()
+  public showDialog(message: string) {
     this.tipUi.hideTip()
-    this.dialogUi.showDialogModal(messages)
+    this.dialogUi.showMessage(message)
     sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, true)
     this.shouldHideTip = true
+  }
+  
+  public hideDialog() {
+    this.dialogUi.hideDialogModal()
+    sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, false)
+    this.shouldHideTip = false
   }
 
   showTip() {

@@ -7,6 +7,8 @@ import { Singleton } from "@/utils/GlobalAccessSingleton"
 import { SoundSingleton, SoundEffects } from "@/utils/SoundSingleton"
 import Npc from "@/npcs/Npc"
 import { Area } from "@/types/Area"
+import Sign from "@/types/Sign"
+import Interactable from "@/types/Interactable"
 
 declare global {
   namespace Phaser.GameObjects {
@@ -125,7 +127,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       })
 
       if (nearbyObject) {
-        this.handleInteraction(nearbyObject)
+        this.interactWithObject(nearbyObject)
       }
     }
 
@@ -213,46 +215,8 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     })
   }
 
-  handleInteraction(object: Phaser.Types.Tilemaps.TiledObject | Npc) {
-    if (object instanceof Npc) {
-      object.handleInteraction(this)
-    } else {
-      const wonLevels = getWonLevels()
-      const props = object.properties
-      const messages = props
-        .find((p: any) => p.name === "message")
-        ?.value.split(";")
-      const isFinishLevelSign = props.find(
-        (p: any) => p.name === "isFinishLevelSign",
-      )?.value
-      const levelNumber = props.find((p: any) => p.name === "levelNumber")
-        ?.value
-
-      if (isFinishLevelSign) {
-        const correctAlternative = props.find(
-          (p: any) => p.name === "correctAlternative",
-        )?.value
-        const levelNumber = props.find((p: any) => p.name === "levelNumber")
-          ?.value
-
-        if (wonLevels.includes(levelNumber)) {
-          sceneEvents.emit(Events.SHOW_DIALOG, ["You already won this level!"])
-        } else {
-          this.scene.scene.pause("LilFox")
-          this.scene.scene.launch("QuizScene", {
-            messages,
-            correctAlternative,
-            levelNumber,
-          })
-        }
-      } else {
-        if (levelNumber && wonLevels.includes(levelNumber)) {
-          sceneEvents.emit(Events.SHOW_DIALOG, ["You already won this level!"])
-        } else {
-          sceneEvents.emit(Events.SHOW_DIALOG, messages)
-        }
-      }
-    }
+  interactWithObject(object: Interactable) {
+    object.handleInteraction(this)
   }
 
   handleLockPlayerMovement(lock: boolean) {

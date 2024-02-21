@@ -19,6 +19,10 @@ import { Area } from "@/types/Area"
 import { CatArea } from "@/types/CatArea"
 import HumanInBlue from "@/npcs/HumanInBlue"
 import { SoundArea } from "@/types/SoundArea"
+import GameUI from "./GameUI"
+import Sign from "@/types/Sign"
+import EnterLevelSign from "@/types/EnterLevelSign"
+import { SignType, createSign } from "@/factory/SignFactory"
 
 type CreateData = {
   levelNumber?: number
@@ -85,6 +89,8 @@ export default class FoxGame extends Phaser.Scene {
     this.scene.run("game-ui")
     this.scene.launch("settings-ui")
 
+    Singleton.getInstance().gameUi = this.scene.get("game-ui") as GameUI
+
     createCharacterAnims(this.anims)
     createArcherAnims(this.anims)
     createEnemyAnims(this.anims)
@@ -100,7 +106,8 @@ export default class FoxGame extends Phaser.Scene {
     this.spawnEnemies(map)
     this.spawnNpcs(map)
 
-    this.signsObjects.objects.forEach((sign) => {
+    this.signsObjects.objects.forEach((s) => {
+      const sign = createSign(s.x!, s.y!, s.name as SignType)
       Singleton.getInstance().interactiveObjects.push(sign)
     })
 
