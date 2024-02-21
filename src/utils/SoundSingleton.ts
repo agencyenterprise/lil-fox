@@ -10,16 +10,18 @@ export enum SoundEffects {
   FOOTSTEPS2 = "audio-footsteps2",
   GAME_OVER = "audio-game-over",
   PICKUP = "audio-pickup",
+  PICKUP_COIN = "audio-pickup-coin",
   THEME = "audio-theme",
+  THEME_PLATFORM = "audio-theme-platform",
   ROAR = "audio-roar",
+  JUMP_SMALL = "audio-jump-small",
+  JUMP_BIG = "audio-jump-big",
+  POWER_UP = "audio-power-up",
 }
 
 export class SoundSingleton {
   private static instance: SoundSingleton | null = null
-  private theme:
-    | Phaser.Sound.NoAudioSound
-    | Phaser.Sound.HTML5AudioSound
-    | Phaser.Sound.WebAudioSound
+  private theme: Phaser.Sound.NoAudioSound | Phaser.Sound.HTML5AudioSound | Phaser.Sound.WebAudioSound
   private soundManager:
     | Phaser.Sound.NoAudioSoundManager
     | Phaser.Sound.HTML5AudioSoundManager
@@ -27,10 +29,8 @@ export class SoundSingleton {
 
   public musicEnabled = getGameSetting(GameSettings.MUSIC_ENABLED) ?? true
   public musicVolume = getGameSetting(GameSettings.MUSIC_VOLUME) ?? 3
-  public soundEffectsEnabled =
-    getGameSetting(GameSettings.SOUND_EFFECTS_ENABLED) ?? true
-  public soundEffectsVolume =
-    getGameSetting(GameSettings.SOUND_EFFECTS_VOLUME) ?? 3
+  public soundEffectsEnabled = getGameSetting(GameSettings.SOUND_EFFECTS_ENABLED) ?? true
+  public soundEffectsVolume = getGameSetting(GameSettings.SOUND_EFFECTS_VOLUME) ?? 3
 
   public playerCurrentAreas: string[] = []
 
@@ -49,11 +49,7 @@ export class SoundSingleton {
     sceneEvents.on(Events.STOP_MUSIC, () => this.stopTheme(), this)
     sceneEvents.on(Events.PAUSE_MUSIC, () => this.pauseTheme(), this)
     sceneEvents.on(Events.RESUME_MUSIC, () => this.resumeTheme(), this)
-    sceneEvents.on(
-      Events.CHANGE_MUSIC_VOLUME,
-      (v: number) => this.changeThemeVolume(v),
-      this,
-    )
+    sceneEvents.on(Events.CHANGE_MUSIC_VOLUME, (v: number) => this.changeThemeVolume(v), this)
 
     scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       sceneEvents.removeAllListeners(Events.CHANGE_MUSIC_VOLUME)
@@ -65,8 +61,12 @@ export class SoundSingleton {
     })
   }
 
-  public playTheme() {
-    this.theme = this.soundManager.add(SoundEffects.THEME, {
+  public playTheme(theme: SoundEffects) {
+    if (this.theme) {
+      this.theme.stop()
+    }
+
+    this.theme = this.soundManager.add(theme, {
       volume: this.musicVolume / 10,
       loop: true,
     })
@@ -103,10 +103,7 @@ export class SoundSingleton {
       return
     }
 
-    if (
-      this.soundManager.getAllPlaying().filter((s) => s.key == soundEffect)
-        .length > 0
-    ) {
+    if (this.soundManager.getAllPlaying().filter((s) => s.key == soundEffect).length > 0) {
       return
     }
 
@@ -123,9 +120,7 @@ export class SoundSingleton {
 
   public removePlayerCurrentArea(area: string) {
     if (this.playerCurrentAreas.includes(area)) {
-      this.playerCurrentAreas = this.playerCurrentAreas.filter(
-        (a) => a !== area,
-      )
+      this.playerCurrentAreas = this.playerCurrentAreas.filter((a) => a !== area)
     }
   }
 }
