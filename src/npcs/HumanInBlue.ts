@@ -64,24 +64,37 @@ export default class HumanInBlue extends Npc {
     } 
     
     if (this.interactionCount === 2) {
-      this.scene.scene.pause("LilFox")
-      this.scene.scene.setVisible(false, "LilFox")
-      this.scene.scene.run("MarioScene")
-      this.scene.scene.setVisible(true, "MarioScene");
-      sceneEvents.emit(Events.MARIO_LIKE_LEVEL_STARTED)
+      const gameUi: GameUI = this.scene.scene.get("game-ui") as GameUI
+      gameUi.dialogUi.askQuestion(
+        "Do you want to start the quest?",
+        ["Yes", "No"],
+        (answer: string) => {
+          if (answer === "Yes") {
+            console.log("Said YES")
+          } else {
+            console.log("Said NO")
+          }
+        }
+      )
+
+      // this.scene.scene.pause("LilFox")
+      // this.scene.scene.setVisible(false, "LilFox")
+      // this.scene.scene.run("MarioScene")
+      // this.scene.scene.setVisible(true, "MarioScene");
+      // sceneEvents.emit(Events.MARIO_LIKE_LEVEL_STARTED)
     } else {
       this.showMessage()
     }
     
-    if (this.interactionCount === this.messages.length) {
-      this.interactionCount = 0
-      sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, false)
-      this.hideDialog()
-    }
+    // if (this.interactionCount === this.messages.length) {
+    //   this.interactionCount = 0
+    //   sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, false)
+    //   this.hideDialog()
+    // }
 
     super.handleInteraction()
   }
-
+ 
   showMessage() {
     const gameUi: GameUI = this.scene.scene.get("game-ui") as GameUI
     gameUi.showDialog(this.messages[this.interactionCount])

@@ -19,6 +19,7 @@ export class Dialog {
   private uiText: Phaser.GameObjects.Text
   private textAnimationPlaying: boolean = false
   private messagesToShow: string[] = []
+  private optionsContainer: Phaser.GameObjects.Container
 
   constructor(scene: Phaser.Scene, width: number) {
     this.scene = scene
@@ -71,6 +72,26 @@ export class Dialog {
     this.container.setAlpha(0)
     this.userInputCursorTween.pause()
     this._isVisible = false
+  }
+
+  askQuestion(question: string, options: string[], callback: (answer: string) => void) {
+    if (this.textAnimationPlaying) return
+
+    this.height - 10
+    this.container.setPosition(50, 185)
+    this.userInputCursorTween.restart()
+    this.container.setAlpha(1)
+    this._isVisible = true
+
+    const { width, height } = this.scene.scale
+    const halfWidth = width / 2
+    this.optionsContainer = this.scene.add.container(0, 0, [
+      this.scene.add.text(halfWidth - 60, height - 35, "OPTION 1", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5),
+      this.scene.add.text(halfWidth - 60, height - 15, "OPTION 2", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5),
+      this.scene.add.text(halfWidth + 40, height - 35, "OPTION 3", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5),
+      this.scene.add.text(halfWidth + 40, height - 15, "OPTION 4", { ...UI_TEXT_STYLE, wordWrap: { width: width - 18 } }).setOrigin(0.5, 0.5),
+    ])
+
   }
 
   createPlayerInputCursor() {
