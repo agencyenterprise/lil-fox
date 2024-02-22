@@ -1,7 +1,6 @@
 import PlatformGameCharacter from "@/characters/PlatformGameCharacter"
 import Slug from "@/enemies/Slug"
 import { Events, sceneEvents } from "@/events/EventsCenter"
-import { SoundEffects, SoundSingleton } from "@/utils/SoundSingleton"
 
 const NECESSARY_COINS = 10
 

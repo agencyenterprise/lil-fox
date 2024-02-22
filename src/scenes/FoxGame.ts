@@ -23,7 +23,6 @@ import GameUI from "./GameUI"
 import Sign from "@/types/Sign"
 import EnterLevelSign from "@/types/EnterLevelSign"
 import { SignType, createSign } from "@/factory/SignFactory"
-import { SoundEffects, SoundSingleton } from "@/utils/SoundSingleton"
 
 type CreateData = {
   levelNumber?: number
