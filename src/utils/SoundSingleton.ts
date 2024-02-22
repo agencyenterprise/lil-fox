@@ -17,6 +17,7 @@ export enum SoundEffects {
   JUMP_SMALL = "audio-jump-small",
   JUMP_BIG = "audio-jump-big",
   POWER_UP = "audio-power-up",
+  SUCCESS = "audio-success",
 }
 
 export class SoundSingleton {

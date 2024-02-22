@@ -52,8 +52,6 @@ export default class MarioScene extends Phaser.Scene {
       callbackScope: this,
       repeat: 50,
     })
-
-    SoundSingleton.getInstance().playTheme(SoundEffects.THEME_PLATFORM)
   }
 
   createLayers(map: Phaser.Tilemaps.Tilemap) {

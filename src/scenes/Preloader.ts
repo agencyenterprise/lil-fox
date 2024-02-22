@@ -106,6 +106,7 @@ export default class Preloader extends Phaser.Scene {
     this.load.audio(SoundEffects.JUMP_SMALL, ["assets/audio/jump-small.ogg", "assets/audio/jump-small.mp3"])
     this.load.audio(SoundEffects.JUMP_BIG, ["assets/audio/jump-big.ogg", "assets/audio/jump-big.mp3"])
     this.load.audio(SoundEffects.POWER_UP, ["assets/audio/power-up.ogg", "assets/audio/power-up.mp3"])
+    this.load.audio(SoundEffects.SUCCESS, ["assets/audio/success.ogg", "assets/audio/success.mp3"])
   }
 
   create() {

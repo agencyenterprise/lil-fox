@@ -1,9 +1,10 @@
+import { Events, sceneEvents } from "@/events/EventsCenter"
 import { Modal } from "@/types/Modal"
 import Phaser from "phaser"
 
 const UI_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
-  color: 'black',
-  fontSize: '10px',
+  color: "black",
+  fontSize: "10px",
   wordWrap: { width: 0 },
 })
 
@@ -28,14 +29,9 @@ export class GameOverModal implements Modal {
     this.width = 310 - this.padding * 2
     this.height = 130
 
-    const panel = this.scene.add.rectangle(
-      0,
-      0,
-      this.width,
-      this.height,
-      0xede4f3,
-      0.9
-    ).setOrigin(0)
+    const panel = this.scene.add
+      .rectangle(0, 0, this.width, this.height, 0xede4f3, 0.9)
+      .setOrigin(0)
       .setStrokeStyle(3, 0x905ac2, 1)
     this.container = this.scene.add.container(50, 60, [panel])
 
@@ -60,14 +56,15 @@ export class GameOverModal implements Modal {
   select(): void {
     this.hideModal()
     this.scene.scene.get("MarioScene").scene.restart()
+    sceneEvents.emit(Events.MARIO_LIKE_LEVEL_STARTED)
   }
-  
+
   downDown(): void {}
   upDown(): void {}
   leftDown(): void {}
   rightDown(): void {}
 
-  showModal({message1, message2}: {message1: string, message2: string}) {
+  showModal({ message1, message2 }: { message1: string; message2: string }) {
     if (message1) {
       this.uiText1.setText(message1)
       this.uiText2.setText(message2)
@@ -91,7 +88,7 @@ export class GameOverModal implements Modal {
   createPlayerInputCursor() {
     const y = 95
     const x = this.width / 2 - 75
-    this.userInputCursor = this.scene.add.image(x, y, 'cursor')
+    this.userInputCursor = this.scene.add.image(x, y, "cursor")
     this.userInputCursor.setScale(3, 1)
 
     this.userInputCursorTween = this.scene.add.tween({

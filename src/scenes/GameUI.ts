@@ -209,11 +209,17 @@ export default class GameUI extends Phaser.Scene {
   }
 
   handleGameOver(message1: string, message2: string) {
+    sceneEvents.emit(Events.STOP_MUSIC)
+    SoundSingleton.getInstance().playSoundEffect(SoundEffects.GAME_OVER)
+
     this.currentOpenModal = this.gameOverModal
     this.gameOverModal.showModal({ message1, message2 })
   }
 
   handleWinMarioLikeLevel() {
+    sceneEvents.emit(Events.STOP_MUSIC)
+    SoundSingleton.getInstance().playSoundEffect(SoundEffects.SUCCESS)
+
     this.currentOpenModal = this.winMarioLikeLevelModal
     this.winMarioLikeLevelModal.showModal()
   }
@@ -223,12 +229,12 @@ export default class GameUI extends Phaser.Scene {
   }
 
   handleCharacterDied() {
-    sceneEvents.emit(Events.STOP_MUSIC)
-    SoundSingleton.getInstance().playSoundEffect(SoundEffects.GAME_OVER)
     this.gameOverModal.showModal({ message1: "Game Over!", message2: "You died!" })
   }
 
   handleMarioLikeLevelStarted() {
+    SoundSingleton.getInstance().playTheme(SoundEffects.THEME_PLATFORM)
+
     this.berries.setVisible(false)
     this.hearts.setVisible(false)
     this.timeDownText.setVisible(true)
@@ -237,6 +243,8 @@ export default class GameUI extends Phaser.Scene {
   }
 
   handleMarioLikeLevelFinished() {
+    SoundSingleton.getInstance().playTheme(SoundEffects.THEME)
+
     this.berries.setVisible(true)
     this.hearts.setVisible(true)
     this.timeDownText.setVisible(false)
