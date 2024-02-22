@@ -12,8 +12,8 @@ export default class HumanInBlue extends Npc {
   private moveEvent: Phaser.Time.TimerEvent
 
   private messages = [
-    "Hey you! I have at?",
-    "You need to cost 100."
+    "Hey you! I have a quest for you, do you think you can handle it?", 
+    "You need to collect as many coins as you can in under 50 seconds, but don't even bother showing me your face again if don't collect at least 100. Do you accept?"
   ]
 
   constructor(
