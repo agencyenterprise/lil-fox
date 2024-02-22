@@ -66,31 +66,25 @@ export default class HumanInBlue extends Npc {
     if (this.interactionCount === 2) {
       const gameUi: GameUI = this.scene.scene.get("game-ui") as GameUI
       gameUi.dialogUi.askQuestion(
-        "Do you want to start the quest?",
         ["Yes", "No"],
-        (answer: string) => {
-          if (answer === "Yes") {
-            console.log("Said YES")
-          } else {
-            console.log("Said NO")
+        (answer: number) => {
+          if (answer === 0) {
+            this.scene.scene.pause("LilFox")
+            this.scene.scene.setVisible(false, "LilFox")
+            this.scene.scene.run("MarioScene")
+            this.scene.scene.setVisible(true, "MarioScene");
+            sceneEvents.emit(Events.MARIO_LIKE_LEVEL_STARTED)
           }
         }
       )
-
-      // this.scene.scene.pause("LilFox")
-      // this.scene.scene.setVisible(false, "LilFox")
-      // this.scene.scene.run("MarioScene")
-      // this.scene.scene.setVisible(true, "MarioScene");
-      // sceneEvents.emit(Events.MARIO_LIKE_LEVEL_STARTED)
+    } else if (this.interactionCount === 3) {
+      this.hideDialog()
+      this.interactionCount = 0
+      sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, false)
+      return
     } else {
       this.showMessage()
     }
-
-    // if (this.interactionCount === this.messages.length) {
-    //   this.interactionCount = 0
-    //   sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, false)
-    //   this.hideDialog()
-    // }
 
     super.handleInteraction()
   }

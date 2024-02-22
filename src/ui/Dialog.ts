@@ -19,9 +19,10 @@ export class Dialog implements ReceivesInstructions {
   private userInputCursorTween: Phaser.Tweens.Tween
   private uiText: Phaser.GameObjects.Text
   private textAnimationPlaying: boolean = false
-  private messagesToShow: string[] = []
-  private optionsContainer: Phaser.GameObjects.Container
   private selectedOption = 0
+  private isAskingQuestion = false
+  private onAnswer: (selectedOption: number) => void
+  private options: Phaser.GameObjects.Text[] = []
 
   constructor(scene: Phaser.Scene, width: number) {
     this.scene = scene
@@ -46,71 +47,45 @@ export class Dialog implements ReceivesInstructions {
     })
 
     this.container.add(this.uiText)
+    this.userInputCursor = this.scene.add.image(this.width - 8, this.height - 12, 'cursor')
     this.createPlayerInputCursor()
 
     this.hideDialogModal()
   }
 
   select(): void {
-    console.log("SELECT", this.selectedOption)
+    if (!this.isAskingQuestion) return
+    this.onAnswer(this.selectedOption)
+    this.isAskingQuestion = false
+    this.options.forEach(option => option.destroy())
+    this.userInputCursor.setVisible(false)
+    this.userInputCursorTween.destroy()
   }
 
   downDown(): void {
-    console.log("SELECT", this.selectedOption)
   }
 
   upDown(): void {
   }
 
   leftDown(): void {
-    console.log("left")
-
-    if (this.selectedOption > 0) this.selectedOption--
-
-    const x = this.getXCoordinatesForOption(this.selectedOption)
-    const y = this.height / 2
-
-    this.userInputCursor.setPosition(x, y)
-    this.userInputCursor.setAngle(0)
-    this.userInputCursorTween.destroy()
-    this.userInputCursorTween = this.scene.add.tween({
-      delay: 0,
-      duration: 500,
-      repeat: -1,
-      x: {
-        from: x,
-        start: x,
-        to: x + 2,
-      },
-      targets: this.userInputCursor,
-    })
+    if (!this.isAskingQuestion) return
+    if (this.selectedOption === 0) return
+    this.selectedOption = 0
+    this.setCursor()
   }
 
   rightDown(): void {
-    console.log("right")
-
-    if (this.selectedOption < 4) this.selectedOption++
-
-    const x = this.getXCoordinatesForOption(this.selectedOption)
-    const y = this.height / 2
-
-    this.userInputCursor.setPosition(x, y)
-    this.userInputCursorTween.destroy()
-    this.userInputCursorTween = this.scene.add.tween({
-      delay: 0,
-      duration: 500,
-      repeat: -1,
-      x: {
-        from: x,
-        start: x,
-        to: x + 2,
-      },
-      targets: this.userInputCursor,
-    })
+    if (!this.isAskingQuestion) return
+    if (this.selectedOption === 1) return
+    this.selectedOption = 1
+    this.setCursor()
   }
 
   showMessage(message: string) {
     if (this.textAnimationPlaying) return
+
+    this.createPlayerInputCursor()
 
     this.height - 10
     this.container.setPosition(50, 185)
@@ -130,11 +105,10 @@ export class Dialog implements ReceivesInstructions {
 
   hideDialogModal() {
     this.container.setAlpha(0)
-    this.userInputCursorTween.pause()
     this._isVisible = false
   }
 
-  askQuestion(question: string, options: string[], callback: (answer: string) => void) {
+  askQuestion(options: string[], onAnswer: (selectedOption: number) => void) {
     if (this.textAnimationPlaying) return
 
     this.height - 10
@@ -149,15 +123,23 @@ export class Dialog implements ReceivesInstructions {
 
     options.forEach((option, index) => {
       const x = this.getXCoordinatesForOption(index)
-      const text: Phaser.GameObjects.Text = new Phaser.GameObjects.Text(this.scene, x, halfHeight, option, { ...UI_TEXT_STYLE })
+      const text: Phaser.GameObjects.Text = new Phaser.GameObjects.Text(this.scene, x, halfHeight, option, { ...UI_TEXT_STYLE }).setOrigin(0, 0.5)
+      this.options.push(text)
       this.container.add(text)
     })
+
+    this.setCursor()
+    this.onAnswer = onAnswer
+    this.isAskingQuestion = true
   }
 
   createPlayerInputCursor() {
     const y = this.height - 12
-    this.userInputCursor = this.scene.add.image(this.width - 8, y, 'cursor')
+    this.userInputCursor.setVisible(true)
+    this.userInputCursor.setPosition(this.width - 8, this.height - 12)
     this.userInputCursor.setAngle(90).setScale(3, 1)
+
+    if (this.userInputCursorTween) this.userInputCursorTween.destroy()
 
     this.userInputCursorTween = this.scene.add.tween({
       delay: 0,
@@ -175,15 +157,42 @@ export class Dialog implements ReceivesInstructions {
     this.container.add(this.userInputCursor)
   }
 
+  setCursor() {
+    const x = this.getXCoordinatesForCursor(this.selectedOption)
+    const y = this.height / 2
+
+    if (this.userInputCursorTween) this.userInputCursorTween.destroy()
+
+    this.userInputCursor.setVisible(true)
+    this.userInputCursor.setPosition(x, y)
+    this.userInputCursor.setAngle(0)
+    this.userInputCursorTween.destroy()
+    this.userInputCursorTween = this.scene.add.tween({
+      delay: 0,
+      duration: 500,
+      repeat: -1,
+      x: {
+        from: x,
+        start: x,
+        to: x + 2,
+      },
+      targets: this.userInputCursor,
+    })
+  }
+
   getXCoordinatesForOption(index: number): number {
     if (index === 0) {
       return this.width / 2 - 25
-    } else if (index === 1) {
-      return this.width / 2 + 25
-    } else if (index === 2) {
-      return this.width / 2 - 90
     } else {
-      return this.width / 2 + 90
+      return this.width / 2 + 25
+    }
+  }
+
+  getXCoordinatesForCursor(index: number): number {
+    if (index === 0) {
+      return this.width / 2 - 37
+    } else {
+      return this.width / 2 + 14
     }
   }
 
@@ -193,9 +202,5 @@ export class Dialog implements ReceivesInstructions {
 
   get isAnimationPlaying() {
     return this.textAnimationPlaying
-  }
-
-  get moreMessagesToShow() {
-    return this.messagesToShow.length > 0
   }
 }
