@@ -1,5 +1,6 @@
-import { Events, sceneEvents } from "@/events/EventsCenter";
-import Character from "./Character";
+import { Events, sceneEvents } from "@/events/EventsCenter"
+import Character from "./Character"
+import { SoundEffects, SoundSingleton } from "@/utils/SoundSingleton"
 
 const NORMAL_SPEED = 110
 const BOOSTED_SPEED = 200
@@ -8,11 +9,10 @@ const BOOSTED_JUMP_SPEED = -4500
 
 enum Potions {
   GREEN_POTION = "greenPotion",
-  ORANGE_POTION = "orangePotion"
+  ORANGE_POTION = "orangePotion",
 }
 
 export default class PlatformGameCharacter extends Character {
-
   public isAlive = true
   public isGameOver = false
   public isJumping = false
@@ -36,40 +36,35 @@ export default class PlatformGameCharacter extends Character {
 
     if (rightDown && upDown && !this.isJumping) {
       this.isJumping = true
-      this.anims.play(`run-${this.selectedSkin}`, true);
-      this.setVelocityX(this.speed);
+      this.anims.play(`run-${this.selectedSkin}`, true)
+      this.setVelocityX(this.speed)
       this.jump()
-      this.scaleX = 1;
-      this.body?.offset.setTo(8, 12);
-
+      this.scaleX = 1
+      this.body?.offset.setTo(8, 12)
     } else if (leftDown && upDown && !this.isJumping) {
       this.isJumping = true
-      this.anims.play(`run-${this.selectedSkin}`, true);
-      this.setVelocity(-this.speed, 0);
+      this.anims.play(`run-${this.selectedSkin}`, true)
+      this.setVelocity(-this.speed, 0)
       this.jump()
-      this.scaleX = -1;
-      this.body?.offset.setTo(24, 12);
-
+      this.scaleX = -1
+      this.body?.offset.setTo(24, 12)
     } else if (leftDown) {
-      this.anims.play(`run-${this.selectedSkin}`, true);
-      this.setVelocityX(-this.speed);
-      this.scaleX = -1;
-      this.body?.offset.setTo(24, 12);
-
+      this.anims.play(`run-${this.selectedSkin}`, true)
+      this.setVelocityX(-this.speed)
+      this.scaleX = -1
+      this.body?.offset.setTo(24, 12)
     } else if (rightDown) {
-      this.anims.play(`run-${this.selectedSkin}`, true);
-      this.setVelocityX(this.speed);
-      this.scaleX = 1;
-      this.body?.offset.setTo(8, 12);
-
+      this.anims.play(`run-${this.selectedSkin}`, true)
+      this.setVelocityX(this.speed)
+      this.scaleX = 1
+      this.body?.offset.setTo(8, 12)
     } else if (upDown && !this.isJumping) {
       this.isJumping = true
-      this.anims.play(`run-${this.selectedSkin}`);
+      this.anims.play(`run-${this.selectedSkin}`)
       this.jump()
-
     } else {
-      this.anims.play(`idle-${this.selectedSkin}`);
-      this.setVelocityX(0);
+      this.anims.play(`idle-${this.selectedSkin}`)
+      this.setVelocityX(0)
     }
   }
 
@@ -85,21 +80,31 @@ export default class PlatformGameCharacter extends Character {
         this.jumpSpeed = NORMAL_JUMP_SPEED
       }, 10000)
     }
+
+    SoundSingleton.getInstance().playSoundEffect(SoundEffects.POWER_UP)
   }
 
   jump() {
-    this.setAccelerationY(this.jumpSpeed);
+    this.setAccelerationY(this.jumpSpeed)
+
+    if (this.jumpSpeed == BOOSTED_JUMP_SPEED) {
+      SoundSingleton.getInstance().playSoundEffect(SoundEffects.JUMP_BIG)
+    } else {
+      SoundSingleton.getInstance().playSoundEffect(SoundEffects.JUMP_SMALL)
+    }
+
     setTimeout(() => {
-      this.setAccelerationY(0);
+      this.setAccelerationY(0)
     }, 150)
   }
 
   die() {
-    this.anims.play(`hurt-${this.selectedSkin}`, true);
-    this.setVelocityX(0);
+    this.anims.play(`hurt-${this.selectedSkin}`, true)
+    this.setVelocityX(0)
     this.jumpSpeed = NORMAL_JUMP_SPEED
     this.jump()
     this.isAlive = false
+    SoundSingleton.getInstance().playSoundEffect(SoundEffects.DAMAGE)
 
     setTimeout(() => {
       sceneEvents.emit(Events.GAME_OVER)
@@ -107,7 +112,7 @@ export default class PlatformGameCharacter extends Character {
   }
 
   gameOver() {
-    this.anims.play(`idle-${this.selectedSkin}`);
+    this.anims.play(`idle-${this.selectedSkin}`)
     this.setVelocity(0, 0)
     this.setAcceleration(0, 0)
     this.isGameOver = true

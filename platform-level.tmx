@@ -140,6 +140,11 @@
     <property name="collides" type="bool" value="true"/>
    </properties>
   </tile>
+  <tile id="40">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+   </properties>
+  </tile>
   <tile id="41">
    <properties>
     <property name="collides" type="bool" value="true"/>
@@ -440,8 +445,8 @@
   <object id="131" gid="55" x="352" y="592" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="5" name="Potions">
-  <object id="33" name="greenPotion" gid="57" x="192" y="432" width="16" height="16"/>
-  <object id="38" name="orangePotion" gid="65" x="160" y="432" width="16" height="16"/>
+  <object id="33" name="greenPotion" gid="57" x="154.5" y="416" width="16" height="16"/>
+  <object id="38" name="orangePotion" gid="65" x="264.5" y="701.5" width="16" height="16"/>
  </objectgroup>
  <objectgroup id="7" name="Enemies">
   <object id="43" x="336" y="704">

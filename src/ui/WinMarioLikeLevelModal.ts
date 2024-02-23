@@ -3,8 +3,8 @@ import { Modal } from "@/types/Modal"
 import Phaser from "phaser"
 
 const UI_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
-  color: 'black',
-  fontSize: '10px',
+  color: "black",
+  fontSize: "10px",
   wordWrap: { width: 0 },
 })
 
@@ -34,36 +34,39 @@ export class WinMarioLikeLevelModal implements Modal {
     this.width = 310 - this.padding * 2
     this.height = 130
 
-    const panel = this.scene.add.rectangle(
-      0,
-      0,
-      this.width,
-      this.height,
-      0xede4f3,
-      0.9
-    ).setOrigin(0)
+    const panel = this.scene.add
+      .rectangle(0, 0, this.width, this.height, 0xede4f3, 0.9)
+      .setOrigin(0)
       .setStrokeStyle(3, 0x905ac2, 1)
     this.container = this.scene.add.container(50, 60, [panel])
 
-    this.uiText1 = this.scene.add.text(this.width / 2, 30, "", {
-      ...UI_TEXT_STYLE,
-      ...{ wordWrap: { width: this.width - 18 } },
-    }).setOrigin(0.5)
+    this.uiText1 = this.scene.add
+      .text(this.width / 2, 30, "", {
+        ...UI_TEXT_STYLE,
+        ...{ wordWrap: { width: this.width - 18 } },
+      })
+      .setOrigin(0.5)
 
-    this.uiText2 = this.scene.add.text(this.width / 2, 45, "", {
-      ...UI_TEXT_STYLE,
-      ...{ wordWrap: { width: this.width - 18 } },
-    }).setOrigin(0.5)
+    this.uiText2 = this.scene.add
+      .text(this.width / 2, 45, "", {
+        ...UI_TEXT_STYLE,
+        ...{ wordWrap: { width: this.width - 18 } },
+      })
+      .setOrigin(0.5)
 
-    this.uiOption1 = this.scene.add.text(this.width / 2, 90, "", {
-      ...UI_TEXT_STYLE,
-      ...{ wordWrap: { width: this.width - 18 } },
-    }).setOrigin(0.5)
+    this.uiOption1 = this.scene.add
+      .text(this.width / 2, 90, "", {
+        ...UI_TEXT_STYLE,
+        ...{ wordWrap: { width: this.width - 18 } },
+      })
+      .setOrigin(0.5)
 
-    this.uiOption2 = this.scene.add.text(this.width / 2, 105, "", {
-      ...UI_TEXT_STYLE,
-      ...{ wordWrap: { width: this.width - 18 } },
-    }).setOrigin(0.5)
+    this.uiOption2 = this.scene.add
+      .text(this.width / 2, 105, "", {
+        ...UI_TEXT_STYLE,
+        ...{ wordWrap: { width: this.width - 18 } },
+      })
+      .setOrigin(0.5)
 
     this.uiText1.setText(TEXT_1)
     this.uiText2.setText(TEXT_2)
@@ -83,6 +86,7 @@ export class WinMarioLikeLevelModal implements Modal {
   select() {
     if (this.selectedOption === 1) {
       this.scene.scene.get("MarioScene").scene.restart()
+      sceneEvents.emit(Events.MARIO_LIKE_LEVEL_STARTED)
     } else {
       this.scene.scene.stop("MarioScene")
       this.scene.scene.setVisible(false, "MarioScene")
@@ -129,8 +133,8 @@ export class WinMarioLikeLevelModal implements Modal {
     })
   }
 
-  leftDown() { }
-  rightDown() { }
+  leftDown() {}
+  rightDown() {}
 
   showModal() {
     this.height - 10
@@ -147,7 +151,7 @@ export class WinMarioLikeLevelModal implements Modal {
 
   createPlayerInputCursor() {
     const [x, y] = [this.width / 2 - 93, 90]
-    this.userInputCursor = this.scene.add.image(x, y, 'cursor')
+    this.userInputCursor = this.scene.add.image(x, y, "cursor")
     this.userInputCursor.setScale(3, 1)
 
     this.userInputCursorTween = this.scene.add.tween({

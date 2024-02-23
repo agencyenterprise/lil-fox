@@ -1259,8 +1259,8 @@
                  "type":"",
                  "visible":true,
                  "width":16,
-                 "x":192,
-                 "y":432
+                 "x":154.5,
+                 "y":416
                 }, 
                 {
                  "gid":65,
@@ -1271,8 +1271,8 @@
                  "type":"",
                  "visible":true,
                  "width":16,
-                 "x":160,
-                 "y":432
+                 "x":264.5,
+                 "y":701.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1570,6 +1570,15 @@
                 }, 
                 {
                  "id":34,
+                 "properties":[
+                        {
+                         "name":"collides",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
+                 "id":40,
                  "properties":[
                         {
                          "name":"collides",

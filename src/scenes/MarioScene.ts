@@ -1,11 +1,10 @@
-import PlatformGameCharacter from "@/characters/PlatformGameCharacter";
-import Slug from "@/enemies/Slug";
-import { Events, sceneEvents } from "@/events/EventsCenter";
+import PlatformGameCharacter from "@/characters/PlatformGameCharacter"
+import Slug from "@/enemies/Slug"
+import { Events, sceneEvents } from "@/events/EventsCenter"
 
 const NECESSARY_COINS = 10
 
 export default class MarioScene extends Phaser.Scene {
-
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
   public character!: PlatformGameCharacter
   private terrainLayer: Phaser.Tilemaps.TilemapLayer
@@ -22,10 +21,9 @@ export default class MarioScene extends Phaser.Scene {
 
   constructor() {
     super({
-
-      key: 'MarioScene',
+      key: "MarioScene",
       physics: {
-        default: 'arcade',
+        default: "arcade",
         arcade: {
           gravity: { y: 1700 },
           // debug: true
@@ -34,13 +32,12 @@ export default class MarioScene extends Phaser.Scene {
     })
   }
 
-
   preload() {
-    this.cursors = this.input.keyboard?.createCursorKeys()!;
+    this.cursors = this.input.keyboard?.createCursorKeys()!
   }
 
   create() {
-    const map = this.make.tilemap({ key: 'platform-level-map' });
+    const map = this.make.tilemap({ key: "platform-level-map" })
 
     this.createLayers(map)
     this.spawnCharacter(map)
@@ -48,41 +45,47 @@ export default class MarioScene extends Phaser.Scene {
     this.spawnCollectables(map)
     this.addColliders()
 
-    this.countDownTimer = this.time.addEvent({ delay: 1000, callback: this.updateTimer, callbackScope: this, repeat: 50 });
+    this.countDownTimer = this.time.addEvent({
+      delay: 1000,
+      callback: this.updateTimer,
+      callbackScope: this,
+      repeat: 50,
+    })
   }
 
   createLayers(map: Phaser.Tilemaps.Tilemap) {
-    const tileset0 = map.addTilesetImage('nature-paltformer-tileset-16x16', 'tiles3');
+    const tileset0 = map.addTilesetImage("nature-paltformer-tileset-16x16", "tiles3")
 
-    map.createLayer('Sky', tileset0!)!;
-    map.createLayer('Trees', tileset0!)!;
-    this.waterLayer = map.createLayer('Water', tileset0!)!;
-    this.terrainLayer = map.createLayer('Terrain', tileset0!)!;
+    map.createLayer("Sky", tileset0!)!
+    map.createLayer("Trees", tileset0!)!
+    this.waterLayer = map.createLayer("Water", tileset0!)!
+    this.terrainLayer = map.createLayer("Terrain", tileset0!)!
   }
 
   spawnCharacter(map: Phaser.Tilemaps.Tilemap) {
-    this.character = new PlatformGameCharacter(this, 30, 650, "character");
+    this.character = new PlatformGameCharacter(this, 30, 650, "character")
     this.collectedCoins = 0
 
     this.character.setSize(this.character.width * 0.4, this.character.height * 0.4)
-    this.physics.add.existing(this.character, false);
-    this.add.existing(this.character);
+    this.physics.add.existing(this.character, false)
+    this.add.existing(this.character)
     this.physics.world.enableBody(this.character, Phaser.Physics.Arcade.DYNAMIC_BODY)
 
-    this.cameras.main.startFollow(this.character, true, 0.05, 0.05);
-    this.cameras.main.setBounds(25, 500, 3392, 100)
+    this.cameras.main.startFollow(this.character, true, 0.05, 0.05)
+    this.cameras.main.setBounds(0, 500, 3392, 100)
+    this.physics.world.setBounds(0, 0, 3392, 100, true, false, false, false)
   }
 
   spawnEnemies(map: Phaser.Tilemaps.Tilemap) {
     this.slugs = this.add.group({
       classType: Slug,
       createCallback: (go) => {
-        this.physics.world.enable(go);
-        (go as any).body.allowGravity = false;
-      }
+        this.physics.world.enable(go)
+        ;(go as any).body.allowGravity = false
+      },
     })
 
-    map.getObjectLayer('Enemies')!.objects.forEach(enemy => {
+    map.getObjectLayer("Enemies")!.objects.forEach((enemy) => {
       this.slugs.get(enemy.x!, enemy.y!, enemy.name).setOrigin(0, 1)
     })
   }
@@ -91,12 +94,12 @@ export default class MarioScene extends Phaser.Scene {
     this.coins = this.add.group({
       classType: Phaser.GameObjects.Image,
       createCallback: (go) => {
-        this.physics.world.enable(go);
-        (go as any).body.allowGravity = false;
-      }
+        this.physics.world.enable(go)
+        ;(go as any).body.allowGravity = false
+      },
     })
 
-    map.getObjectLayer('Coins')!.objects.forEach(coin => {
+    map.getObjectLayer("Coins")!.objects.forEach((coin) => {
       this.add.tween({
         yoyo: true,
         delay: 0,
@@ -107,27 +110,48 @@ export default class MarioScene extends Phaser.Scene {
           start: coin.y,
           to: coin.y! - 1,
         },
-        targets: this.coins.get(coin.x, coin.y, 'coin').setOrigin(0, 1),
+        targets: this.coins.get(coin.x, coin.y, "coin").setOrigin(0, 1),
       })
     })
 
     this.potions = this.add.group({
       classType: Phaser.GameObjects.Image,
       createCallback: (go) => {
-        this.physics.world.enable(go);
-        (go as any).body.allowGravity = false;
-      }
+        this.physics.world.enable(go)
+        ;(go as any).body.allowGravity = false
+      },
     })
 
-    map.getObjectLayer('Potions')!.objects.forEach(potion => {
+    map.getObjectLayer("Potions")!.objects.forEach((potion) => {
       this.potions.get(potion.x!, potion.y!, potion.name).setOrigin(0, 1)
     })
   }
 
   addColliders() {
-    this.terrainLayer?.setCollisionByProperty({ collides: true });
-    this.physics.add.collider(this.character, this.terrainLayer, this.handleTerrainCollision, () => this.character.isAlive, this);
-    this.physics.add.collider(this.character, this.slugs, this.handleCharacterSlugCollision, () => this.character.isAlive, this);
+    this.terrainLayer?.setCollisionByProperty({ collides: true })
+    this.waterLayer?.setCollisionByProperty({ collides: true })
+    this.physics.add.collider(
+      this.character,
+      this.terrainLayer,
+      this.handleTerrainCollision,
+      () => this.character.isAlive,
+      this,
+    )
+    this.physics.add.collider(
+      this.character,
+      this.slugs,
+      this.handleCharacterSlugCollision,
+      () => this.character.isAlive,
+      this,
+    )
+    this.physics.add.collider(
+      this.character,
+      this.waterLayer,
+      this.handleWaterCollision,
+      () => this.character.isAlive,
+      this,
+    )
+    this.character.setCollideWorldBounds(true)
   }
 
   update() {
@@ -152,6 +176,11 @@ export default class MarioScene extends Phaser.Scene {
   }
 
   handleCharacterSlugCollision() {
+    this.countDownTimer.remove()
+    this.character.die()
+  }
+
+  handleWaterCollision() {
     this.countDownTimer.remove()
     this.character.die()
   }

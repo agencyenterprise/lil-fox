@@ -31,9 +31,9 @@ type CreateData = {
 export default class FoxGame extends Phaser.Scene {
   constructor() {
     super({
-      key: 'LilFox',
+      key: "LilFox",
       physics: {
-        default: 'matter',
+        default: "matter",
         arcade: {
           gravity: { y: 0 },
           // debug: true
@@ -148,9 +148,7 @@ export default class FoxGame extends Phaser.Scene {
       const x = npc.x! + npc.width! * 0.5
       const y = npc.y! + npc.height! * 0.5
       const props = npc.properties
-      const messages = props
-        .find((p: any) => p.name === "message")
-        ?.value.split(";")
+      const messages = props.find((p: any) => p.name === "message")?.value.split(";")
       switch (npc.name) {
         case "cat":
           const cat: Cat = this.cats.get(x, y, "cat")
@@ -202,13 +200,8 @@ export default class FoxGame extends Phaser.Scene {
         case "green_archer":
           if (wonLevels.includes(2)) break
           const props = enemy.properties
-          const facingDirection = props
-            .find((p: any) => p.name === "facing")
-            ?.value.split(";")[0]
-          this.greenArchers
-            .get(x, y, "greenArcher")
-            .setArrows(this.arrows)
-            .setFacingDirection(facingDirection)
+          const facingDirection = props.find((p: any) => p.name === "facing")?.value.split(";")[0]
+          this.greenArchers.get(x, y, "greenArcher").setArrows(this.arrows).setFacingDirection(facingDirection)
           break
       }
     })
@@ -223,32 +216,16 @@ export default class FoxGame extends Phaser.Scene {
 
     if (data.levelNumber) {
       const levelSpawn = this.spawnPoints.get(`level${data.levelNumber}Spawn`)!
-      this.character = new Character(
-        this,
-        levelSpawn.x,
-        levelSpawn.y,
-        "character",
-      )
+      this.character = new Character(this, levelSpawn.x, levelSpawn.y, "character")
     } else {
       const mainSpawn = this.spawnPoints.get(SpawnPoints.MAIN_SPAWN)!
-      this.character = new Character(
-        this,
-        mainSpawn.x,
-        mainSpawn.y,
-        "character",
-      )
+      this.character = new Character(this, mainSpawn.x, mainSpawn.y, "character")
     }
 
-    this.character.setSize(
-      this.character.width * 0.4,
-      this.character.height * 0.4,
-    )
+    this.character.setSize(this.character.width * 0.4, this.character.height * 0.4)
     this.physics.add.existing(this.character, false)
     this.add.existing(this.character)
-    this.physics.world.enableBody(
-      this.character,
-      Phaser.Physics.Arcade.DYNAMIC_BODY,
-    )
+    this.physics.world.enableBody(this.character, Phaser.Physics.Arcade.DYNAMIC_BODY)
 
     this.cameras.main.startFollow(this.character, true, 0.05, 0.05)
   }
@@ -261,13 +238,7 @@ export default class FoxGame extends Phaser.Scene {
       },
     })
 
-    this.physics.add.collider(
-      this.character,
-      this.foods,
-      this.handleCollectFood,
-      undefined,
-      this,
-    )
+    this.physics.add.collider(this.character, this.foods, this.handleCollectFood, undefined, this)
 
     map.getObjectLayer("Blueberries")!.objects.forEach((blueberry) => {
       const x = blueberry.x! + blueberry.width! * 0.5
@@ -364,10 +335,7 @@ export default class FoxGame extends Phaser.Scene {
   }
 
   createLayers(map: Phaser.Tilemaps.Tilemap) {
-    const tileset0 = map.addTilesetImage(
-      "punyworld-overworld-tileset",
-      "tiles0",
-    )
+    const tileset0 = map.addTilesetImage("punyworld-overworld-tileset", "tiles0")
     const tileset1 = map.addTilesetImage("Tileset 1", "tiles1")
     const tileset2 = map.addTilesetImage("DungeonTileset", "tiles2")
 
@@ -385,11 +353,7 @@ export default class FoxGame extends Phaser.Scene {
     })
     const chestsLayer = map.getObjectLayer("Treasures")
     chestsLayer?.objects.forEach((chestObj) => {
-      chests.get(
-        chestObj.x! + chestObj.width! * 0.5,
-        chestObj.y! + chestObj.height! * 0.5,
-        "treasure",
-      )
+      chests.get(chestObj.x! + chestObj.width! * 0.5, chestObj.y! + chestObj.height! * 0.5, "treasure")
     })
 
     this.areas = this.areasObjects.objects.map((area) => {
@@ -398,13 +362,7 @@ export default class FoxGame extends Phaser.Scene {
       } else if (area.name.startsWith("cat")) {
         return new CatArea(area.x!, area.y!, area.width!, area.height!)
       } else if (area.name.startsWith("sound")) {
-        return new SoundArea(
-          area.name,
-          area.x!,
-          area.y!,
-          area.width!,
-          area.height!,
-        )
+        return new SoundArea(area.name, area.x!, area.y!, area.width!, area.height!)
       } else {
         return new Area(area.x!, area.y!, area.width!, area.height!)
       }
@@ -443,20 +401,8 @@ export default class FoxGame extends Phaser.Scene {
       undefined,
       this,
     )
-    this.physics.add.collider(
-      this.arrows,
-      this.treesLayer,
-      this.handleObjectsArrowCollision,
-      undefined,
-      this,
-    )
-    this.physics.add.collider(
-      this.arrows,
-      this.constructionsLayer,
-      this.handleObjectsArrowCollision,
-      undefined,
-      this,
-    )
+    this.physics.add.collider(this.arrows, this.treesLayer, this.handleObjectsArrowCollision, undefined, this)
+    this.physics.add.collider(this.arrows, this.constructionsLayer, this.handleObjectsArrowCollision, undefined, this)
   }
 
   changeSkin(skin: Skin) {
@@ -499,63 +445,37 @@ export default class FoxGame extends Phaser.Scene {
   }
 
   loadSkinSpriteSheet(skinName: string) {
-    this.load.spritesheet(
-      `idle-${skinName}`,
-      `/assets/animations/fox/${skinName}/lilfox_idle_strip8.png`,
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      },
-    )
-    this.load.spritesheet(
-      `crouch-${skinName}`,
-      `/assets/animations/fox/${skinName}/lilfox_crouch_strip8.png`,
-      { frameWidth: 32, frameHeight: 32 },
-    )
-    this.load.spritesheet(
-      `sit-${skinName}`,
-      `/assets/animations/fox/${skinName}/lilfox_sit_strip8.png`,
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      },
-    )
-    this.load.spritesheet(
-      `sneak-${skinName}`,
-      `/assets/animations/fox/${skinName}/lilfox_sneak_strip4.png`,
-      { frameWidth: 32, frameHeight: 32 },
-    )
-    this.load.spritesheet(
-      `run-${skinName}`,
-      `/assets/animations/fox/${skinName}/lilfox_run_strip4.png`,
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      },
-    )
-    this.load.spritesheet(
-      `walk-${skinName}`,
-      `/assets/animations/fox/${skinName}/lilfox_walk_strip8.png`,
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      },
-    )
-    this.load.spritesheet(
-      `die-${skinName}`,
-      `/assets/animations/fox/${skinName}/lilfox_die_strip8.png`,
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
-    this.load.spritesheet(
-      `hurt-${skinName}`,
-      `/assets/animations/fox/${skinName}/lilfox_hurt_strip5.png`,
-      {
-        frameWidth: 32,
-        frameHeight: 32,
-      }
-    );
+    this.load.spritesheet(`idle-${skinName}`, `/assets/animations/fox/${skinName}/lilfox_idle_strip8.png`, {
+      frameWidth: 32,
+      frameHeight: 32,
+    })
+    this.load.spritesheet(`crouch-${skinName}`, `/assets/animations/fox/${skinName}/lilfox_crouch_strip8.png`, {
+      frameWidth: 32,
+      frameHeight: 32,
+    })
+    this.load.spritesheet(`sit-${skinName}`, `/assets/animations/fox/${skinName}/lilfox_sit_strip8.png`, {
+      frameWidth: 32,
+      frameHeight: 32,
+    })
+    this.load.spritesheet(`sneak-${skinName}`, `/assets/animations/fox/${skinName}/lilfox_sneak_strip4.png`, {
+      frameWidth: 32,
+      frameHeight: 32,
+    })
+    this.load.spritesheet(`run-${skinName}`, `/assets/animations/fox/${skinName}/lilfox_run_strip4.png`, {
+      frameWidth: 32,
+      frameHeight: 32,
+    })
+    this.load.spritesheet(`walk-${skinName}`, `/assets/animations/fox/${skinName}/lilfox_walk_strip8.png`, {
+      frameWidth: 32,
+      frameHeight: 32,
+    })
+    this.load.spritesheet(`die-${skinName}`, `/assets/animations/fox/${skinName}/lilfox_die_strip8.png`, {
+      frameWidth: 32,
+      frameHeight: 32,
+    })
+    this.load.spritesheet(`hurt-${skinName}`, `/assets/animations/fox/${skinName}/lilfox_hurt_strip5.png`, {
+      frameWidth: 32,
+      frameHeight: 32,
+    })
   }
 }
