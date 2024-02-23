@@ -167,7 +167,6 @@ export default class FoxGame extends Phaser.Scene {
           break
         case "human_in_blue":
           const humanInBlue: HumanInBlue = this.humansInBlue.get(x, y, "human_in_blue")
-          humanInBlue.setMessages(messages)
           Singleton.getInstance().interactiveObjects.push(humanInBlue)
       }
     })

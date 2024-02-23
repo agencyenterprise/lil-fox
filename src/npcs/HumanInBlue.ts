@@ -13,7 +13,7 @@ export default class HumanInBlue extends Npc {
 
   private messages = [
     "Hey you! I have a quest for you, do you think you can handle it?", 
-    "You need to collect as many coins as you can in under 50 seconds, but don't even bother showing me your face again if don't collect at least 100."
+    "You need to collect as many coins as you can in under 50 seconds, but don't even bother showing me your face again if don't collect at least 100. Do you accept?"
   ]
 
   constructor(
@@ -61,22 +61,29 @@ export default class HumanInBlue extends Npc {
         SoundEffects.CATOWNER_HELLO,
       )
       sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, true)
-    } 
-    
-    if (this.interactionCount === 2) {
-      this.scene.scene.pause("LilFox")
-      this.scene.scene.setVisible(false, "LilFox")
-      this.scene.scene.run("MarioScene")
-      this.scene.scene.setVisible(true, "MarioScene");
-      sceneEvents.emit(Events.MARIO_LIKE_LEVEL_STARTED)
-    } else {
-      this.showMessage()
     }
-    
-    if (this.interactionCount === this.messages.length) {
+
+    if (this.interactionCount === 2) {
+      const gameUi: GameUI = this.scene.scene.get("game-ui") as GameUI
+      gameUi.dialogUi.askQuestion(
+        ["Yes", "No"],
+        (answer: number) => {
+          if (answer === 0) {
+            this.scene.scene.pause("LilFox")
+            this.scene.scene.setVisible(false, "LilFox")
+            this.scene.scene.run("MarioScene")
+            this.scene.scene.setVisible(true, "MarioScene");
+            sceneEvents.emit(Events.MARIO_LIKE_LEVEL_STARTED)
+          }
+        }
+      )
+    } else if (this.interactionCount === 3) {
+      this.hideDialog()
       this.interactionCount = 0
       sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, false)
-      this.hideDialog()
+      return
+    } else {
+      this.showMessage()
     }
 
     super.handleInteraction()
