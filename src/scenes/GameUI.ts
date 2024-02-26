@@ -229,7 +229,7 @@ export default class GameUI extends Phaser.Scene {
   }
 
   updateTimer(nextTime: number) {
-    this.timeDownText.setText(`00:${nextTime}`)
+    this.timeDownText.setText(`00:${nextTime.toString().padStart(2, "0")}`)
   }
 
   handleCharacterDied() {
@@ -238,6 +238,8 @@ export default class GameUI extends Phaser.Scene {
 
   handleMarioLikeLevelStarted() {
     SoundSingleton.getInstance().playTheme(SoundEffects.THEME_PLATFORM)
+
+    this.coinAmountText.setText("x0")
 
     this.berries.setVisible(false)
     this.hearts.setVisible(false)
