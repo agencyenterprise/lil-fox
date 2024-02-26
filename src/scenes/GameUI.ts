@@ -8,8 +8,15 @@ import { SoundSingleton, SoundEffects } from "@/utils/SoundSingleton"
 import { GameOverModal } from "@/ui/GameOverModal"
 import { WinMarioLikeLevelModal } from "@/ui/WinMarioLikeLevelModal"
 import { Modal, ReceivesInstructions } from "@/types/Modal"
+import type RexUI from "phaser3-rex-plugins/templates/ui/ui-plugin"
+import { InventoryWindowFactory } from "@/inventory/ui/InventoryWindowFactory"
+import uiJson from "../../public/inventory/assets/ui.json"
+import uiImg from "../../public/inventory/assets/ui.png"
 
 export default class GameUI extends Phaser.Scene {
+
+  public rexUI: RexUI
+
   private settingsMenu!: SettingsMenu
 
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
@@ -32,6 +39,9 @@ export default class GameUI extends Phaser.Scene {
   }
 
   preload() {
+    const uiAtlasMeta = uiJson.meta as any
+    uiAtlasMeta.image = uiImg
+
     this.cursors = this.input.keyboard?.createCursorKeys()!
   }
 
@@ -111,6 +121,8 @@ export default class GameUI extends Phaser.Scene {
 
     SoundSingleton.getInstance().setSoundManager(this)
     SoundSingleton.getInstance().playTheme(SoundEffects.THEME)
+
+    InventoryWindowFactory.create(this)
 
     sceneEvents.on(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
     sceneEvents.on(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)

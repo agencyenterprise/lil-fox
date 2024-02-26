@@ -4782,7 +4782,7 @@ phaser3-nineslice@^0.5.0:
     phaser "^3.13.0"
     webpack-cli "^3.1.1"
 
-phaser3-rex-plugins@^1.80.0:
+phaser3-rex-plugins@^1.60.7:
   version "1.80.0"
   resolved "https://registry.yarnpkg.com/phaser3-rex-plugins/-/phaser3-rex-plugins-1.80.0.tgz#e38ca87eb8dd2ebafec01190d1ea2dbfae1e4313"
   integrity sha512-OeayvK1rKSKUKs/nGWvMPx/x5AgyaV8WgyyCy5shn84B702yatlt93xLIIii5ER3O5ovqndK6Ne/ARaGsdbiwQ==

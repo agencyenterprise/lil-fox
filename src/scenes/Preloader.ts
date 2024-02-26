@@ -72,6 +72,12 @@ export default class Preloader extends Phaser.Scene {
       "npcs/humans/wearing_blue/human_wearing_blue_looking_left.json",
     )
 
+    this.load.atlas(
+      "A_INVENTORY", 
+      "inventory/assets/ui.png", 
+      "inventory/assets/ui.json", 
+    )
+
     this.load.image("ui-heart-empty", "ui/ui_heart_empty.png")
     this.load.image("ui-heart-full", "ui/ui_heart_full.png")
     this.load.image("ui-heart-half", "ui/ui_heart_half.png")
