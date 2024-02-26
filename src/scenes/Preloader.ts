@@ -11,9 +11,12 @@ export default class Preloader extends Phaser.Scene {
     this.load.image("tiles1", "tiles/16oga.png")
     this.load.image("tiles2", "tiles/DungeonTileset.png")
     this.load.image("tiles3", "tiles/nature-paltformer-tileset-16x16.png")
+    this.load.image("tiles4", "tiles/CuteRPG_Interior_custom.png")
+    this.load.image("tiles5", "tiles/Interiors_free_16x16.png")
 
     this.load.tilemapTiledJSON("map", "tiles/lil-fox-map.json")
     this.load.tilemapTiledJSON("platform-level-map", "tiles/platform-level.json")
+    this.load.tilemapTiledJSON("grandpa-home-map", "tiles/grandpa-home-map.json")
 
     this.load.atlas(
       "green_archer_shooting",
@@ -110,6 +113,6 @@ export default class Preloader extends Phaser.Scene {
   }
 
   create() {
-    this.scene.start("LilFox")
+    this.scene.start("GrandpaScene")
   }
 }

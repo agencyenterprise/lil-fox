@@ -112,6 +112,12 @@ export default class GameUI extends Phaser.Scene {
     SoundSingleton.getInstance().setSoundManager(this)
     SoundSingleton.getInstance().playTheme(SoundEffects.THEME)
 
+    this.berries.setVisible(false)
+    this.hearts.setVisible(false)
+    this.timeDownText.setVisible(false)
+    this.coinAmountText.setVisible(false)
+    this.coinImage.setVisible(false)
+
     sceneEvents.on(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
     sceneEvents.on(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
     sceneEvents.on(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)

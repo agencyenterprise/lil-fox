@@ -13,12 +13,7 @@ import Interactable from "@/types/Interactable"
 declare global {
   namespace Phaser.GameObjects {
     interface GameObjectFactory {
-      character(
-        x: number,
-        y: number,
-        texture: string,
-        frame?: string | number,
-      ): Character
+      character(x: number, y: number, texture: string, frame?: string | number): Character
     }
   }
 }
@@ -56,29 +51,15 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     this.selectedSkin = skin
   }
 
-  constructor(
-    scene: Phaser.Scene,
-    x: number,
-    y: number,
-    texture: string,
-    frame?: string | number,
-  ) {
+  constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
     super(scene, x, y, texture, frame)
 
     this.anims.play(`idle-${this.selectedSkin}`)
     scene.physics.add.existing(this, false)
 
-    sceneEvents.on(
-      Events.LOCK_PLAYER_MOVEMENT,
-      this.handleLockPlayerMovement,
-      this,
-    )
+    sceneEvents.on(Events.LOCK_PLAYER_MOVEMENT, this.handleLockPlayerMovement, this)
     scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      sceneEvents.off(
-        Events.LOCK_PLAYER_MOVEMENT,
-        this.handleLockPlayerMovement,
-        this,
-      )
+      sceneEvents.off(Events.LOCK_PLAYER_MOVEMENT, this.handleLockPlayerMovement, this)
     })
   }
 
@@ -111,13 +92,9 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
       this.scene.scene.restart()
     }
 
-    if (
-      this.healthState === HealthState.DAMAGE ||
-      this.healthState === HealthState.DEAD
-    )
-      return
+    if (this.healthState === HealthState.DAMAGE || this.healthState === HealthState.DEAD) return
 
-    this.isCharacterInArea(areas)
+    this.isCharacterInArea(areas || [])
 
     if (spaceJustDown) {
       const nearbyArea = new Phaser.Geom.Circle(this.x, this.y, TILE_SIZE)
