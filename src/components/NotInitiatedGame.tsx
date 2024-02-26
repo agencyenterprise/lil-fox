@@ -4,6 +4,7 @@ import { useNetwork, useAccount, useConnect, useSwitchNetwork } from 'wagmi'
 import Image from "next/image";
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { lineaTestnet } from '@wagmi/core/chains'
+import RexUIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin'
 
 type NotInitiatedGameProps = {
   setIsGameStarted: (started: boolean) => void;
@@ -29,15 +30,25 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
       const { default: MarioScene } = await import("../scenes/MarioScene")
       const { default: GameUI } = await import("../scenes/GameUI")
       const { default: QuizScene } = await import("../scenes/QuizScene")
+      const { default: BagScene } = await import("../scenes/BagScene")
 
       gameRef.current = new Phaser.Game({
         parent: 'phaser-container',
         width: 400,
         height: 250,
-        scene: [Preloader, FoxGame, MarioScene, GameUI, QuizScene],
+        scene: [Preloader,FoxGame, BagScene, MarioScene, GameUI, QuizScene],
         scale: {
           zoom: 2,
         },
+        plugins: {
+          scene: [
+            {
+              key: 'rexUI',
+              plugin: RexUIPlugin,
+              mapping: 'rexUI'
+            }
+          ]
+        }
       });
       setIsGameStarted(true);
     }
