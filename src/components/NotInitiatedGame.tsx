@@ -37,6 +37,8 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
 
       gameRef.current = new Phaser.Game({
         parent: 'phaser-container',
+        // width: 400 * 2,
+        // height: 250 * 2,
         width: 400,
         height: 250,
         scene: [Preloader, FoxGame, MarioScene, GameUI, QuizScene],
