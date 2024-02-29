@@ -4,12 +4,18 @@ import { useNetwork, useAccount, useConnect, useSwitchNetwork } from 'wagmi'
 import Image from "next/image";
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { lineaTestnet } from '@wagmi/core/chains'
+import initializeWorld from '@/InitializeWorld';
+import { getItems } from '@/prefabs/Item';
+import getPlayer from '@/prefabs/Player';
 // import RexUIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
 
 type NotInitiatedGameProps = {
   setIsGameStarted: (started: boolean) => void;
   gameRef: any
 }
+
+export const world = initializeWorld()
+export const playerEntity = getPlayer();
 
 export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGameProps) {
   const { connect } = useConnect()
@@ -56,8 +62,14 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
           ],
         },
       });
+
+      const items = getItems()
+      console.log({ items })
+      console.log({ playerEntity })
+
       setIsGameStarted(true);
     }
+
     initPhaser()
   };
 

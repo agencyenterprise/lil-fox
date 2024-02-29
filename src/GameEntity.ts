@@ -6,9 +6,20 @@ import {
   Quantity,
   Renderable,
   Valuable,
+  EntityId,
+  Inventory
 } from "./components/Components";
 
 export class GameEntity extends _Entity {
+  get entityId(): EntityId {
+    const component = this.getComponent<EntityId>(EntityId);
+
+    if (!component) {
+      throw new Error("EntityId does not exist on this entity.");
+    }
+    return component;
+  }
+  
   get pickedUp(): PickedUp {
     const component = this.getComponent<PickedUp>(PickedUp);
     if (!component) {
@@ -61,6 +72,14 @@ export class GameEntity extends _Entity {
     const component = this.getComponent<Consumable>(Consumable);
     if (!component) {
       throw new Error("Consumable does not exist on this entity.");
+    }
+    return component;
+  }
+
+  get inventory_mutable(): Inventory {
+    const component = this.getMutableComponent<Inventory>(Inventory);
+    if (!component) {
+      throw new Error("Inventory does not exist on this entity.");
     }
     return component;
   }

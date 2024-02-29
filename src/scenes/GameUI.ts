@@ -12,6 +12,10 @@ import type RexUI from "phaser3-rex-plugins/templates/ui/ui-plugin"
 import { InventoryWindowFactory } from "@/inventory/ui/InventoryWindowFactory"
 import uiJson from "../../public/inventory/assets/ui.json"
 import uiImg from "../../public/inventory/assets/ui.png"
+import { getPlayerItems } from "@/prefabs/Player"
+import { initializeEntity } from "@/InitializeEntity"
+import { addToInventory } from "@/inventory/state/InventoryUtilities"
+import { playerEntity } from "@/components/NotInitiatedGame"
 
 export default class GameUI extends Phaser.Scene {
 
@@ -123,6 +127,13 @@ export default class GameUI extends Phaser.Scene {
     SoundSingleton.getInstance().playTheme(SoundEffects.THEME)
 
     InventoryWindowFactory.create(this)
+
+    const playerItems = getPlayerItems();
+
+    playerItems.forEach((item) => {
+      const entity = initializeEntity(item as any);
+      addToInventory(playerEntity, entity);
+    });
 
     sceneEvents.on(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
     sceneEvents.on(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)

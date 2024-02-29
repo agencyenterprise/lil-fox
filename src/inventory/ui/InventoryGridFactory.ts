@@ -2,6 +2,7 @@ import GameUI from "@/scenes/GameUI";
 import InventoryGridSlotFactory from "./InventoryGridSlotFactory";
 import InventoryGridSlotSpriteFactory from "./InventoryGridSlotSpriteFactory";
 import InventoryGridSlot from "./InventoryGridSlot";
+import InventoryGridManager from "../managers/InventoryGridManager";
 
 export default class InventoryGridFactory {
   static create(scene: GameUI) {
@@ -49,7 +50,6 @@ export default class InventoryGridFactory {
       return slotA.slotIndex - slotB.slotIndex;
     });
 
-    // return new InventoryGridManager(table, slots);
-    return table
+    return new InventoryGridManager(table, slots);
   }
 }

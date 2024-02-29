@@ -1,5 +1,5 @@
+import { initializeEntity } from "@/InitializeEntity";
 import { v4 as uuidv4 } from "uuid";
-import { initializeEntity } from "../ecs/InitializeEntity.ts";
 export type ItemKey = keyof typeof itemPresets;
 
 export const itemPresets = {

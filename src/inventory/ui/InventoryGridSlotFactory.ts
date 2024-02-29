@@ -1,7 +1,9 @@
 import OverlapSizer from "phaser3-rex-plugins/templates/ui/overlapsizer/OverlapSizer";
-import GameUI from "@/scenes/GameUI.js";
+import GameUI from "@/scenes/GameUI";
 import InventoryGridSlot from "./InventoryGridSlot";
 import { InventoryGridContext } from "../InventoryGridContext";
+import InventoryPointerEventManager from "../managers/InventoryPointerEventManager";
+import InventoryGridSlotItemManager from "../managers/InventoryGridSlotItemManager";
 
 export default class InventoryGridSlotFactory {
   static create(
@@ -16,13 +18,13 @@ export default class InventoryGridSlotFactory {
 
       const slot = new InventoryGridSlot(slotSprite, InventoryGridContext.inventory);
 
-      // slot.registerManagers(
-      //   new InventoryGridSlotPointerEventManager(scene, slot),
-        // new InventoryPointerEventManager(scene, slot),
-        // new InventoryGridSlotItemManager(scene, slot),
+      slot.registerManagers(
+        // new InventoryGridSlotPointerEventManager(scene, slot),
+        new InventoryPointerEventManager(scene, slot),
+        new InventoryGridSlotItemManager(scene, slot),
         // new InventoryGridSlotDragManager(scene, slot, getValidDropTarget),
         // new InventoryItemTooltipManager(scene, slot)
-      // );
+      );
 
       slots.push(slot);
     }

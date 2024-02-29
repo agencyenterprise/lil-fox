@@ -1,5 +1,7 @@
 import Consumable from "./Consumable";
 import Descriptor from "./Descriptor";
+import EntityId from "./EntityId";
+import Inventory from "./Inventory";
 import PickedUp from "./PickedUp";
 import Quantity from "./Quantity";
 import Renderable from "./Renderable";
@@ -8,11 +10,12 @@ import Valuable from "./Valuable";
 export {
   Consumable,
   Descriptor,
-//   Inventory,
+  Inventory,
   PickedUp,
   Quantity,
   Renderable,
   Valuable,
+  EntityId,
 };
 
 export const components: ComponentTypes = {
@@ -22,7 +25,8 @@ export const components: ComponentTypes = {
   Quantity,
   Renderable,
   Valuable,
-//   Inventory,
+  Inventory,
+  EntityId,
 };
 
 export type ComponentTypes = {
@@ -32,5 +36,6 @@ export type ComponentTypes = {
   Quantity: typeof Quantity;
   Renderable: typeof Renderable;
   Valuable: typeof Valuable;
-//   Inventory: typeof Inventory;
+  EntityId: typeof EntityId;
+  Inventory: typeof Inventory;
 };
