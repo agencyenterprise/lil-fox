@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="3">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="9">
  <editorsettings>
   <export target="public/tiles/grandpa-home-map.json" format="json"/>
  </editorsettings>
@@ -1430,6 +1430,11 @@
     <property name="collides" type="bool" value="true"/>
    </properties>
   </tile>
+  <tile id="398">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+   </properties>
+  </tile>
   <tile id="400">
    <properties>
     <property name="collides" type="bool" value="true"/>
@@ -1876,6 +1881,11 @@
    </properties>
   </tile>
   <tile id="493">
+   <properties>
+    <property name="collides" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="495">
    <properties>
     <property name="collides" type="bool" value="true"/>
    </properties>
@@ -2419,7 +2429,7 @@
 0,0,0,760,763,0,0,0,0,0,1227,1228,0,0,0,0,0,0,1341,0,
 0,1245,0,792,795,0,0,0,0,0,1243,1244,1245,0,0,0,0,0,1357,0,
 0,1261,0,393,393,0,0,0,0,0,1259,1260,1261,0,0,0,0,0,1356,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,496,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
  <layer id="5" name="Objects" width="20" height="20">
@@ -2442,15 +2452,20 @@
 0,0,0,0,0,0,0,0,0,0,990,991,0,0,1741,0,1743,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,640,0,0,0,
-0,0,0,240,272,0,648,0,0,0,0,0,0,0,0,0,656,0,0,0,
-0,0,0,0,0,0,664,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,240,272,0,0,0,0,0,0,0,0,0,0,0,656,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup id="9" name="Areas">
+  <object id="4" name="tipLetter" x="155.351" y="33.2103" width="25.4613" height="23.2472"/>
+  <object id="5" name="tipDoor" x="92.6199" y="294.834" width="22.5092" height="16.9742"/>
+  <object id="6" x="-61.2546" y="115.867"/>
+ </objectgroup>
  <objectgroup id="6" name="SpawnPoints">
   <object id="1" name="Letter" x="168.563" y="39.8137">
    <point/>
   </object>
-  <object id="2" name="Character" x="103.69" y="294.096">
+  <object id="2" name="Character" x="103.321" y="284.871">
    <point/>
   </object>
  </objectgroup>

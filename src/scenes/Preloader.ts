@@ -96,6 +96,7 @@ export default class Preloader extends Phaser.Scene {
     this.load.image("cursor", `ui/cursor.png`)
 
     this.load.audio(SoundEffects.THEME, ["assets/audio/theme.ogg", "assets/audio/theme.mp3"])
+    this.load.audio(SoundEffects.THEME_GRANDPA, ["assets/audio/theme-grandpa.ogg", "assets/audio/theme-grandpa.mp3"])
     this.load.audio(SoundEffects.THEME_PLATFORM, ["assets/audio/theme-platform.ogg", "assets/audio/theme-platform.mp3"])
     this.load.audio(SoundEffects.GAME_OVER, ["assets/audio/game-over.ogg", "assets/audio/game-over.mp3"])
     this.load.audio(SoundEffects.DAMAGE, ["assets/audio/ouch.ogg", "assets/audio/ouch.mp3"])

@@ -12,6 +12,7 @@ export enum SoundEffects {
   PICKUP = "audio-pickup",
   PICKUP_COIN = "audio-pickup-coin",
   THEME = "audio-theme",
+  THEME_GRANDPA = "audio-theme-grandpa",
   THEME_PLATFORM = "audio-theme-platform",
   ROAR = "audio-roar",
   JUMP_SMALL = "audio-jump-small",

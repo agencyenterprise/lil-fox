@@ -1,9 +1,11 @@
 import { Skin } from "@/characters/Character"
 import IntroductionCharacter from "@/characters/IntroductionCharacter"
 import { createCharacterAnims } from "@/anims/CharacterAnims"
-import { Events, sceneEvents } from "@/events/EventsCenter"
 import { Singleton } from "@/utils/GlobalAccessSingleton"
 import GameUI from "./GameUI"
+import { TipArea } from "@/types/TipArea"
+import { Area } from "@/types/Area"
+import GrandpaDoor from "@/types/GrandpaDoor"
 
 export default class GrandpaScene extends Phaser.Scene {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
@@ -11,6 +13,7 @@ export default class GrandpaScene extends Phaser.Scene {
   private wallsLayer: Phaser.Tilemaps.TilemapLayer
   private furnituresLayer: Phaser.Tilemaps.TilemapLayer
   private spawnPoints: Map<string, Phaser.Geom.Point> = new Map()
+  private doorArea: Phaser.Geom.Rectangle
 
   constructor() {
     super({
@@ -49,6 +52,9 @@ export default class GrandpaScene extends Phaser.Scene {
     this.createLayers(map)
     this.spawnCharacter(map)
     this.addColliders()
+
+    const door: GrandpaDoor = new GrandpaDoor(this, this.doorArea.x, this.doorArea.y)
+    Singleton.getInstance().interactiveObjects.push(door)
   }
 
   createLayers(map: Phaser.Tilemaps.Tilemap) {
@@ -64,6 +70,18 @@ export default class GrandpaScene extends Phaser.Scene {
       const x = spawnPoint.x
       const y = spawnPoint.y
       this.spawnPoints.set(spawnPoint.name, new Phaser.Geom.Point(x!, y!))
+    })
+
+    Singleton.getInstance().areas = map.getObjectLayer("Areas")!.objects.map((area) => {
+      if (area.name.startsWith("tip")) {
+        if (area.name === "tipDoor") {
+          this.doorArea = new Phaser.Geom.Rectangle(area.x!, area.y!, area.width!, area.height!)
+        }
+
+        return new TipArea(area.x!, area.y!, area.width!, area.height!)
+      } else {
+        return new Area(area.x!, area.y!, area.width!, area.height!)
+      }
     })
   }
 

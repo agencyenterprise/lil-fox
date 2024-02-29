@@ -94,7 +94,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
 
     if (this.healthState === HealthState.DAMAGE || this.healthState === HealthState.DEAD) return
 
-    this.isCharacterInArea(areas || [])
+    this.isCharacterInArea(areas)
 
     if (spaceJustDown) {
       const nearbyArea = new Phaser.Geom.Circle(this.x, this.y, TILE_SIZE)
