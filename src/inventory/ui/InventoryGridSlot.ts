@@ -5,6 +5,7 @@ import { GameEntity } from "@/GameEntity";
 import { PointerEventManager } from "../core/PointerEventManager";
 import { ItemManager } from "../core/ItemManager";
 import { InventoryGridSlotEvent, InventoryGridSlotEventEmitter } from "../events/InventoryGridSlotEventEmitter";
+import DragManager from "../core/InventoryManager";
 
 export interface AddItemConfig {
   renderable: Renderable;
@@ -17,6 +18,7 @@ export default class InventoryGridSlot {
 
   private pointerEventManager: PointerEventManager | undefined;
   private itemManager: ItemManager | undefined;
+  private dragManager: DragManager | undefined;
   public slotIndex: number = 0;
 
   public readonly events: InventoryGridSlotEventEmitter =
@@ -73,12 +75,12 @@ export default class InventoryGridSlot {
   registerManagers(
     pointerEventManager: PointerEventManager,
     itemManager: ItemManager,
-    // dragManager: DragManager,
+    dragManager: DragManager,
     // itemTooltipManager: ItemTooltipManager
   ) {
     this.pointerEventManager = pointerEventManager;
     this.itemManager = itemManager;
-    // this.dragManager = dragManager;
+    this.dragManager = dragManager;
     // this.itemTooltipManager = itemTooltipManager;
   }
 }

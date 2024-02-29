@@ -7,7 +7,6 @@ import { lineaTestnet } from '@wagmi/core/chains'
 import initializeWorld from '@/InitializeWorld';
 import { getItems } from '@/prefabs/Item';
 import getPlayer from '@/prefabs/Player';
-// import RexUIPlugin from "phaser3-rex-plugins/templates/ui/ui-plugin.js";
 
 type NotInitiatedGameProps = {
   setIsGameStarted: (started: boolean) => void;
@@ -40,6 +39,7 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
       const { default: GameUI } = await import("../scenes/GameUI")
       const { default: QuizScene } = await import("../scenes/QuizScene")
       const { default: RexUIPlugin } = await import("phaser3-rex-plugins/templates/ui/ui-plugin.js");
+      const { default: DragPlugin } = await import("phaser3-rex-plugins/plugins/drag-plugin");
 
       gameRef.current = new Phaser.Game({
         parent: 'phaser-container',
@@ -53,6 +53,13 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
         },
         pixelArt: true,
         plugins: {
+          global: [
+            {
+              key: "dragPlugin",
+              plugin: DragPlugin,
+              start: true,
+            },
+          ],
           scene: [
             {
               key: "rexUI",

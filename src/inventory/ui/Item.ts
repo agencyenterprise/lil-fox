@@ -69,6 +69,7 @@ export default class Item {
       this
     );
   }
+
   initiateDrag() {
     const dragPlugin = this.itemSprite.scene.plugins.get(
       "dragPlugin"

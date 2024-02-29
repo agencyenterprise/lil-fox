@@ -4,6 +4,8 @@ import InventoryGridSlot from "./InventoryGridSlot";
 import { InventoryGridContext } from "../InventoryGridContext";
 import InventoryPointerEventManager from "../managers/InventoryPointerEventManager";
 import InventoryGridSlotItemManager from "../managers/InventoryGridSlotItemManager";
+import InventoryGridSlotDragManager from "../managers/InventoryDragManager";
+import { getValidDropTarget } from "../Utils";
 
 export default class InventoryGridSlotFactory {
   static create(
@@ -22,7 +24,7 @@ export default class InventoryGridSlotFactory {
         // new InventoryGridSlotPointerEventManager(scene, slot),
         new InventoryPointerEventManager(scene, slot),
         new InventoryGridSlotItemManager(scene, slot),
-        // new InventoryGridSlotDragManager(scene, slot, getValidDropTarget),
+        new InventoryGridSlotDragManager(scene, slot, getValidDropTarget),
         // new InventoryItemTooltipManager(scene, slot)
       );
 
