@@ -33,7 +33,6 @@ export default class InventoryGridSlot {
   }
 
   addItem(addItemConfig: AddItemConfig) {
-    console.log("InventoryGridSlot.addItem()")
     const item = this.itemManager!.addItem(addItemConfig);
 
     this.events.emit(InventoryGridSlotEvent.ITEM_ADDED, item);

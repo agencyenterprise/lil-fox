@@ -10,7 +10,6 @@ export default class InventoryGridManager {
   ) {}
 
   addItem(itemConfig: AddItemConfig, slotIndex?: number): Item | null {
-    console.log("item.config", itemConfig)
     const slot =
       slotIndex !== undefined
         ? this.getSlotAtIndex(slotIndex)

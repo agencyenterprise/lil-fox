@@ -14,15 +14,12 @@ export default class InventoryGridSlotItemManager implements ItemManager {
 
   addItem(config: AddItemConfig): Item {
     // Create a new item sprite based on the item's config
-    console.log("InventoryGridSlotItemManager.addItem()")
     const itemSprite = ItemSpriteFactory.create(
       this.scene,
       this.itemSlot.slotSprite.x,
       this.itemSlot.slotSprite.y,
       config.renderable.sprite.frame
     );
-
-    console.log({itemSprite})
 
     this.item = new Item(itemSprite, config);
 

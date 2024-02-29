@@ -17,6 +17,7 @@ export default class InventoryWindowManager {
 
     playerInventory.slots.forEach((slot) => {
       slot.events.on(InventoryGridSlotEvent.DRAG_ENDED, (dragEndedProps) => {
+        console.log("DRAG ENDED")
         const { startingSlotIndex, landingSlotIndex } = dragEndedProps;
 
         const currentSlot =
