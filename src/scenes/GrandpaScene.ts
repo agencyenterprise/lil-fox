@@ -4,8 +4,10 @@ import { createCharacterAnims } from "@/anims/CharacterAnims"
 import { Singleton } from "@/utils/GlobalAccessSingleton"
 import GameUI from "./GameUI"
 import { TipArea } from "@/types/TipArea"
+import { GrandpaDoorArea } from "@/types/GrandpaDoorArea"
 import { Area } from "@/types/Area"
-import GrandpaDoor from "@/types/GrandpaDoor"
+import { Events, sceneEvents } from "@/events/EventsCenter"
+import GrandpaLetter from "@/types/GrandpaLetter"
 
 export default class GrandpaScene extends Phaser.Scene {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
@@ -13,7 +15,8 @@ export default class GrandpaScene extends Phaser.Scene {
   private wallsLayer: Phaser.Tilemaps.TilemapLayer
   private furnituresLayer: Phaser.Tilemaps.TilemapLayer
   private spawnPoints: Map<string, Phaser.Geom.Point> = new Map()
-  private doorArea: Phaser.Geom.Rectangle
+  private doorImage: Phaser.GameObjects.Image
+  private doorCollider: Phaser.Physics.Arcade.Collider
 
   constructor() {
     super({
@@ -52,9 +55,7 @@ export default class GrandpaScene extends Phaser.Scene {
     this.createLayers(map)
     this.spawnCharacter(map)
     this.addColliders()
-
-    const door: GrandpaDoor = new GrandpaDoor(this, this.doorArea.x, this.doorArea.y)
-    Singleton.getInstance().interactiveObjects.push(door)
+    this.createEventListeners()
   }
 
   createLayers(map: Phaser.Tilemaps.Tilemap) {
@@ -72,13 +73,18 @@ export default class GrandpaScene extends Phaser.Scene {
       this.spawnPoints.set(spawnPoint.name, new Phaser.Geom.Point(x!, y!))
     })
 
+    this.doorImage = this.add.image(104, 312, "door").setVisible(true)
+    this.physics.world.enableBody(this.doorImage, Phaser.Physics.Arcade.STATIC_BODY)
+
     Singleton.getInstance().areas = map.getObjectLayer("Areas")!.objects.map((area) => {
       if (area.name.startsWith("tip")) {
-        if (area.name === "tipDoor") {
-          this.doorArea = new Phaser.Geom.Rectangle(area.x!, area.y!, area.width!, area.height!)
+        if (area.name === "tipLetter") {
+          Singleton.getInstance().interactiveObjects.push(new GrandpaLetter(this, area.x!, area.y!))
         }
 
         return new TipArea(area.x!, area.y!, area.width!, area.height!)
+      } else if (area.name.startsWith("door")) {
+        return new GrandpaDoorArea(this, area.x!, area.y!, area.width!, area.height!)
       } else {
         return new Area(area.x!, area.y!, area.width!, area.height!)
       }
@@ -103,6 +109,22 @@ export default class GrandpaScene extends Phaser.Scene {
 
     this.physics.add.collider(this.character, this.wallsLayer)
     this.physics.add.collider(this.character, this.furnituresLayer)
+    this.doorCollider = this.physics.add.collider(this.character, this.doorImage)
+  }
+
+  createEventListeners() {
+    sceneEvents.on(Events.GRANDPA_LETTER_READ, this.handleLetterRead, this)
+
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      sceneEvents.off(Events.GRANDPA_LETTER_READ, this.handleLetterRead, this)
+    })
+  }
+
+  handleLetterRead() {
+    if (this.doorImage.visible) {
+      this.doorImage.setVisible(false)
+      this.doorCollider.destroy()
+    }
   }
 
   update() {

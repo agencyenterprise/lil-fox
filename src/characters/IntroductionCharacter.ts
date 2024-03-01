@@ -17,10 +17,8 @@ export default class IntroductionCharacter extends Character {
       const nearbyArea = new Phaser.Geom.Circle(this.x, this.y, TILE_SIZE)
 
       const nearbyObject = Singleton.getInstance().interactiveObjects.find((obj) => {
-        console.log(obj.x, obj.y)
         return nearbyArea.contains(obj.x!, obj.y!)
       })
-
       if (nearbyObject) {
         this.interactWithObject(nearbyObject)
       }
