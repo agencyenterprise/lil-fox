@@ -3,7 +3,7 @@ import Interactable from "./Interactable"
 import GameUI from "@/scenes/GameUI"
 import { Singleton } from "@/utils/GlobalAccessSingleton"
 
-export default class GrandpaMap implements Interactable {
+export class GrandpaMap implements Interactable {
   public x: number = 0
   public y: number = 0
   scene: Phaser.Scene
@@ -21,7 +21,7 @@ export default class GrandpaMap implements Interactable {
     this.interactionCount++
 
     if (this.interactionCount === 1) {
-      this.showLetter("This is the map of the game, keep with you always")
+      this.showLetter("This is the map of the game, keep with you always.")
     } else if (this.interactionCount === 2) {
       this.hideLetter()
       this.interactionCount = 0

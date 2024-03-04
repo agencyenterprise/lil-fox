@@ -37,7 +37,7 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
   public selectedSkin: Skin = Skin.DEFAULT
   private healthState = HealthState.IDLE
   private damageTime = 0
-  private isPlayerMovementLocked = false
+  protected isPlayerMovementLocked = false
 
   private _health = 5
 

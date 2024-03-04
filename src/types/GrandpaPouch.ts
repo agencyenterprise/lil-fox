@@ -3,7 +3,7 @@ import Interactable from "./Interactable"
 import GameUI from "@/scenes/GameUI"
 import { Singleton } from "@/utils/GlobalAccessSingleton"
 
-export default class GrandpaPouch implements Interactable {
+export class GrandpaPouch implements Interactable {
   public x: number = 0
   public y: number = 0
   scene: Phaser.Scene
@@ -21,7 +21,7 @@ export default class GrandpaPouch implements Interactable {
     this.interactionCount++
 
     if (this.interactionCount === 1) {
-      this.showLetter("Get this pouch of coins, it will help you in the game")
+      this.showLetter("Get this pouch of coins, it will help you in the game.")
     } else if (this.interactionCount === 2) {
       this.hideLetter()
       this.interactionCount = 0

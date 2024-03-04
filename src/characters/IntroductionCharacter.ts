@@ -24,6 +24,12 @@ export default class IntroductionCharacter extends Character {
       }
     }
 
+    if (this.isPlayerMovementLocked) {
+      this.anims.play(`idle-${this.selectedSkin}`)
+      this.setVelocity(0, 0)
+      return
+    }
+
     this.moveFox(cursors)
   }
 }

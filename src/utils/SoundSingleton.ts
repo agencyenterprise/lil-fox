@@ -11,6 +11,7 @@ export enum SoundEffects {
   GAME_OVER = "audio-game-over",
   PICKUP = "audio-pickup",
   PICKUP_COIN = "audio-pickup-coin",
+  PICKUP_PAPER = "audio-pickup-paper",
   THEME = "audio-theme",
   THEME_GRANDPA = "audio-theme-grandpa",
   THEME_PLATFORM = "audio-theme-platform",
@@ -19,6 +20,7 @@ export enum SoundEffects {
   JUMP_BIG = "audio-jump-big",
   POWER_UP = "audio-power-up",
   SUCCESS = "audio-success",
+  DOOR_OPEN = "audio-door-open",
 }
 
 export class SoundSingleton {

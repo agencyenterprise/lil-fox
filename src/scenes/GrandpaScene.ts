@@ -1,18 +1,29 @@
 import { Skin } from "@/characters/Character"
 import IntroductionCharacter from "@/characters/IntroductionCharacter"
 import { createCharacterAnims } from "@/anims/CharacterAnims"
-import { Singleton } from "@/utils/GlobalAccessSingleton"
-import GameUI from "./GameUI"
+
+import { Area } from "@/types/Area"
 import { TipArea } from "@/types/TipArea"
 import { GrandpaDoorArea } from "@/types/GrandpaDoorArea"
-import { Area } from "@/types/Area"
+import { GrandpaLetter } from "@/types/GrandpaLetter"
+import { GrandpaMap } from "@/types/GrandpaMap"
+import { GrandpaPouch } from "@/types/GrandpaPouch"
+
 import { Events, sceneEvents } from "@/events/EventsCenter"
-import GrandpaLetter from "@/types/GrandpaLetter"
-import GrandpaMap from "@/types/GrandpaMap"
-import GrandpaPouch from "@/types/GrandpaPouch"
+import { Singleton } from "@/utils/GlobalAccessSingleton"
+import { SoundEffects, SoundSingleton } from "@/utils/SoundSingleton"
+
+import GameUI from "./GameUI"
+
+const enum Collectibles {
+  Letter = "Letter",
+  Map = "Map",
+  Pouch = "Pouch",
+}
 
 export default class GrandpaScene extends Phaser.Scene {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
+  private map: Phaser.Tilemaps.Tilemap
   public character!: IntroductionCharacter
   private wallsLayer: Phaser.Tilemaps.TilemapLayer
   private furnituresLayer: Phaser.Tilemaps.TilemapLayer
@@ -22,6 +33,7 @@ export default class GrandpaScene extends Phaser.Scene {
   private letterImage: Phaser.GameObjects.Image
   private mapImage: Phaser.GameObjects.Image
   private pouchImage: Phaser.GameObjects.Image
+  private itemsLeftToCollect: string[] = [Collectibles.Letter, Collectibles.Map, Collectibles.Pouch]
 
   constructor() {
     super({
@@ -51,42 +63,42 @@ export default class GrandpaScene extends Phaser.Scene {
 
     Singleton.getInstance().gameUi = this.scene.get("game-ui") as GameUI
 
-    const map = this.make.tilemap({ key: "grandpa-home-map" })
+    this.map = this.make.tilemap({ key: "grandpa-home-map" })
 
     createCharacterAnims(this.anims)
 
     this.cameras.main.setBounds(-40, -50, 250, 400)
 
-    this.createLayers(map)
-    this.createAreas(map)
-    this.createObjects(map)
-    this.createInteractions(map)
+    this.createLayers()
+    this.createAreas()
+    this.createObjects()
+    this.createInteractions()
     this.spawnCharacter()
     this.addColliders()
     this.createEventListeners()
   }
 
-  createLayers(map: Phaser.Tilemaps.Tilemap) {
-    const tileset0 = map.addTilesetImage("CuteRPG_Interior_custom", "tiles4")
-    const tileset1 = map.addTilesetImage("Interiors_free_16x16", "tiles5")
+  createLayers() {
+    const tileset0 = this.map.addTilesetImage("CuteRPG_Interior_custom", "tiles4")
+    const tileset1 = this.map.addTilesetImage("Interiors_free_16x16", "tiles5")
 
-    map.createLayer("Floor", [tileset0!, tileset1!])!
-    this.wallsLayer = map.createLayer("Walls", [tileset0!, tileset1!])!
-    this.furnituresLayer = map.createLayer("Furnitures", [tileset0!, tileset1!])!
-    map.createLayer("Objects", [tileset0!, tileset1!])!
+    this.map.createLayer("Floor", [tileset0!, tileset1!])!
+    this.wallsLayer = this.map.createLayer("Walls", [tileset0!, tileset1!])!
+    this.furnituresLayer = this.map.createLayer("Furnitures", [tileset0!, tileset1!])!
+    this.map.createLayer("Objects", [tileset0!, tileset1!])!
 
-    map.getObjectLayer("SpawnPoints")!.objects.forEach((spawnPoint) => {
+    this.map.getObjectLayer("SpawnPoints")!.objects.forEach((spawnPoint) => {
       const x = spawnPoint.x
       const y = spawnPoint.y
       this.spawnPoints.set(spawnPoint.name, new Phaser.Geom.Point(x!, y!))
     })
   }
 
-  createAreas(map: Phaser.Tilemaps.Tilemap) {
-    Singleton.getInstance().areas = map.getObjectLayer("Areas")!.objects.map((area) => {
-      if (area.name.startsWith("tip")) {
+  createAreas() {
+    Singleton.getInstance().areas = this.map.getObjectLayer("Areas")!.objects.map((area) => {
+      if (this.itemsLeftToCollect.includes(area.name.replace("tip", ""))) {
         return new TipArea(area.x!, area.y!, area.width!, area.height!)
-      } else if (area.name.startsWith("door")) {
+      } else if (area.name == "areaDoor") {
         return new GrandpaDoorArea(this, area.x!, area.y!, area.width!, area.height!)
       } else {
         return new Area(area.x!, area.y!, area.width!, area.height!)
@@ -94,26 +106,30 @@ export default class GrandpaScene extends Phaser.Scene {
     })
   }
 
-  createObjects(map: Phaser.Tilemaps.Tilemap) {
+  createObjects() {
     // Door
-    this.doorImage = this.add.image(104, 312, "door").setVisible(true)
+    const doorSpawn = this.spawnPoints.get("Door")!
+    this.doorImage = this.add.image(doorSpawn.x, doorSpawn.y, "door")
     this.physics.world.enableBody(this.doorImage, Phaser.Physics.Arcade.STATIC_BODY)
 
     // Letter
-    const letterSpawn = this.spawnPoints.get("Letter")!
+    const letterSpawn = this.spawnPoints.get(Collectibles.Letter)!
     this.letterImage = this.add.image(letterSpawn.x, letterSpawn.y, "letter").setScale(0.7)
+    this.physics.world.enableBody(this.letterImage, Phaser.Physics.Arcade.STATIC_BODY)
 
     // Map
-    const mapSpawn = this.spawnPoints.get("Map")!
+    const mapSpawn = this.spawnPoints.get(Collectibles.Map)!
     this.mapImage = this.add.image(mapSpawn.x, mapSpawn.y, "map").setScale(0.8)
+    this.physics.world.enableBody(this.mapImage, Phaser.Physics.Arcade.STATIC_BODY)
 
     // Pouch
-    const pouchSpawn = this.spawnPoints.get("Pouch")!
+    const pouchSpawn = this.spawnPoints.get(Collectibles.Pouch)!
     this.pouchImage = this.add.image(pouchSpawn.x, pouchSpawn.y, "pouch").setScale(0.8)
+    this.physics.world.enableBody(this.pouchImage, Phaser.Physics.Arcade.STATIC_BODY)
   }
 
-  createInteractions(map: Phaser.Tilemaps.Tilemap) {
-    map.getObjectLayer("Areas")!.objects.map((area) => {
+  createInteractions() {
+    this.map.getObjectLayer("Areas")!.objects.map((area) => {
       if (area.name === "tipLetter") {
         Singleton.getInstance().interactiveObjects.push(new GrandpaLetter(this, area.x!, area.y!))
       }
@@ -148,6 +164,9 @@ export default class GrandpaScene extends Phaser.Scene {
     this.physics.add.collider(this.character, this.furnituresLayer)
 
     this.doorCollider = this.physics.add.collider(this.character, this.doorImage)
+    this.physics.add.collider(this.character, this.letterImage)
+    this.physics.add.collider(this.character, this.mapImage)
+    this.physics.add.collider(this.character, this.pouchImage)
   }
 
   createEventListeners() {
@@ -160,8 +179,15 @@ export default class GrandpaScene extends Phaser.Scene {
     })
   }
 
+  removeItemCollected(itemName: string) {
+    this.itemsLeftToCollect = this.itemsLeftToCollect.filter((item) => item !== itemName)
+    this.createAreas()
+  }
+
   handleLetterRead() {
     if (this.letterImage.visible) {
+      SoundSingleton.getInstance().playSoundEffect(SoundEffects.PICKUP_PAPER)
+      this.removeItemCollected(Collectibles.Letter)
       this.letterImage.setVisible(false)
       this.handleDoorOpen()
     }
@@ -169,6 +195,8 @@ export default class GrandpaScene extends Phaser.Scene {
 
   handleMapCollected() {
     if (this.mapImage.visible) {
+      SoundSingleton.getInstance().playSoundEffect(SoundEffects.PICKUP_PAPER)
+      this.removeItemCollected(Collectibles.Map)
       this.mapImage.setVisible(false)
       this.handleDoorOpen()
     }
@@ -176,6 +204,8 @@ export default class GrandpaScene extends Phaser.Scene {
 
   handlePouchCollected() {
     if (this.pouchImage.visible) {
+      SoundSingleton.getInstance().playSoundEffect(SoundEffects.PICKUP_COIN)
+      this.removeItemCollected(Collectibles.Pouch)
       this.pouchImage.setVisible(false)
       this.handleDoorOpen()
     }
@@ -183,10 +213,11 @@ export default class GrandpaScene extends Phaser.Scene {
 
   handleDoorOpen() {
     if (this.doorImage.visible) {
-      if (this.mapImage.visible || this.pouchImage.visible) {
+      if (this.itemsLeftToCollect.length > 0) {
         return
       }
 
+      SoundSingleton.getInstance().playSoundEffect(SoundEffects.DOOR_OPEN)
       this.doorImage.setVisible(false)
       this.doorCollider.destroy()
     }
