@@ -18,6 +18,7 @@ export default class InventoryGridSlotDragManager implements DragManager {
       item.itemSprite.on(
         "drop",
         (pointer: Phaser.Input.Pointer, itemSlotSprite: OverlapSizer) => {
+          console.log("drop", {itemSlotSprite})
           this.handleDragDrop(pointer, itemSlotSprite, item);
         }
       );
@@ -37,9 +38,11 @@ export default class InventoryGridSlotDragManager implements DragManager {
       );
     });
   }
+
   handleDragEnter(pointer: Phaser.Input.Pointer, itemSlotSprite: OverlapSizer) {
     const slotContext = itemSlotSprite.getData("slotType");
     const slotIndex = itemSlotSprite.getData("slotIndex");
+    console.log("handleDragEnter", slotIndex)
     if (this.getValidDropTarget(slotContext)) {
       this.itemSlot.events.emit(InventoryGridSlotEvent.DRAG_LEAVE, {
         slotIndex,
@@ -79,6 +82,9 @@ export default class InventoryGridSlotDragManager implements DragManager {
     if (!isValidDropTarget) {
       item.resetPosition();
     }
+
+    console.log("slotType", itemSlotSprite.getData("slotType"))
+    console.log("slotIndex", itemSlotSprite.getData("slotIndex"))
 
     this.itemSlot.events.emit(InventoryGridSlotEvent.DRAG_ENDED, {
       startingSlotContext: this.itemSlot.slotType,

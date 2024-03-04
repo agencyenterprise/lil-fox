@@ -1,12 +1,12 @@
 import GameUI from "@/scenes/GameUI";
 import InventoryGridSlotFactory from "./InventoryGridSlotFactory";
 import InventoryGridSlotSpriteFactory from "./InventoryGridSlotSpriteFactory";
-import InventoryGridSlot from "./InventoryGridSlot";
 import InventoryGridManager from "../managers/InventoryGridManager";
+
 
 export default class InventoryGridFactory {
   static create(scene: GameUI) {
-    const slots: InventoryGridSlot[] = InventoryGridSlotFactory.create(
+    const slots = InventoryGridSlotFactory.create(
       scene,
       25,
       InventoryGridSlotSpriteFactory.create
@@ -26,7 +26,7 @@ export default class InventoryGridFactory {
       const column = (i - row) / cols;
 
       const rightPadding = column === cols - 1 ? 5 : 0;
-      const bottomPadding = row === rows - 1 ? 5 : 0;
+      const bottompadding = row === rows - 1 ? 5 : 0;
 
       itemSlot.setSlotIndex(row * cols + column);
 
@@ -37,7 +37,7 @@ export default class InventoryGridFactory {
           top: 5,
           right: rightPadding,
           left: 5,
-          bottom: bottomPadding,
+          bottom: bottompadding,
         },
         key: i.toString(),
         align: "center",

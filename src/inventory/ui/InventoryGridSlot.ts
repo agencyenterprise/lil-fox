@@ -28,6 +28,7 @@ export default class InventoryGridSlot {
     public readonly slotSprite: OverlapSizer,
     public readonly slotType: InventoryGridContext
   ) {
+    console.log("constructor InventoryGridSlot", slotType)
     this.slotSprite.setData("slotIndex", this.slotIndex);
     this.slotSprite.setData("slotType", slotType);
   }
@@ -49,6 +50,7 @@ export default class InventoryGridSlot {
   }
 
   setSlotIndex(index: number) {
+    console.log("index", index)
     this.slotIndex = index
   }
 
@@ -74,12 +76,12 @@ export default class InventoryGridSlot {
   registerManagers(
     pointerEventManager: PointerEventManager,
     itemManager: ItemManager,
-    dragManager: DragManager,
+    // dragManager: DragManager,
     // itemTooltipManager: ItemTooltipManager
   ) {
     this.pointerEventManager = pointerEventManager;
     this.itemManager = itemManager;
-    this.dragManager = dragManager;
+    // this.dragManager = dragManager;
     // this.itemTooltipManager = itemTooltipManager;
   }
 }

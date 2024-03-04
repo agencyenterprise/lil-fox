@@ -24,7 +24,7 @@ export default class InventoryGridSlotFactory {
         // new InventoryGridSlotPointerEventManager(scene, slot),
         new InventoryPointerEventManager(scene, slot),
         new InventoryGridSlotItemManager(scene, slot),
-        new InventoryGridSlotDragManager(scene, slot, getValidDropTarget),
+        // new InventoryGridSlotDragManager(scene, slot, getValidDropTarget),
         // new InventoryItemTooltipManager(scene, slot)
       );
 

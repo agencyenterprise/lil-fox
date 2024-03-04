@@ -15,44 +15,46 @@ export default class InventoryWindowManager {
       this.playerInventory.addItem(decomposeItem(item));
     });
 
-    playerInventory.slots.forEach((slot) => {
-      slot.events.on(InventoryGridSlotEvent.DRAG_ENDED, (dragEndedProps) => {
-        console.log("DRAG ENDED")
-        const { startingSlotIndex, landingSlotIndex } = dragEndedProps;
+    // playerInventory.slots.forEach((slot) => {
+    //   slot.events.on(InventoryGridSlotEvent.DRAG_ENDED, (dragEndedProps) => {
+    //     console.log("DRAG ENDED")
+    //     const { startingSlotIndex, landingSlotIndex } = dragEndedProps;
+    //     console.log({ startingSlotIndex, landingSlotIndex })
 
-        const currentSlot =
-          this.playerInventory.getSlotAtIndex(startingSlotIndex);
 
-        const item = currentSlot.getItem();
+    //     const currentSlot =
+    //       this.playerInventory.getSlotAtIndex(startingSlotIndex);
 
-        // call game logic
-        moveItemToSlot(item!.entity.entityId.value, landingSlotIndex);
-      });
+    //     const item = currentSlot.getItem();
 
-      slot.events.on(InventoryGridSlotEvent.DRAG_OVER, (dragOverProps) => {
-        const { slotIndex } = dragOverProps;
-        const slot = this.playerInventory.getSlotAtIndex(slotIndex);
+    //     // call game logic
+    //     moveItemToSlot(item!.entity.entityId.value, landingSlotIndex);
+    //   });
 
-        if (!slot) return;
+    //   slot.events.on(InventoryGridSlotEvent.DRAG_OVER, (dragOverProps) => {
+    //     const { slotIndex } = dragOverProps;
+    //     const slot = this.playerInventory.getSlotAtIndex(slotIndex);
 
-        const isValidDropTarget = getValidDropTarget(slot!.slotType).includes(
-          dragOverProps.slotContext
-        );
+    //     if (!slot) return;
 
-        if (!isValidDropTarget) return;
+    //     const isValidDropTarget = getValidDropTarget(slot!.slotType).includes(
+    //       dragOverProps.slotContext
+    //     );
 
-        slot.handlePointerOver(this.scene.input.activePointer);
-      });
+    //     if (!isValidDropTarget) return;
 
-      slot.events.on(InventoryGridSlotEvent.DRAG_LEAVE, (dragLeaveProps) => {
-        const { slotIndex } = dragLeaveProps;
-        const slot = this.playerInventory.getSlotAtIndex(slotIndex);
+    //     slot.handlePointerOver(this.scene.input.activePointer);
+    //   });
 
-        if (!slot) return;
+    //   slot.events.on(InventoryGridSlotEvent.DRAG_LEAVE, (dragLeaveProps) => {
+    //     const { slotIndex } = dragLeaveProps;
+    //     const slot = this.playerInventory.getSlotAtIndex(slotIndex);
 
-        slot!.handlePointerOut(this.scene.input.activePointer);
-      });
-    });
+    //     if (!slot) return;
+
+    //     slot!.handlePointerOut(this.scene.input.activePointer);
+    //   });
+    // });
 
     inventoryEvents.on(InventoryEvent.ITEM_MOVED, (itemMovedProps) => {
       this.playerInventory.removeItem(itemMovedProps.currentSlotIndex);

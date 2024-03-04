@@ -19,67 +19,67 @@ export default class Item {
 
     this.itemSprite.setScale(1.5);
 
-    this.itemSprite
-      .setInteractive({ cursor: "pointer" })
-      .on("pointerdown", (pointer: Phaser.Input.Pointer) => {
-        this.handleDrag(pointer);
-      });
+    // this.itemSprite
+    //   .setInteractive({ cursor: "pointer" })
+    //   .on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+    //     this.handleDrag(pointer);
+    //   });
 
-    this.itemSprite.on("dragstart", () => {
-      this.itemSprite.setScale(2);
-    });
+    // this.itemSprite.on("dragstart", () => {
+    //   this.itemSprite.setScale(2);
+    // });
 
-    this.itemSprite.on("dragend", () => {
-      this.resetPosition();
-    });
+    // this.itemSprite.on("dragend", () => {
+    //   this.resetPosition();
+    // });
   }
 
-  handleDrag(pointer: Phaser.Input.Pointer) {
-    // Record the start position of the pointer
-    let dragStartX = pointer.x;
-    let dragStartY = pointer.y;
+  // handleDrag(pointer: Phaser.Input.Pointer) {
+  //   // Record the start position of the pointer
+  //   let dragStartX = pointer.x;
+  //   let dragStartY = pointer.y;
 
-    let isDragging = false;
+  //   let isDragging = false;
 
-    const dragThreshold = 10; //Pixels the pointer needs to move to start the drag
+  //   const dragThreshold = 10; //Pixels the pointer needs to move to start the drag
 
-    const item = this;
+  //   const item = this;
 
-    this.itemSprite.scene.input.on(
-      "pointermove",
-      function (this: Item, pointer: Phaser.Input.Pointer) {
-        if (!pointer.isDown) {
-          this.handleDrop();
-          return;
-        }
+  //   this.itemSprite.scene.input.on(
+  //     "pointermove",
+  //     function (this: Item, pointer: Phaser.Input.Pointer) {
+  //       if (!pointer.isDown) {
+  //         this.handleDrop();
+  //         return;
+  //       }
 
-        // Calculate distance pointer has moved
-        const distance = Phaser.Math.Distance.Between(
-          dragStartX,
-          dragStartY,
-          pointer.x,
-          pointer.y
-        );
+  //       // Calculate distance pointer has moved
+  //       const distance = Phaser.Math.Distance.Between(
+  //         dragStartX,
+  //         dragStartY,
+  //         pointer.x,
+  //         pointer.y
+  //       );
 
-        if (!isDragging && distance > dragThreshold) {
-          isDragging = true;
-          item.initiateDrag();
-        }
-      },
-      this
-    );
-  }
+  //       if (!isDragging && distance > dragThreshold) {
+  //         isDragging = true;
+  //         item.initiateDrag();
+  //       }
+  //     },
+  //     this
+  //   );
+  // }
 
-  initiateDrag() {
-    const dragPlugin = this.itemSprite.scene.plugins.get(
-      "dragPlugin"
-    ) as DragPlugin;
+  // initiateDrag() {
+  //   const dragPlugin = this.itemSprite.scene.plugins.get(
+  //     "dragPlugin"
+  //   ) as DragPlugin;
 
-    const dragComponent = dragPlugin.add(this.itemSprite);
-    dragComponent.drag();
+  //   const dragComponent = dragPlugin.add(this.itemSprite);
+  //   dragComponent.drag();
 
-    this.itemSprite.setDepth(999); // we want the item sprite on top of everything else
-  }
+  //   this.itemSprite.setDepth(999); // we want the item sprite on top of everything else
+  // }
 
   resetPosition() {
     this.itemSprite.x = this.initialPosition.x;
@@ -87,7 +87,7 @@ export default class Item {
     this.itemSprite.setScale(1.5);
   }
 
-  handleDrop() {
-    this.itemSprite.scene.input.off("pointermove");
-  }
+  // handleDrop() {
+  //   this.itemSprite.scene.input.off("pointermove");
+  // }
 }
