@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="9">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="16">
  <editorsettings>
   <export target="public/tiles/grandpa-home-map.json" format="json"/>
  </editorsettings>
@@ -322,22 +322,22 @@
   </tile>
   <tile id="112">
    <properties>
-    <property name="collides" type="bool" value="true"/>
+    <property name="collides" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="113">
    <properties>
-    <property name="collides" type="bool" value="true"/>
+    <property name="collides" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="114">
    <properties>
-    <property name="collides" type="bool" value="true"/>
+    <property name="collides" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="115">
    <properties>
-    <property name="collides" type="bool" value="true"/>
+    <property name="collides" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="116">
@@ -2355,7 +2355,7 @@
   </tile>
   <tile id="1219">
    <properties>
-    <property name="collides" type="bool" value="true"/>
+    <property name="collides" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="1220">
@@ -2365,7 +2365,7 @@
   </tile>
   <tile id="1235">
    <properties>
-    <property name="collides" type="bool" value="true"/>
+    <property name="collides" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="1236">
@@ -2375,7 +2375,7 @@
   </tile>
   <tile id="1251">
    <properties>
-    <property name="collides" type="bool" value="true"/>
+    <property name="collides" type="bool" value="false"/>
    </properties>
   </tile>
   <tile id="1252">
@@ -2436,7 +2436,7 @@
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,749,0,0,0,716,0,0,0,0,0,0,0,0,201,0,0,236,0,
-0,764,765,0,0,0,0,0,0,0,1345,0,0,0,0,0,0,0,0,0,
+0,764,765,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,780,781,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -2451,20 +2451,28 @@
 0,0,0,168,0,0,0,0,0,0,974,975,0,0,1725,1740,1727,0,0,0,
 0,0,0,0,0,0,0,0,0,0,990,991,0,0,1741,0,1743,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,640,0,0,0,
-0,0,0,240,272,0,0,0,0,0,0,0,0,0,0,0,656,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,240,272,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
  <objectgroup id="9" name="Areas">
   <object id="4" name="tipLetter" x="158.303" y="42.4354" width="18.8192" height="10.7011"/>
   <object id="5" name="doorArea" x="92.2509" y="302.952" width="23.6162" height="20.6642"/>
+  <object id="9" name="tipMap" x="48.3395" y="32.4723" width="15.4982" height="10.3321"/>
+  <object id="12" name="tipPouch" x="273.432" y="233.579" width="14.7601" height="17.7122"/>
  </objectgroup>
  <objectgroup id="6" name="SpawnPoints">
   <object id="1" name="Letter" x="168.563" y="39.8137">
    <point/>
   </object>
   <object id="2" name="Character" x="103.321" y="284.871">
+   <point/>
+  </object>
+  <object id="13" name="Map" x="55.7196" y="26.1993">
+   <point/>
+  </object>
+  <object id="15" name="Pouch" x="286.347" y="239.852">
    <point/>
   </object>
  </objectgroup>

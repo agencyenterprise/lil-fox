@@ -1,6 +1,7 @@
 import Character from "@/characters/Character"
 import { Area } from "./Area"
 import { Events, sceneEvents } from "@/events/EventsCenter"
+import { Singleton } from "@/utils/GlobalAccessSingleton"
 
 export class GrandpaDoorArea extends Area {
   scene: Phaser.Scene
@@ -11,11 +12,18 @@ export class GrandpaDoorArea extends Area {
   }
 
   handleCharacterInArea(character?: Character): void {
-    this.scene.scene.pause("GrandpaScene")
-    this.scene.scene.setVisible(false, "GrandpaScene")
-    this.scene.scene.run("LilFox")
-    this.scene.scene.setVisible(true, "LilFox")
+    Singleton.getInstance().gameUi.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+      this.scene.scene.setVisible(false, "GrandpaScene")
 
-    sceneEvents.emit(Events.FOX_GAME_LEVEL_STARTED)
+      this.scene.scene.run("LilFox")
+      this.scene.scene.setVisible(true, "LilFox")
+
+      Singleton.getInstance().gameUi.cameras.main.fadeIn(500, 0, 0, 0)
+
+      sceneEvents.emit(Events.FOX_GAME_LEVEL_STARTED)
+    })
+
+    this.scene.scene.pause("GrandpaScene")
+    Singleton.getInstance().gameUi.cameras.main.fadeOut(500, 0, 0, 0)
   }
 }

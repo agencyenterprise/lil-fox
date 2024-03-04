@@ -21,6 +21,8 @@ enum Events {
   MARIO_LIKE_LEVEL_STARTED = "mario-like-level-started",
   MARIO_LIKE_LEVEL_FINISHED = "mario-like-level-finished",
   GRANDPA_LETTER_READ = "grandpa-letter-read",
+  GRANDPA_MAP_COLLECTED = "grandpa-map-collected",
+  GRANDPA_POUCH_COLLECTED = "grandpa-pouch-collected",
 }
 
 const sceneEvents = new Phaser.Events.EventEmitter()
