@@ -116,16 +116,34 @@ export default class GrandpaScene extends Phaser.Scene {
     const letterSpawn = this.spawnPoints.get(Collectibles.Letter)!
     this.letterImage = this.add.image(letterSpawn.x, letterSpawn.y, "letter").setScale(0.7)
     this.physics.world.enableBody(this.letterImage, Phaser.Physics.Arcade.STATIC_BODY)
+    this.addTween(this.letterImage, letterSpawn)
 
     // Map
     const mapSpawn = this.spawnPoints.get(Collectibles.Map)!
     this.mapImage = this.add.image(mapSpawn.x, mapSpawn.y, "map").setScale(0.8)
     this.physics.world.enableBody(this.mapImage, Phaser.Physics.Arcade.STATIC_BODY)
+    this.addTween(this.mapImage, mapSpawn)
 
     // Pouch
     const pouchSpawn = this.spawnPoints.get(Collectibles.Pouch)!
     this.pouchImage = this.add.image(pouchSpawn.x, pouchSpawn.y, "pouch").setScale(0.8)
     this.physics.world.enableBody(this.pouchImage, Phaser.Physics.Arcade.STATIC_BODY)
+    this.addTween(this.pouchImage, pouchSpawn)
+  }
+
+  addTween(image: Phaser.GameObjects.Image, spawn: Phaser.Geom.Point) {
+    this.add.tween({
+      yoyo: true,
+      delay: 0,
+      duration: 300,
+      repeat: -1,
+      y: {
+        from: spawn.y,
+        start: spawn.y,
+        to: spawn.y - 2,
+      },
+      targets: image,
+    })
   }
 
   createInteractions() {
