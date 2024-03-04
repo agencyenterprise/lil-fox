@@ -24,6 +24,7 @@ export default class GameUI extends Phaser.Scene {
   private settingsMenu!: SettingsMenu
 
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
+  private mKey!: Phaser.Input.Keyboard.Key
 
   private hearts: Phaser.GameObjects.Group
   private berries: Phaser.GameObjects.Group
@@ -47,6 +48,7 @@ export default class GameUI extends Phaser.Scene {
     uiAtlasMeta.image = uiImg
 
     this.cursors = this.input.keyboard?.createCursorKeys()!
+    this.mKey = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.M)!;
   }
 
   create() {
@@ -158,6 +160,12 @@ export default class GameUI extends Phaser.Scene {
   }
 
   update() {
+    const mKeyDown = Phaser.Input.Keyboard.JustDown(this.mKey)
+
+    if (mKeyDown) {
+      console.log("M Down")
+    }
+
     if ((!this.currentOpenModal || !this.currentOpenModal.isVisible) && !this.dialogUi.isVisible) return
 
     const instructionReceiver: ReceivesInstructions = this.currentOpenModal?.isVisible
