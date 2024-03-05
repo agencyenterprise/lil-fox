@@ -14,7 +14,7 @@ import uiJson from "../../public/inventory/assets/ui.json"
 import uiImg from "../../public/inventory/assets/ui.png"
 import { getPlayerItems } from "@/prefabs/Player"
 import { initializeEntity } from "@/InitializeEntity"
-import { addToInventory } from "@/inventory/state/InventoryUtilities"
+import { addToInventory, deleteItem, hideItems } from "@/inventory/state/InventoryUtilities"
 import { playerEntity } from "@/components/NotInitiatedGame"
 
 export default class GameUI extends Phaser.Scene {
@@ -136,6 +136,10 @@ export default class GameUI extends Phaser.Scene {
       const entity = initializeEntity(item as any);
       addToInventory(playerEntity, entity);
     });
+
+    deleteItem(playerItems[2].entityID)
+
+    hideItems()
 
     sceneEvents.on(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
     sceneEvents.on(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)

@@ -3,6 +3,8 @@ import { GameEntity } from "../../ecs/GameEntity.ts";
 export const enum InventoryEvent {
   ITEM_ADDED = "item_added",
   ITEM_MOVED = "item_moved",
+  ITEM_REMOVED = "item_removed",
+  HIDE_ITEM = "hide_item",
 }
 
 export interface ItemMovedProps {
@@ -10,9 +12,24 @@ export interface ItemMovedProps {
   item: GameEntity;
 }
 
+export interface ItemRemovedProps {
+  currentSlotIndex: number;
+}
+
+export interface ItemRemovedProps {
+  currentSlotIndex: number;
+}
+
+export interface HideItemProps {
+  currentSlotIndex: number;
+  hide: boolean;
+}
+
 export interface InventoryEventMap {
   [InventoryEvent.ITEM_ADDED]: GameEntity;
   [InventoryEvent.ITEM_MOVED]: ItemMovedProps;
+  [InventoryEvent.ITEM_REMOVED]: ItemRemovedProps;
+  [InventoryEvent.HIDE_ITEM]: HideItemProps;
 }
 
 export class InventoryEventEmitter extends Phaser.Events.EventEmitter {

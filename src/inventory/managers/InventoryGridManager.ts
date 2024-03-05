@@ -33,6 +33,15 @@ export default class InventoryGridManager {
     }
   }
 
+  hideItem(slotIndex: number) {
+    const slot = this.getSlotAtIndex(slotIndex);
+
+    if (slot) {
+      slot.hideItem();
+      this.grid.layout();
+    }
+  }
+
   getSlotAtIndex(index: number) {
     const slot = this.slots[index];
 

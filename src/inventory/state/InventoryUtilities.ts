@@ -18,13 +18,22 @@ export const addToInventory = (actor: GameEntity, item: GameEntity) => {
   inventoryEvents.emit(InventoryEvent.ITEM_ADDED, item);
 }
 
+export function deleteItem(itemId: string) {
+  const itemEntity = world.entityManager.getEntityByName(itemId) as GameEntity;
+
+  const currentSlot = playerEntity.inventory_mutable.slots.find(
+    (i) => i.item === itemEntity.entityId.value
+  );
+
+  currentSlot?.removeItem();
+
+  inventoryEvents.emit(InventoryEvent.ITEM_REMOVED, { currentSlotIndex: currentSlot!.slotIndex });
+}
+
 
 export function moveItemToSlot(itemId: string, targetSlotIndex?: number) {
   console.log("moveItemToSlot", itemId, targetSlotIndex)
   const itemEntity = world.entityManager.getEntityByName(itemId) as GameEntity;
-
-  console.log({ playerEntity })
-  console.log("playerEntity.inventory_mutable.slots", playerEntity.inventory_mutable.slots)
 
   const currentSlot = playerEntity.inventory_mutable.slots.find(
     (i) => i.item === itemEntity.entityId.value
@@ -32,15 +41,10 @@ export function moveItemToSlot(itemId: string, targetSlotIndex?: number) {
 
   const removedItemId = currentSlot!.removeItem();
 
-
-
   const targetSlot =
     targetSlotIndex !== undefined
       ? playerEntity.inventory_mutable.slots[targetSlotIndex]
       : playerEntity.inventory_mutable.firstAvailableSlot();
-
-    
-  console.log({ targetSlot })
 
   targetSlot?.addItem(removedItemId);
   itemEntity.pickedUp_mutable.slotIndex = targetSlot!.slotIndex;
@@ -48,5 +52,12 @@ export function moveItemToSlot(itemId: string, targetSlotIndex?: number) {
   inventoryEvents.emit(InventoryEvent.ITEM_MOVED, {
     currentSlotIndex: currentSlot!.slotIndex,
     item: itemEntity,
+  });
+
+}
+
+export function hideItems() {
+  playerEntity.inventory_mutable.slots.forEach((slot) => {
+    inventoryEvents.emit(InventoryEvent.HIDE_ITEM, { currentSlotIndex: slot.slotIndex, hide: true });
   });
 }

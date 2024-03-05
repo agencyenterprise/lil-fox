@@ -49,6 +49,10 @@ export default class InventoryGridSlot {
     this.slotSprite.setData("hasItem", false);
   }
 
+  hideItem() {
+    this.itemManager!.hideItem();
+  }
+
   setSlotIndex(index: number) {
     console.log("index", index)
     this.slotIndex = index
@@ -61,7 +65,7 @@ export default class InventoryGridSlot {
   hasItem() {
     return this.itemManager?.hasItem();
   }
-  
+
   showItemInfo() {
     // this.itemTooltipManager?.showItemTooltip();
   }

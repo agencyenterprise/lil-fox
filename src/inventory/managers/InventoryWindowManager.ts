@@ -15,6 +15,14 @@ export default class InventoryWindowManager {
       this.playerInventory.addItem(decomposeItem(item));
     });
 
+    inventoryEvents.on(InventoryEvent.ITEM_REMOVED, (itemMovedProps) => {
+      this.playerInventory.removeItem(itemMovedProps.currentSlotIndex);
+    });
+
+    inventoryEvents.on(InventoryEvent.HIDE_ITEM, (hideItemProps) => {
+     this.playerInventory.hideItem(hideItemProps.currentSlotIndex, hideItemProps.hide);
+    })
+
     // playerInventory.slots.forEach((slot) => {
     //   slot.events.on(InventoryGridSlotEvent.DRAG_ENDED, (dragEndedProps) => {
     //     console.log("DRAG ENDED")

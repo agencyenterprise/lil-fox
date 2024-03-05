@@ -55,7 +55,6 @@ export default class InventoryGridSlotItemManager implements ItemManager {
   }
 
   showItem(): void {
-    console.log("InventoryGridSlotItemManager.showItem()")
     if (this.hasItem()) {
       this.item?.itemSprite.setVisible(true);
 
@@ -64,6 +63,7 @@ export default class InventoryGridSlotItemManager implements ItemManager {
       }
     }
   }
+
   removeItem(): string {
     if (this.hasItem()) {
       const itemId = this.item!.entity.entityId.value;
