@@ -8,7 +8,7 @@ import {
   Valuable,
   EntityId,
   Inventory
-} from "./components/Components";
+} from "./items/components/Components";
 
 export class GameEntity extends _Entity {
   get entityId(): EntityId {
@@ -19,7 +19,7 @@ export class GameEntity extends _Entity {
     }
     return component;
   }
-  
+
   get pickedUp(): PickedUp {
     const component = this.getComponent<PickedUp>(PickedUp);
     if (!component) {

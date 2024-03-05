@@ -1,7 +1,7 @@
 import { GameEntity } from "@/GameEntity";
 import { InventoryEvent, InventoryEventEmitter } from "../events/InventoryEventsEmitter";
 import { playerEntity, world } from "@/components/NotInitiatedGame";
-import { PickedUp } from "@/components/Components";
+import { PickedUp } from "@/items/components/Components";
 
 export const inventoryEvents = new InventoryEventEmitter();
 

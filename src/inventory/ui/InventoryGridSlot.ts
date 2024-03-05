@@ -1,6 +1,6 @@
 import OverlapSizer from "phaser3-rex-plugins/templates/ui/overlapsizer/OverlapSizer";
 import { InventoryGridContext } from "../InventoryGridContext";
-import { Descriptor, PickedUp, Quantity, Renderable } from "@/components/Components";
+import { Descriptor, PickedUp, Quantity, Renderable } from "@/items/components/Components";
 import { GameEntity } from "@/GameEntity";
 import { PointerEventManager } from "../core/PointerEventManager";
 import { ItemManager } from "../core/ItemManager";

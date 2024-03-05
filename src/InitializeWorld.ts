@@ -1,6 +1,6 @@
 import { ComponentConstructor, World } from "ecsy";
 import { GameEntity } from "./GameEntity";
-import { components } from "./components/Components";
+import { components } from "./items/components/Components";
 
 export default function initializeWorld() {
   const world = new World({ entityClass: GameEntity });

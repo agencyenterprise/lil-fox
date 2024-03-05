@@ -1,7 +1,7 @@
 import { GameEntity } from "@/GameEntity";
 import { AddItemConfig } from "./ui/InventoryGridSlot";
-import PickedUp from "@/components/PickedUp";
-import Quantity from "@/components/Quantity";
+import PickedUp from "@/items/components/PickedUp";
+import Quantity from "@/items/components/Quantity";
 import { InventoryGridContext } from "./InventoryGridContext";
 
 export function decomposeItem(item: GameEntity): AddItemConfig {

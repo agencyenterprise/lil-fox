@@ -1,7 +1,7 @@
 import { GameEntity } from "./GameEntity";
-import { componentLookup } from "./components/ComponentLookup";
-import { ComponentTypes } from "./components/Components";
-import EntityId from "./components/EntityId";
+import { componentLookup } from "./items/components/ComponentLookup";
+import { ComponentTypes } from "./items/components/Components";
+import EntityId from "./items/components/EntityId";
 import { world } from "./components/NotInitiatedGame";
 
 export interface RawEntity {
