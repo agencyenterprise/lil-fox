@@ -88,6 +88,7 @@ export default class Preloader extends Phaser.Scene {
     this.load.image("ui-heart-full", "ui/ui_heart_full.png")
     this.load.image("ui-heart-half", "ui/ui_heart_half.png")
 
+    this.load.image("map-image", "items/map-image.png")
     this.load.image("coin", "items/coin.png")
     this.load.image("greenPotion", "items/greenPotion.png")
     this.load.image("orangePotion", "items/orangePotion.png")

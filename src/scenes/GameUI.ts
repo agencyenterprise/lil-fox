@@ -26,6 +26,7 @@ export default class GameUI extends Phaser.Scene {
 
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
   private iKey!: Phaser.Input.Keyboard.Key
+  private mKey!: Phaser.Input.Keyboard.Key
 
   private hearts: Phaser.GameObjects.Group
   private berries: Phaser.GameObjects.Group
@@ -38,6 +39,7 @@ export default class GameUI extends Phaser.Scene {
   private currentOpenModal?: Modal
   private coinImage: Phaser.GameObjects.Image
   private inventoryWindow: Sizer
+  private mapImage: Phaser.GameObjects.Image
 
   private shouldHideTip: boolean = false
 
@@ -51,6 +53,7 @@ export default class GameUI extends Phaser.Scene {
 
     this.cursors = this.input.keyboard?.createCursorKeys()!
     this.iKey = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.I)!;
+    this.mKey = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.M)!;
   }
 
   create() {
@@ -60,7 +63,7 @@ export default class GameUI extends Phaser.Scene {
     this.tipUi = new Tip(this)
     this.settingsMenu = new SettingsMenu(this)
 
-    const { width } = this.scale
+    const { width, height } = this.scale
     const settingsButton = this.add
       .image(width - 5, 5, "small-button")
       .setScale(0.5)
@@ -141,6 +144,8 @@ export default class GameUI extends Phaser.Scene {
 
     this.hideInventory()
 
+    this.mapImage = this.add.image(width / 2, height / 2, "map-image").setOrigin(0.5, 0.5).setScale(0.25)
+
 
     sceneEvents.on(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
     sceneEvents.on(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
@@ -166,9 +171,12 @@ export default class GameUI extends Phaser.Scene {
 
   update() {
     const iKeyDown = Phaser.Input.Keyboard.JustDown(this.iKey)
+    const mKeyDown = Phaser.Input.Keyboard.JustDown(this.mKey)
 
     if (iKeyDown) {
       this.handleIKeyDown()
+    } else if (mKeyDown) {
+      this.handleMKeyDown()
     }
 
     if ((!this.currentOpenModal || !this.currentOpenModal.isVisible) && !this.dialogUi.isVisible) return
@@ -308,5 +316,13 @@ export default class GameUI extends Phaser.Scene {
   hideInventory() {
     this.inventoryWindow.setVisible(false)
     hideItems()
+  }
+
+  handleMKeyDown() {
+    if (this.mapImage.visible) {
+      this.mapImage.setVisible(false)
+    } else {
+      this.mapImage.setVisible(true)
+    }
   }
 }

@@ -8,10 +8,12 @@ export class InventoryWindowFactory {
   static create(scene: GameUI): Sizer {
     const backgroundImg = scene.add.image(0, 0, "A_INVENTORY", "Inventory.png")
     const inventoryWindow = scene.rexUI.add.sizer({
-      width: backgroundImg.width / 3,
-      height: backgroundImg.height / 3,
+      width: backgroundImg.width,
+      height: backgroundImg.height,
       orientation: "y",
     })
+
+    inventoryWindow.setScale(0.35, 0.35)
 
     inventoryWindow.addBackground(backgroundImg)
 
