@@ -134,11 +134,12 @@ export default class GameUI extends Phaser.Scene {
 
     const playerItems = getPlayerItems();
 
-    playerItems.forEach((item) => {
-      const entity = initializeEntity(item as any);
-      addToInventory(playerEntity, entity);
-    });
-    // deleteItem(playerItems[2].entityID)
+    // playerItems.forEach((item) => {
+    //   const entity = initializeEntity(item as any);
+    //   addToInventory(playerEntity, entity);
+    // });
+
+    this.hideInventory()
 
 
     sceneEvents.on(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
