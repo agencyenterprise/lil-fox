@@ -53,6 +53,10 @@ export default class InventoryGridSlot {
     this.itemManager!.hideItem();
   }
 
+  showItem() {
+    this.itemManager!.showItem();
+  }
+
   setSlotIndex(index: number) {
     console.log("index", index)
     this.slotIndex = index

@@ -42,6 +42,15 @@ export default class InventoryGridManager {
     }
   }
 
+  showItem(slotIndex: number) {
+    const slot = this.getSlotAtIndex(slotIndex);
+
+    if (slot) {
+      slot.showItem();
+      this.grid.layout();
+    }
+  }
+
   getSlotAtIndex(index: number) {
     const slot = this.slots[index];
 

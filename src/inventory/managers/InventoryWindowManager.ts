@@ -20,7 +20,11 @@ export default class InventoryWindowManager {
     });
 
     inventoryEvents.on(InventoryEvent.HIDE_ITEM, (hideItemProps) => {
-     this.playerInventory.hideItem(hideItemProps.currentSlotIndex, hideItemProps.hide);
+      if (hideItemProps.hide) {
+        this.playerInventory.hideItem(hideItemProps.currentSlotIndex);
+      } else {
+        this.playerInventory.showItem(hideItemProps.currentSlotIndex);
+      }
     })
 
     // playerInventory.slots.forEach((slot) => {

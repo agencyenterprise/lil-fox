@@ -14,8 +14,9 @@ import uiJson from "../../public/inventory/assets/ui.json"
 import uiImg from "../../public/inventory/assets/ui.png"
 import { getPlayerItems } from "@/prefabs/Player"
 import { initializeEntity } from "@/InitializeEntity"
-import { addToInventory, deleteItem, hideItems } from "@/inventory/state/InventoryUtilities"
+import { addToInventory, deleteItem, hideItems, showItems } from "@/inventory/state/InventoryUtilities"
 import { playerEntity } from "@/components/NotInitiatedGame"
+import Sizer from "phaser3-rex-plugins/templates/ui/sizer/Sizer"
 
 export default class GameUI extends Phaser.Scene {
 
@@ -24,7 +25,7 @@ export default class GameUI extends Phaser.Scene {
   private settingsMenu!: SettingsMenu
 
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
-  private mKey!: Phaser.Input.Keyboard.Key
+  private iKey!: Phaser.Input.Keyboard.Key
 
   private hearts: Phaser.GameObjects.Group
   private berries: Phaser.GameObjects.Group
@@ -36,6 +37,7 @@ export default class GameUI extends Phaser.Scene {
   private tipUi: Tip
   private currentOpenModal?: Modal
   private coinImage: Phaser.GameObjects.Image
+  private inventoryWindow: Sizer
 
   private shouldHideTip: boolean = false
 
@@ -48,7 +50,7 @@ export default class GameUI extends Phaser.Scene {
     uiAtlasMeta.image = uiImg
 
     this.cursors = this.input.keyboard?.createCursorKeys()!
-    this.mKey = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.M)!;
+    this.iKey = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.I)!;
   }
 
   create() {
@@ -128,7 +130,7 @@ export default class GameUI extends Phaser.Scene {
     SoundSingleton.getInstance().setSoundManager(this)
     SoundSingleton.getInstance().playTheme(SoundEffects.THEME)
 
-    InventoryWindowFactory.create(this)
+    this.inventoryWindow = InventoryWindowFactory.create(this)
 
     const playerItems = getPlayerItems();
 
@@ -136,10 +138,8 @@ export default class GameUI extends Phaser.Scene {
       const entity = initializeEntity(item as any);
       addToInventory(playerEntity, entity);
     });
+    // deleteItem(playerItems[2].entityID)
 
-    deleteItem(playerItems[2].entityID)
-
-    hideItems()
 
     sceneEvents.on(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
     sceneEvents.on(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
@@ -164,10 +164,10 @@ export default class GameUI extends Phaser.Scene {
   }
 
   update() {
-    const mKeyDown = Phaser.Input.Keyboard.JustDown(this.mKey)
+    const iKeyDown = Phaser.Input.Keyboard.JustDown(this.iKey)
 
-    if (mKeyDown) {
-      console.log("M Down")
+    if (iKeyDown) {
+      this.handleIKeyDown()
     }
 
     if ((!this.currentOpenModal || !this.currentOpenModal.isVisible) && !this.dialogUi.isVisible) return
@@ -289,5 +289,23 @@ export default class GameUI extends Phaser.Scene {
     this.timeDownText.setVisible(false)
     this.coinAmountText.setVisible(false)
     this.coinImage.setVisible(false)
+  }
+
+  handleIKeyDown() {
+    if (this.inventoryWindow.visible) {
+      this.hideInventory()
+    } else {
+      this.showInventory()
+    }
+  }
+
+  showInventory() {
+    this.inventoryWindow.setVisible(true)
+    showItems()
+  }
+
+  hideInventory() {
+    this.inventoryWindow.setVisible(false)
+    hideItems()
   }
 }

@@ -61,3 +61,9 @@ export function hideItems() {
     inventoryEvents.emit(InventoryEvent.HIDE_ITEM, { currentSlotIndex: slot.slotIndex, hide: true });
   });
 }
+
+export function showItems() {
+  playerEntity.inventory_mutable.slots.forEach((slot) => {
+    inventoryEvents.emit(InventoryEvent.HIDE_ITEM, { currentSlotIndex: slot.slotIndex, hide: false });
+  });
+}
