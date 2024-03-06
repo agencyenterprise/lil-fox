@@ -123,26 +123,37 @@
                  "y":302.952
                 }, 
                 {
-                 "height":10.3321033210332,
+                 "height":10.3321,
                  "id":9,
                  "name":"tipMap",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":15.4981549815498,
-                 "x":48.3394833948339,
-                 "y":32.4723247232472
+                 "width":15.4982,
+                 "x":48.3395,
+                 "y":32.4723
                 }, 
                 {
-                 "height":17.7121771217712,
+                 "height":17.7122,
                  "id":12,
                  "name":"tipPouch",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":14.760147601476,
-                 "x":273.431734317343,
-                 "y":233.579335793358
+                 "width":14.7601,
+                 "x":273.432,
+                 "y":233.579
+                }, 
+                {
+                 "height":14.760147601476,
+                 "id":20,
+                 "name":"tipBackpack",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":13.6531365313653,
+                 "x":49.0774907749078,
+                 "y":180.073800738007
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -188,8 +199,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":55.719557195572,
-                 "y":26.1992619926199
+                 "x":55.7196,
+                 "y":26.1993
                 }, 
                 {
                  "height":0,
@@ -200,8 +211,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":286.346863468635,
-                 "y":239.852398523985
+                 "x":286.347,
+                 "y":239.852
                 }, 
                 {
                  "height":0,
@@ -214,6 +225,18 @@
                  "width":0,
                  "x":104,
                  "y":312
+                }, 
+                {
+                 "height":0,
+                 "id":19,
+                 "name":"Backpack",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":55.3505535055351,
+                 "y":197.785977859779
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -253,7 +276,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":19,
+ "nextobjectid":22,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.2",

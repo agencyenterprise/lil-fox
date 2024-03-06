@@ -1,7 +1,5 @@
 import { Events, sceneEvents } from "@/events/EventsCenter"
 import Interactable from "./Interactable"
-import GameUI from "@/scenes/GameUI"
-import { Singleton } from "@/utils/GlobalAccessSingleton"
 
 export class GrandpaLetter implements Interactable {
   public x: number = 0
@@ -21,22 +19,11 @@ export class GrandpaLetter implements Interactable {
     this.interactionCount++
 
     if (this.interactionCount === 1) {
-      this.showLetter("This is the content of the letter.")
-    } else if (this.interactionCount === 2) {
-      this.hideLetter()
-      this.interactionCount = 0
-
+      sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, true)
+      sceneEvents.emit(Events.GRANDPA_LETTER_OPEN)
+    } else {
+      sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, false)
       sceneEvents.emit(Events.GRANDPA_LETTER_READ)
     }
-  }
-
-  showLetter(message: string) {
-    const gameUi: GameUI = Singleton.getInstance().gameUi
-    gameUi.showDialog(message)
-  }
-
-  hideLetter() {
-    const gameUi: GameUI = Singleton.getInstance().gameUi
-    gameUi.hideDialog()
   }
 }

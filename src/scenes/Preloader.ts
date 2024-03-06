@@ -84,8 +84,10 @@ export default class Preloader extends Phaser.Scene {
     this.load.image("orangePotion", "items/orangePotion.png")
     this.load.image("door", "items/door.png")
     this.load.image("letter", "items/letter.png")
+    this.load.image("letterOpen", "items/letterOpen.png")
     this.load.image("map", "items/map.png")
     this.load.image("pouch", "items/pouch.png")
+    this.load.image("backpack", "items/backpack.png")
 
     this.load.image("berry", "food/blueberry.png")
     this.load.image("berry-empty", "food/blueberry-empty.png")

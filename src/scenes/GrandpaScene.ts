@@ -6,8 +6,7 @@ import { Area } from "@/types/Area"
 import { TipArea } from "@/types/TipArea"
 import { GrandpaDoorArea } from "@/types/GrandpaDoorArea"
 import { GrandpaLetter } from "@/types/GrandpaLetter"
-import { GrandpaMap } from "@/types/GrandpaMap"
-import { GrandpaPouch } from "@/types/GrandpaPouch"
+import { GrandpaCollectible } from "@/types/GrandpaCollectible"
 
 import { Events, sceneEvents } from "@/events/EventsCenter"
 import { Singleton } from "@/utils/GlobalAccessSingleton"
@@ -19,7 +18,24 @@ const enum Collectibles {
   Letter = "Letter",
   Map = "Map",
   Pouch = "Pouch",
+  Backpack = "Backpack",
 }
+
+const letterText = `Dear Lil Fox, 
+
+I hope this letter finds you well.
+It brings me great joy to know that you have decided to embark on this journey to preserve the culture of our island tribes with a time capsule. 
+
+Although I couldn’t be around to send you on this journey, - I have left you a map, my old backpack and some coins to help you along the way.
+My friend Joe at the town general store will help you with some supplies. 
+
+Remember that the true essence of this journey lies not only in the artifacts you collect, but in the people you meet and the stories you uncover along the way. 
+Adventure awaits - have a great one!
+
+Love, 
+Grandpa
+
+Ps. Follow the path towards the forest.`
 
 export default class GrandpaScene extends Phaser.Scene {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
@@ -31,9 +47,12 @@ export default class GrandpaScene extends Phaser.Scene {
   private doorImage: Phaser.GameObjects.Image
   private doorCollider: Phaser.Physics.Arcade.Collider
   private letterImage: Phaser.GameObjects.Image
+  private letterOpenImage: Phaser.GameObjects.Image
+  private letterOpenText: Phaser.GameObjects.Text
   private mapImage: Phaser.GameObjects.Image
   private pouchImage: Phaser.GameObjects.Image
-  private itemsLeftToCollect: string[] = [Collectibles.Letter, Collectibles.Map, Collectibles.Pouch]
+  private backpackImage: Phaser.GameObjects.Image
+  private itemsLeftToCollect: string[] = [Collectibles.Letter]
 
   constructor() {
     super({
@@ -118,17 +137,33 @@ export default class GrandpaScene extends Phaser.Scene {
     this.physics.world.enableBody(this.letterImage, Phaser.Physics.Arcade.STATIC_BODY)
     this.addTween(this.letterImage, letterSpawn)
 
-    // Map
-    const mapSpawn = this.spawnPoints.get(Collectibles.Map)!
-    this.mapImage = this.add.image(mapSpawn.x, mapSpawn.y, "map").setScale(0.8)
-    this.physics.world.enableBody(this.mapImage, Phaser.Physics.Arcade.STATIC_BODY)
-    this.addTween(this.mapImage, mapSpawn)
+    this.letterOpenImage = this.add
+      .image(letterSpawn.x, letterSpawn.y + 36, "letterOpen")
+      .setScale(0.6)
+      .setDepth(10)
+      .setVisible(false)
+    this.letterOpenText = this.add
+      .text(this.letterOpenImage.x - 85, this.letterOpenImage.y - 120, letterText, {
+        fontSize: "8px",
+        color: "black",
+        wordWrap: { width: 180 },
+      })
+      .setVisible(false)
+      .setDepth(10)
 
-    // Pouch
-    const pouchSpawn = this.spawnPoints.get(Collectibles.Pouch)!
-    this.pouchImage = this.add.image(pouchSpawn.x, pouchSpawn.y, "pouch").setScale(0.8)
-    this.physics.world.enableBody(this.pouchImage, Phaser.Physics.Arcade.STATIC_BODY)
-    this.addTween(this.pouchImage, pouchSpawn)
+    // Collectibles
+    this.mapImage = this.createCollectible(Collectibles.Map, "map", 0.8)
+    this.pouchImage = this.createCollectible(Collectibles.Pouch, "pouch", 0.8)
+    this.backpackImage = this.createCollectible(Collectibles.Backpack, "backpack", 0.7)
+  }
+
+  createCollectible(item: Collectibles, imageKey: string, scale: number) {
+    const spawn = this.spawnPoints.get(item)!
+    const image = this.add.image(spawn.x, spawn.y, imageKey).setVisible(false).setScale(scale)
+    this.physics.world.enableBody(image, Phaser.Physics.Arcade.STATIC_BODY)
+    this.addTween(image, spawn)
+
+    return image
   }
 
   addTween(image: Phaser.GameObjects.Image, spawn: Phaser.Geom.Point) {
@@ -153,11 +188,39 @@ export default class GrandpaScene extends Phaser.Scene {
       }
 
       if (area.name === "tipMap") {
-        Singleton.getInstance().interactiveObjects.push(new GrandpaMap(this, area.x!, area.y!))
+        Singleton.getInstance().interactiveObjects.push(
+          new GrandpaCollectible(
+            this,
+            area.x!,
+            area.y!,
+            "This is the map of the game, keep with you always.",
+            Events.GRANDPA_MAP_COLLECTED,
+          ),
+        )
       }
 
       if (area.name === "tipPouch") {
-        Singleton.getInstance().interactiveObjects.push(new GrandpaPouch(this, area.x!, area.y!))
+        Singleton.getInstance().interactiveObjects.push(
+          new GrandpaCollectible(
+            this,
+            area.x!,
+            area.y!,
+            "Get this pouch of coins, it will help you in the game.",
+            Events.GRANDPA_POUCH_COLLECTED,
+          ),
+        )
+      }
+
+      if (area.name === "tipBackpack") {
+        Singleton.getInstance().interactiveObjects.push(
+          new GrandpaCollectible(
+            this,
+            area.x!,
+            area.y!,
+            "Get this backpack, it will help you in the game.",
+            Events.GRANDPA_BACKPACK_COLLECTED,
+          ),
+        )
       }
     })
   }
@@ -185,48 +248,76 @@ export default class GrandpaScene extends Phaser.Scene {
     this.physics.add.collider(this.character, this.letterImage)
     this.physics.add.collider(this.character, this.mapImage)
     this.physics.add.collider(this.character, this.pouchImage)
+    this.physics.add.collider(this.character, this.backpackImage)
   }
 
   createEventListeners() {
+    sceneEvents.on(Events.GRANDPA_LETTER_OPEN, this.handleLetterOpen, this)
     sceneEvents.on(Events.GRANDPA_LETTER_READ, this.handleLetterRead, this)
-    sceneEvents.on(Events.GRANDPA_MAP_COLLECTED, this.handleMapCollected, this)
-    sceneEvents.on(Events.GRANDPA_POUCH_COLLECTED, this.handlePouchCollected, this)
+
+    sceneEvents.on(
+      Events.GRANDPA_MAP_COLLECTED,
+      () => this.handleItemCollected(Collectibles.Map, this.mapImage, SoundEffects.PICKUP_PAPER),
+      this,
+    )
+    sceneEvents.on(
+      Events.GRANDPA_POUCH_COLLECTED,
+      () => this.handleItemCollected(Collectibles.Pouch, this.pouchImage, SoundEffects.PICKUP_COIN),
+      this,
+    )
+    sceneEvents.on(
+      Events.GRANDPA_BACKPACK_COLLECTED,
+      () => this.handleItemCollected(Collectibles.Backpack, this.backpackImage, SoundEffects.PICKUP_PAPER),
+      this,
+    )
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      sceneEvents.off(Events.GRANDPA_LETTER_READ, this.handleLetterRead, this)
+      sceneEvents.removeAllListeners(Events.GRANDPA_LETTER_OPEN)
+      sceneEvents.removeAllListeners(Events.GRANDPA_LETTER_READ)
+      sceneEvents.removeAllListeners(Events.GRANDPA_MAP_COLLECTED)
+      sceneEvents.removeAllListeners(Events.GRANDPA_POUCH_COLLECTED)
+      sceneEvents.removeAllListeners(Events.GRANDPA_BACKPACK_COLLECTED)
     })
   }
 
-  removeItemCollected(itemName: string) {
-    this.itemsLeftToCollect = this.itemsLeftToCollect.filter((item) => item !== itemName)
-    this.createAreas()
+  handleLetterOpen() {
+    if (this.letterImage.visible) {
+      this.removeItemCollected(Collectibles.Letter)
+      this.letterOpenImage.setVisible(true)
+      this.letterOpenText.setVisible(true)
+    }
   }
 
   handleLetterRead() {
     if (this.letterImage.visible) {
       SoundSingleton.getInstance().playSoundEffect(SoundEffects.PICKUP_PAPER)
-      this.removeItemCollected(Collectibles.Letter)
+      this.letterOpenImage.setVisible(false)
+      this.letterOpenText.setVisible(false)
       this.letterImage.setVisible(false)
+
+      this.mapImage.setVisible(true)
+      this.pouchImage.setVisible(true)
+      this.backpackImage.setVisible(true)
+
+      this.itemsLeftToCollect.push(Collectibles.Map)
+      this.itemsLeftToCollect.push(Collectibles.Pouch)
+      this.itemsLeftToCollect.push(Collectibles.Backpack)
+      this.createAreas()
+    }
+  }
+
+  handleItemCollected(item: Collectibles, image: Phaser.GameObjects.Image, soundEffect: SoundEffects) {
+    if (image.visible) {
+      SoundSingleton.getInstance().playSoundEffect(soundEffect)
+      this.removeItemCollected(item)
+      image.setVisible(false)
       this.handleDoorOpen()
     }
   }
 
-  handleMapCollected() {
-    if (this.mapImage.visible) {
-      SoundSingleton.getInstance().playSoundEffect(SoundEffects.PICKUP_PAPER)
-      this.removeItemCollected(Collectibles.Map)
-      this.mapImage.setVisible(false)
-      this.handleDoorOpen()
-    }
-  }
-
-  handlePouchCollected() {
-    if (this.pouchImage.visible) {
-      SoundSingleton.getInstance().playSoundEffect(SoundEffects.PICKUP_COIN)
-      this.removeItemCollected(Collectibles.Pouch)
-      this.pouchImage.setVisible(false)
-      this.handleDoorOpen()
-    }
+  removeItemCollected(itemName: string) {
+    this.itemsLeftToCollect = this.itemsLeftToCollect.filter((item) => item !== itemName)
+    this.createAreas()
   }
 
   handleDoorOpen() {

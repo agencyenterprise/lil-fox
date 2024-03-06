@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="19">
+<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="20" height="20" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="22">
  <editorsettings>
   <export target="public/tiles/grandpa-home-map.json" format="json"/>
  </editorsettings>
@@ -2461,6 +2461,7 @@
   <object id="5" name="areaDoor" x="92.2509" y="302.952" width="23.6162" height="20.6642"/>
   <object id="9" name="tipMap" x="48.3395" y="32.4723" width="15.4982" height="10.3321"/>
   <object id="12" name="tipPouch" x="273.432" y="233.579" width="14.7601" height="17.7122"/>
+  <object id="20" name="tipBackpack" x="49.0775" y="176.753" width="13.6531" height="18.0812"/>
  </objectgroup>
  <objectgroup id="6" name="SpawnPoints">
   <object id="1" name="Letter" x="168.563" y="39.8137">
@@ -2476,6 +2477,9 @@
    <point/>
   </object>
   <object id="16" name="Door" x="104" y="312">
+   <point/>
+  </object>
+  <object id="19" name="Backpack" x="55.3506" y="197.786">
    <point/>
   </object>
  </objectgroup>
