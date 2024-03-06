@@ -32,11 +32,11 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
 
       gameRef.current = new Phaser.Game({
         parent: 'phaser-container',
-        width: 400,
-        height: 250,
+        width: window.innerWidth,
+        height: window.innerHeight,
         scene: [Preloader, FoxGame, MarioScene, GameUI, QuizScene],
         scale: {
-          zoom: 2,
+          zoom: 3,
         },
       });
       setIsGameStarted(true);
@@ -55,7 +55,7 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
                 onClick={() => switchNetwork?.(59140)}
               >
                 Switch to Linea network
-              </button>
+              </button> 
             </>
           ) : (
             <div>
@@ -71,7 +71,7 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
               disabled={!connector.ready}
               key={connector.id}
               onClick={() => connect({ connector })}
-              className='border-2 p-2 font-bold bg-blue-500 absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2'
+              className='border-2 p-2 font-bold bg-blue-500'
             >
               Connect With Metamask
             </button>
