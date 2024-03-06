@@ -37,6 +37,8 @@ Grandpa
 
 Ps. Follow the path towards the forest.`
 
+const pouchCoinsCount = 100
+
 export default class GrandpaScene extends Phaser.Scene {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
   private map: Phaser.Tilemaps.Tilemap
@@ -262,7 +264,10 @@ export default class GrandpaScene extends Phaser.Scene {
     )
     sceneEvents.on(
       Events.GRANDPA_POUCH_COLLECTED,
-      () => this.handleItemCollected(Collectibles.Pouch, this.pouchImage, SoundEffects.PICKUP_COIN),
+      () => {
+        Singleton.getInstance().gameUi.handlePlayerCollectedCoin(pouchCoinsCount)
+        this.handleItemCollected(Collectibles.Pouch, this.pouchImage, SoundEffects.PICKUP_COIN)
+      },
       this,
     )
     sceneEvents.on(
