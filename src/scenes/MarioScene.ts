@@ -72,8 +72,8 @@ export default class MarioScene extends Phaser.Scene {
     this.physics.world.enableBody(this.character, Phaser.Physics.Arcade.DYNAMIC_BODY)
 
     this.cameras.main.startFollow(this.character, true, 0.05, 0.05)
-    this.cameras.main.setBounds(0, 500, 3392, 100)
-    this.physics.world.setBounds(0, 0, 3392, 100, true, false, false, false)
+    this.cameras.main.setBounds(0, 250, 3392, 500)
+    this.physics.world.setBounds(0, 0, 3392, 500, true, false, false, false)
   }
 
   spawnEnemies(map: Phaser.Tilemaps.Tilemap) {
@@ -176,11 +176,13 @@ export default class MarioScene extends Phaser.Scene {
   }
 
   handleCharacterSlugCollision() {
+    sceneEvents.emit(Events.UPDATE_COUNTDOWN_TIMER, 0)
     this.countDownTimer.remove()
     this.character.die()
   }
 
   handleWaterCollision() {
+    sceneEvents.emit(Events.UPDATE_COUNTDOWN_TIMER, 0)
     this.countDownTimer.remove()
     this.character.die()
   }
