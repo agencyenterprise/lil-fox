@@ -58,7 +58,6 @@ export default class CatOwner extends Npc {
   }
 
   handleInteraction(character?: Character): void {
-    console.log({ interactionCount: this.interactionCount })
     if (this.interactionCount === 0) {
       this.stopMoving()
       SoundSingleton.getInstance().playSoundEffect(
