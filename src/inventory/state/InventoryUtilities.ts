@@ -32,7 +32,6 @@ export function deleteItem(itemId: string) {
 
 
 export function moveItemToSlot(itemId: string, targetSlotIndex?: number) {
-  console.log("moveItemToSlot", itemId, targetSlotIndex)
   const itemEntity = world.entityManager.getEntityByName(itemId) as GameEntity;
 
   const currentSlot = playerEntity.inventory_mutable.slots.find(

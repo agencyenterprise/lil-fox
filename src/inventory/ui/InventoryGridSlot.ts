@@ -28,7 +28,6 @@ export default class InventoryGridSlot {
     public readonly slotSprite: OverlapSizer,
     public readonly slotType: InventoryGridContext
   ) {
-    console.log("constructor InventoryGridSlot", slotType)
     this.slotSprite.setData("slotIndex", this.slotIndex);
     this.slotSprite.setData("slotType", slotType);
   }

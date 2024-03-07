@@ -128,12 +128,10 @@ export default class GrandpaScene extends Phaser.Scene {
   }
 
   createObjects() {
-    // Door
     const doorSpawn = this.spawnPoints.get("Door")!
     this.doorImage = this.add.image(doorSpawn.x, doorSpawn.y, "door")
     this.physics.world.enableBody(this.doorImage, Phaser.Physics.Arcade.STATIC_BODY)
 
-    // Letter
     const letterSpawn = this.spawnPoints.get(Collectibles.Letter)!
     this.letterImage = this.add.image(letterSpawn.x, letterSpawn.y, "letter").setScale(0.7)
     this.physics.world.enableBody(this.letterImage, Phaser.Physics.Arcade.STATIC_BODY)
@@ -153,7 +151,6 @@ export default class GrandpaScene extends Phaser.Scene {
       .setVisible(false)
       .setDepth(10)
 
-    // Collectibles
     this.mapImage = this.createCollectible(Collectibles.Map, "map", 0.8)
     this.pouchImage = this.createCollectible(Collectibles.Pouch, "pouch", 0.8)
     this.backpackImage = this.createCollectible(Collectibles.Backpack, "backpack", 0.7)
