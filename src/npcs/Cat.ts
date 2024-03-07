@@ -4,10 +4,11 @@ import Character from '@/characters/Character'
 import { Events, sceneEvents } from '@/events/EventsCenter'
 import { Singleton } from '@/utils/GlobalAccessSingleton'
 import { Direction } from '@/utils/gridUtils'
+import GameUI from '@/scenes/GameUI'
 
 export default class Cat extends Npc {
 
-  private messages: string[] = []
+  private messages: string[] = ["Meeeeoooowww!", "MEEEEOWW!!!"]
   public shouldFollowPlayer = false
   private currentDirection: Direction = Direction.NONE
 
@@ -61,20 +62,29 @@ export default class Cat extends Npc {
   }
 
   handleInteraction(character?: Character): void {
-    sceneEvents.emit(Events.SHOW_DIALOG, this.messages)
+    if (this.interactionCount > this.messages.length) return
 
-    if (this.hasPlayerInteracted) return
-
-    character!.startTrackingPosition()
-
-    this.shouldFollowPlayer = true
-
-    Singleton.getInstance().hasPlayerFoundCat = true
-
-    super.handleInteraction()
+    if (this.interactionCount < this.messages.length) {
+      this.showMessage()
+      super.handleInteraction()
+    } else if (this.interactionCount === this.messages.length) {
+      this.shouldFollowPlayer = true
+      character!.startTrackingPosition()
+      Singleton.getInstance().hasPlayerFoundCat = true
+      
+      this.hideDialog()
+      sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, false)
+      super.handleInteraction()
+    }
   }
 
-  setMessages(messages: string[]) {
-    this.messages = messages
+  showMessage() {
+    const gameUi: GameUI = this.scene.scene.get("game-ui") as GameUI
+    gameUi.showDialog(this.messages[this.interactionCount])
+  }
+
+  hideDialog() {
+    const gameUi: GameUI = this.scene.scene.get("game-ui") as GameUI
+    gameUi.hideDialog()
   }
 }
