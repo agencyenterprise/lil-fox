@@ -145,13 +145,11 @@ export default class FoxGame extends Phaser.Scene {
         case "cat":
           const cat: Cat = this.cats.get(x, y, "cat")
           cat.setVisible(false)
-          cat.setMessages(messages)
           Singleton.getInstance().cat = cat
           Singleton.getInstance().interactiveObjects.push(cat)
           break
         case "cat_owner":
           const catOwner: CatOwner = this.catOwners.get(x, y, "cat_owner")
-          catOwner.setMessages(messages)
           Singleton.getInstance().catOwner = catOwner
           Singleton.getInstance().interactiveObjects.push(catOwner)
           break

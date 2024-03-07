@@ -58,7 +58,6 @@ export default class InventoryGridSlot {
   }
 
   setSlotIndex(index: number) {
-    console.log("index", index)
     this.slotIndex = index
   }
 

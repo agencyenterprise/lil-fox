@@ -138,10 +138,6 @@ export default class CatOwner extends Npc {
     gameUi.hideDialog()
   }
 
-  setMessages(messages: string[]) {
-    this.messages = messages
-  }
-
   destroy(fromScene?: boolean | undefined) {
     this.moveEvent.destroy()
     super.destroy(fromScene)
