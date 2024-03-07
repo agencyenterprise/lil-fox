@@ -62,7 +62,6 @@ export default class Cat extends Npc {
   }
 
   handleInteraction(character?: Character): void {
-    console.log({ interactionCount: this.interactionCount, messagesLength: this.messages.length})
     if (this.interactionCount > this.messages.length) return
 
     if (this.interactionCount < this.messages.length) {
