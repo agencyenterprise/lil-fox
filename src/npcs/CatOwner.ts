@@ -5,12 +5,22 @@ import Character from "@/characters/Character"
 import { Events, sceneEvents } from "@/events/EventsCenter"
 import { Singleton } from "@/utils/GlobalAccessSingleton"
 import { SoundSingleton, SoundEffects } from "@/utils/SoundSingleton"
+import GameUI from "@/scenes/GameUI"
 
 export default class CatOwner extends Npc {
   private direction: Direction | null = Direction.RIGHT
-  private messages: string[] = []
   private moveEvent: Phaser.Time.TimerEvent
   private catDelivered = false
+
+  private messages: string[] = [
+    "Please help me! My cat runaway into the forest, I'm so desperate.",
+    "Can you find him? I promise, if you find him I will give you something no money can buy! Make sure to check closely every corner, he loves to hide."
+  ]
+
+  private foundCatMessages: string[] = [
+    "I can't believe you found my cat! Thank you so much!",
+    "Please accept this (insert something awesome here) as a token of my gratitude!",
+  ]
 
   constructor(
     scene: Phaser.Scene,
@@ -48,11 +58,24 @@ export default class CatOwner extends Npc {
   }
 
   handleInteraction(character?: Character): void {
+    console.log({ interactionCount: this.interactionCount })
+    if (this.interactionCount === 0) {
+      this.stopMoving()
+      SoundSingleton.getInstance().playSoundEffect(
+        SoundEffects.CATOWNER_HELLO,
+      )
+    }
+
     if (Singleton.getInstance().hasPlayerFoundCat) {
-      sceneEvents.emit(Events.SHOW_DIALOG, [
-        "I can't believe you found my cat! Thank you so much!",
-        "Please accept this (insert something awesome here) as a token of my gratitude!",
-      ])
+      if (this.interactionCount < this.foundCatMessages.length) {
+        this.showMessage()
+        super.handleInteraction()
+      } else if (this.interactionCount === this.foundCatMessages.length) {
+        this.interactionCount = 0
+        this.hideDialog()
+        sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, false)
+      }
+
       if (!this.catDelivered) {
         this.catDelivered = true
         const cat = Singleton.getInstance().cat
@@ -68,18 +91,17 @@ export default class CatOwner extends Npc {
           cat.stopCat()
         }, 1200)
       }
+
     } else {
-      if (this.direction) {
-        SoundSingleton.getInstance().playSoundEffect(
-          SoundEffects.CATOWNER_HELLO,
-        )
+      if (this.interactionCount < this.messages.length) {
+        this.showMessage()
+        super.handleInteraction()
+      } else if (this.interactionCount === this.messages.length) {
+        this.interactionCount = 0
+        this.hideDialog()
+        sceneEvents.emit(Events.LOCK_PLAYER_MOVEMENT, false)
       }
-
-      this.stopMoving()
-      sceneEvents.emit(Events.SHOW_DIALOG, this.messages)
     }
-
-    super.handleInteraction()
   }
 
   protected preUpdate(time: number, delta: number): void {
@@ -100,6 +122,20 @@ export default class CatOwner extends Npc {
         this.setVelocity(speed, 0)
         break
     }
+  }
+
+  showMessage() {
+    const gameUi: GameUI = this.scene.scene.get("game-ui") as GameUI
+    if (Singleton.getInstance().hasPlayerFoundCat) {
+      gameUi.showDialog(this.foundCatMessages[this.interactionCount])
+    } else {
+      gameUi.showDialog(this.messages[this.interactionCount])
+    }
+  }
+
+  hideDialog() {
+    const gameUi: GameUI = this.scene.scene.get("game-ui") as GameUI
+    gameUi.hideDialog()
   }
 
   setMessages(messages: string[]) {
