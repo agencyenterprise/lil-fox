@@ -23,6 +23,8 @@ import GameUI from "./GameUI"
 import Sign from "@/types/Sign"
 import EnterLevelSign from "@/types/EnterLevelSign"
 import { SignType, createSign } from "@/factory/SignFactory"
+import initializeWorld from "@/InitializeWorld"
+import { getItems } from "@/prefabs/Item"
 
 type CreateData = {
   levelNumber?: number
@@ -106,6 +108,7 @@ export default class FoxGame extends Phaser.Scene {
 
     const globalAccessSingleton = Singleton.getInstance()
     globalAccessSingleton.areas = this.areas
+
 
     // const debugGraphics = this.add.graphics().setAlpha(0.75);
     // this.treesLayer?.renderDebug(debugGraphics, {

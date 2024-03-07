@@ -1,14 +1,20 @@
 "use client"
 
-import { useNetwork, useAccount, useConnect, useSwitchNetwork } from "wagmi"
-import Image from "next/image"
-import { MetaMaskConnector } from "wagmi/connectors/metaMask"
-import { lineaTestnet } from "@wagmi/core/chains"
+import { useNetwork, useAccount, useConnect, useSwitchNetwork } from 'wagmi'
+import Image from "next/image";
+import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
+import { lineaTestnet } from '@wagmi/core/chains'
+import initializeWorld from '@/InitializeWorld';
+import { getItems } from '@/prefabs/Item';
+import getPlayer from '@/prefabs/Player';
 
 type NotInitiatedGameProps = {
   setIsGameStarted: (started: boolean) => void
   gameRef: any
 }
+
+export const world = initializeWorld()
+export const playerEntity = getPlayer();
 
 export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGameProps) {
   const { connect } = useConnect()
@@ -19,6 +25,9 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
   const connector = new MetaMaskConnector({
     chains: [lineaTestnet],
   })
+
+  const width = window.innerWidth * window.devicePixelRatio;
+  const height = window.innerHeight * window.devicePixelRatio;
 
   const startGame = () => {
     async function initPhaser() {
@@ -31,6 +40,9 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
       const { default: QuizScene } = await import("../scenes/QuizScene")
       const { default: GrandpaScene } = await import("../scenes/GrandpaScene")
 
+      const { default: RexUIPlugin } = await import("phaser3-rex-plugins/templates/ui/ui-plugin.js");
+      const { default: DragPlugin } = await import("phaser3-rex-plugins/plugins/drag-plugin");
+
       gameRef.current = new Phaser.Game({
         parent: "phaser-container",
         width: 400,
@@ -39,9 +51,32 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
         scale: {
           zoom: 2,
         },
-      })
-      setIsGameStarted(true)
+        pixelArt: true,
+        plugins: {
+          global: [
+            {
+              key: "dragPlugin",
+              plugin: DragPlugin,
+              start: true,
+            },
+          ],
+          scene: [
+            {
+              key: "rexUI",
+              plugin: RexUIPlugin,
+              mapping: "rexUI",
+            },
+          ],
+        },
+      });
+
+      const items = getItems()
+      console.log({ items })
+      console.log({ playerEntity })
+
+      setIsGameStarted(true);
     }
+
     initPhaser()
   }
 
