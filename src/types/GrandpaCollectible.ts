@@ -2,6 +2,7 @@ import { Events, sceneEvents } from "@/events/EventsCenter"
 import Interactable from "./Interactable"
 import GameUI from "@/scenes/GameUI"
 import { Singleton } from "@/utils/GlobalAccessSingleton"
+import { isTextAnimationBeingPlayed } from "@/utils/DialogUtils"
 
 export class GrandpaCollectible implements Interactable {
   public x: number = 0
@@ -21,25 +22,27 @@ export class GrandpaCollectible implements Interactable {
   }
 
   handleInteraction(): void {
+    if (isTextAnimationBeingPlayed()) return
+
     this.hasPlayerInteracted = true
     this.interactionCount++
 
     if (this.interactionCount === 1) {
-      this.showLetter(this.message)
+      this.showMessage(this.message)
     } else if (this.interactionCount === 2) {
-      this.hideLetter()
+      this.hideMessage()
       this.interactionCount = 0
 
       sceneEvents.emit(this.collectedEvent)
     }
   }
 
-  showLetter(message: string) {
+  showMessage(message: string) {
     const gameUi: GameUI = Singleton.getInstance().gameUi
     gameUi.showDialog(message)
   }
 
-  hideLetter() {
+  hideMessage() {
     const gameUi: GameUI = Singleton.getInstance().gameUi
     gameUi.hideDialog()
   }

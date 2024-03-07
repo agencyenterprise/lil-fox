@@ -3,6 +3,7 @@ import Phaser from "phaser"
 enum Events {
   PLAYER_HEALTH_CHANGED = "player-health-changed",
   PLAYER_COLLECTED_BERRY = "player-collected-berry",
+  PLAYER_ACCUMULATED_COIN = "player-accumulated-coin",
   PLAYER_COLLECTED_COIN = "player-collected-coin",
   LOCK_PLAYER_MOVEMENT = "lock-player-movement",
   SHOW_TIP = "show-tip",

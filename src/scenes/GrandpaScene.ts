@@ -262,7 +262,7 @@ export default class GrandpaScene extends Phaser.Scene {
     sceneEvents.on(
       Events.GRANDPA_POUCH_COLLECTED,
       () => {
-        Singleton.getInstance().gameUi.handlePlayerCollectedCoin(pouchCoinsCount)
+        sceneEvents.emit(Events.PLAYER_ACCUMULATED_COIN, pouchCoinsCount)
         this.handleItemCollected(Collectibles.Pouch, this.pouchImage, SoundEffects.PICKUP_COIN)
       },
       this,
