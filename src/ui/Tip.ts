@@ -1,15 +1,15 @@
 import Phaser from "phaser"
 
 const UI_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
-  color: 'black',
-  fontSize: '10px',
+  color: "black",
+  fontSize: "10px",
   wordWrap: { width: 0 },
 })
 
 export class Tip {
   private scene: Phaser.Scene
   private padding: number
-  private width: number = 280
+  private width: number = 115
   private height: number = 20
   private container: Phaser.GameObjects.Container
   private _isVisible: boolean = false
@@ -20,14 +20,9 @@ export class Tip {
     this.padding = 5
     this.width = this.width - this.padding * 2
 
-    const panel = this.scene.add.rectangle(
-      0,
-      0,
-      this.width,
-      this.height,
-      0xede4f3,
-      0.9
-    ).setOrigin(0)
+    const panel = this.scene.add
+      .rectangle(0, 0, this.width, this.height, 0xede4f3, 0.9)
+      .setOrigin(0)
       .setStrokeStyle(3, 0x905ac2, 1)
     this.container = this.scene.add.container(0, 0, [panel])
 
@@ -42,11 +37,11 @@ export class Tip {
 
   showTip() {
     this.height - 10
-    this.container.setPosition(125, 220)
+    this.container.setPosition(260, 220)
     this.container.setAlpha(1)
     this._isVisible = true
 
-    this.uiText.setText("Press space next to the sign to read it.").setAlpha(1)
+    this.uiText.setText("Press space").setAlpha(1)
 
     setTimeout(() => {
       this.hideTip()
