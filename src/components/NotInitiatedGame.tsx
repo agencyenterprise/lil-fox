@@ -1,14 +1,20 @@
-"use client";
+"use client"
 
 import { useNetwork, useAccount, useConnect, useSwitchNetwork } from 'wagmi'
 import Image from "next/image";
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { lineaTestnet } from '@wagmi/core/chains'
+import initializeWorld from '@/InitializeWorld';
+import { getItems } from '@/prefabs/Item';
+import getPlayer from '@/prefabs/Player';
 
 type NotInitiatedGameProps = {
-  setIsGameStarted: (started: boolean) => void;
+  setIsGameStarted: (started: boolean) => void
   gameRef: any
 }
+
+export const world = initializeWorld()
+export const playerEntity = getPlayer();
 
 export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGameProps) {
   const { connect } = useConnect()
@@ -29,55 +35,75 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
       const { default: MarioScene } = await import("../scenes/MarioScene")
       const { default: GameUI } = await import("../scenes/GameUI")
       const { default: QuizScene } = await import("../scenes/QuizScene")
+      const { default: GrandpaScene } = await import("../scenes/GrandpaScene")
+
+      const { default: RexUIPlugin } = await import("phaser3-rex-plugins/templates/ui/ui-plugin.js");
+      const { default: DragPlugin } = await import("phaser3-rex-plugins/plugins/drag-plugin");
 
       gameRef.current = new Phaser.Game({
-        parent: 'phaser-container',
+        parent: "phaser-container",
         width: window.innerWidth,
         height: window.innerHeight,
-        scene: [Preloader, FoxGame, MarioScene, GameUI, QuizScene],
+        scene: [Preloader, FoxGame, MarioScene, GrandpaScene, GameUI, QuizScene],
         scale: {
           zoom: 3,
         },
+        pixelArt: true,
+        plugins: {
+          global: [
+            {
+              key: "dragPlugin",
+              plugin: DragPlugin,
+              start: true,
+            },
+          ],
+          scene: [
+            {
+              key: "rexUI",
+              plugin: RexUIPlugin,
+              mapping: "rexUI",
+            },
+          ],
+        },
       });
+
+      const items = getItems()
+
       setIsGameStarted(true);
     }
+
     initPhaser()
-  };
+  }
 
   return (
     <div>
-      {
-        isConnected ? (
-          chain?.id !== 59140 ? (
-            <>
-              <button
-                disabled={!switchNetwork}
-                onClick={() => switchNetwork?.(59140)}
-              >
-                Switch to Linea network
-              </button> 
-            </>
-          ) : (
-            <div>
-              <button id="icon" onClick={startGame}>
-                <Image src="/fox.png" width="48" height="48" alt="fox icon" />
-                <div>Fox.exe</div>
-              </button>
-            </div>
-          )
+      {isConnected ? (
+        chain?.id !== 59140 ? (
+          <>
+            <button disabled={!switchNetwork} onClick={() => switchNetwork?.(59140)}>
+              Switch to Linea network
+            </button> 
+          </>
         ) : (
           <div>
-            <button
-              disabled={!connector.ready}
-              key={connector.id}
-              onClick={() => connect({ connector })}
-              className='border-2 p-2 font-bold bg-blue-500'
-            >
-              Connect With Metamask
+            <button id="icon" onClick={startGame}>
+              <Image src="/fox.png" width="48" height="48" alt="fox icon" />
+              <div>Fox.exe</div>
             </button>
           </div>
         )
-      }
+      ) : (
+        <div>
+          <button
+            disabled={!connector.ready}
+            key={connector.id}
+            onClick={() => connect({ connector })}
+            className="border-2 p-2 font-bold bg-blue-500"
+          >
+            Connect With Metamask
+          </button>
+        </div>
+      )}
     </div>
   )
 }

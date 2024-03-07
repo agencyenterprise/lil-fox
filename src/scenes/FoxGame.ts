@@ -23,6 +23,8 @@ import GameUI from "./GameUI"
 import Sign from "@/types/Sign"
 import EnterLevelSign from "@/types/EnterLevelSign"
 import { SignType, createSign } from "@/factory/SignFactory"
+import initializeWorld from "@/InitializeWorld"
+import { getItems } from "@/prefabs/Item"
 
 type CreateData = {
   levelNumber?: number
@@ -77,21 +79,10 @@ export default class FoxGame extends Phaser.Scene {
   private collectedBlueBerries: number = 0
 
   preload() {
-    this.loadSkinSpriteSheet(Skin.DEFAULT)
-    this.loadSkinSpriteSheet(Skin.BLUE)
-    this.loadSkinSpriteSheet(Skin.KUMAMON)
-    this.loadSkinSpriteSheet(Skin.SUNGLASSES)
-
     this.cursors = this.input.keyboard?.createCursorKeys()!
   }
 
   create(data: CreateData) {
-    this.scene.run("game-ui")
-    this.scene.launch("settings-ui")
-
-    Singleton.getInstance().gameUi = this.scene.get("game-ui") as GameUI
-
-    createCharacterAnims(this.anims)
     createArcherAnims(this.anims)
     createEnemyAnims(this.anims)
     createChestAnims(this.anims)
@@ -117,6 +108,7 @@ export default class FoxGame extends Phaser.Scene {
 
     const globalAccessSingleton = Singleton.getInstance()
     globalAccessSingleton.areas = this.areas
+
 
     // const debugGraphics = this.add.graphics().setAlpha(0.75);
     // this.treesLayer?.renderDebug(debugGraphics, {

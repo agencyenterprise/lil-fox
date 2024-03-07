@@ -8,11 +8,24 @@ import { SoundSingleton, SoundEffects } from "@/utils/SoundSingleton"
 import { GameOverModal } from "@/ui/GameOverModal"
 import { WinMarioLikeLevelModal } from "@/ui/WinMarioLikeLevelModal"
 import { Modal, ReceivesInstructions } from "@/types/Modal"
+import type RexUI from "phaser3-rex-plugins/templates/ui/ui-plugin"
+import { InventoryWindowFactory } from "@/inventory/ui/InventoryWindowFactory"
+import uiJson from "../../public/inventory/assets/ui.json"
+import uiImg from "../../public/inventory/assets/ui.png"
+import { getPlayerItems } from "@/prefabs/Player"
+import { initializeEntity } from "@/InitializeEntity"
+import { addToInventory, deleteItem, hideItems, showItems } from "@/inventory/state/InventoryUtilities"
+import { playerEntity } from "@/components/NotInitiatedGame"
+import Sizer from "phaser3-rex-plugins/templates/ui/sizer/Sizer"
 
 export default class GameUI extends Phaser.Scene {
+
+  public rexUI: RexUI
+
   private settingsMenu!: SettingsMenu
 
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys
+  private iKey!: Phaser.Input.Keyboard.Key
 
   private hearts: Phaser.GameObjects.Group
   private berries: Phaser.GameObjects.Group
@@ -24,6 +37,7 @@ export default class GameUI extends Phaser.Scene {
   private tipUi: Tip
   private currentOpenModal?: Modal
   private coinImage: Phaser.GameObjects.Image
+  private inventoryWindow: Sizer
 
   private shouldHideTip: boolean = false
 
@@ -32,7 +46,11 @@ export default class GameUI extends Phaser.Scene {
   }
 
   preload() {
+    const uiAtlasMeta = uiJson.meta as any
+    uiAtlasMeta.image = uiImg
+
     this.cursors = this.input.keyboard?.createCursorKeys()!
+    this.iKey = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.I)!;
   }
 
   create() {
@@ -102,15 +120,37 @@ export default class GameUI extends Phaser.Scene {
       quantity: 5,
     })
 
-    this.coinAmountText = this.add.text(30, 0, "x1").setScale(0.8, 0.8).setOrigin(1, 0.45).setVisible(false)
-    this.coinImage = this.add.image(0, 0, "coin").setVisible(false)
-    this.add.container(17, 30).setSize(50, 50).add(this.coinImage).add(this.coinAmountText)
+    this.coinImage = this.add.image(0, 7, "coin").setOrigin(1, 0.5)
+    this.coinAmountText = this.add.text(this.coinImage.width + 12, 7, "x100", { fontSize: "12px" }).setOrigin(1, 0.5)
+    this.add
+      .container(width - settingsButton.width - 20, 8)
+      .setSize(50, 50)
+      .add(this.coinImage)
+      .add(this.coinAmountText)
 
     this.timeDownText = this.add.text(30, 0, "00:00").setScale(0.8, 0.8).setOrigin(1, 0.45).setVisible(false)
     this.add.container(17, 15).setSize(50, 50).add(this.timeDownText)
 
     SoundSingleton.getInstance().setSoundManager(this)
-    SoundSingleton.getInstance().playTheme(SoundEffects.THEME)
+    SoundSingleton.getInstance().playTheme(SoundEffects.THEME_GRANDPA)
+
+    this.berries.setVisible(false)
+    this.hearts.setVisible(false)
+    this.timeDownText.setVisible(false)
+    this.coinAmountText.setVisible(false)
+    this.coinImage.setVisible(false)
+
+    this.inventoryWindow = InventoryWindowFactory.create(this)
+
+    const playerItems = getPlayerItems();
+
+    // playerItems.forEach((item) => {
+    //   const entity = initializeEntity(item as any);
+    //   addToInventory(playerEntity, entity);
+    // });
+
+    this.hideInventory()
+
 
     sceneEvents.on(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
     sceneEvents.on(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
@@ -123,6 +163,8 @@ export default class GameUI extends Phaser.Scene {
     sceneEvents.on(Events.GAME_OVER, this.handleGameOver, this)
     sceneEvents.on(Events.WIN_MARIO_LIKE_LEVEL, this.handleWinMarioLikeLevel, this)
     sceneEvents.on(Events.UPDATE_COUNTDOWN_TIMER, this.updateTimer, this)
+    sceneEvents.on(Events.GRANDPA_POUCH_COLLECTED, this.handleGrandpaLevelPouchCollected, this)
+    sceneEvents.on(Events.FOX_GAME_LEVEL_STARTED, this.handleFoxGameLevelStarted, this)
     sceneEvents.on(Events.MARIO_LIKE_LEVEL_STARTED, this.handleMarioLikeLevelStarted, this)
     sceneEvents.on(Events.MARIO_LIKE_LEVEL_FINISHED, this.handleMarioLikeLevelFinished, this)
 
@@ -135,6 +177,12 @@ export default class GameUI extends Phaser.Scene {
   }
 
   update() {
+    const iKeyDown = Phaser.Input.Keyboard.JustDown(this.iKey)
+
+    if (iKeyDown) {
+      this.handleIKeyDown()
+    }
+
     if ((!this.currentOpenModal || !this.currentOpenModal.isVisible) && !this.dialogUi.isVisible) return
 
     const instructionReceiver: ReceivesInstructions = this.currentOpenModal?.isVisible
@@ -236,16 +284,31 @@ export default class GameUI extends Phaser.Scene {
     this.gameOverModal.showModal({ message1: "Game Over!", message2: "You died!" })
   }
 
+  handleGrandpaLevelPouchCollected() {
+    this.coinImage.setVisible(true)
+    this.coinAmountText.setVisible(true)
+  }
+
+  handleFoxGameLevelStarted() {
+    SoundSingleton.getInstance().playTheme(SoundEffects.THEME)
+
+    this.berries.setVisible(true)
+    this.hearts.setVisible(true)
+    this.timeDownText.setVisible(false)
+    this.coinImage.setVisible(true)
+    this.coinAmountText.setVisible(true)
+  }
+
   handleMarioLikeLevelStarted() {
     SoundSingleton.getInstance().playTheme(SoundEffects.THEME_PLATFORM)
 
-    this.coinAmountText.setText("x0")
+    this.coinAmountText.setText("x100")
 
     this.berries.setVisible(false)
     this.hearts.setVisible(false)
     this.timeDownText.setVisible(true)
-    this.coinAmountText.setVisible(true)
     this.coinImage.setVisible(true)
+    this.coinAmountText.setVisible(true)
   }
 
   handleMarioLikeLevelFinished() {
@@ -256,5 +319,23 @@ export default class GameUI extends Phaser.Scene {
     this.timeDownText.setVisible(false)
     this.coinAmountText.setVisible(false)
     this.coinImage.setVisible(false)
+  }
+
+  handleIKeyDown() {
+    if (this.inventoryWindow.visible) {
+      this.hideInventory()
+    } else {
+      this.showInventory()
+    }
+  }
+
+  showInventory() {
+    this.inventoryWindow.setVisible(true)
+    showItems()
+  }
+
+  hideInventory() {
+    this.inventoryWindow.setVisible(false)
+    hideItems()
   }
 }
