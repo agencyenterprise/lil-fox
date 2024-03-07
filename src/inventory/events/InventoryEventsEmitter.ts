@@ -1,4 +1,4 @@
-import { GameEntity } from "../../ecs/GameEntity.ts";
+import { GameEntity } from "@/GameEntity";
 
 export const enum InventoryEvent {
   ITEM_ADDED = "item_added",
