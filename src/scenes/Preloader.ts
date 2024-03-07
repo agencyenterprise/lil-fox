@@ -11,9 +11,12 @@ export default class Preloader extends Phaser.Scene {
     this.load.image("tiles1", "tiles/16oga.png")
     this.load.image("tiles2", "tiles/DungeonTileset.png")
     this.load.image("tiles3", "tiles/nature-paltformer-tileset-16x16.png")
+    this.load.image("tiles4", "tiles/CuteRPG_Interior_custom.png")
+    this.load.image("tiles5", "tiles/Interiors_free_16x16.png")
 
     this.load.tilemapTiledJSON("map", "tiles/lil-fox-map.json")
     this.load.tilemapTiledJSON("platform-level-map", "tiles/platform-level.json")
+    this.load.tilemapTiledJSON("grandpa-home-map", "tiles/grandpa-home-map.json")
 
     this.load.atlas(
       "green_archer_shooting",
@@ -92,6 +95,12 @@ export default class Preloader extends Phaser.Scene {
     this.load.image("coin", "items/coin.png")
     this.load.image("greenPotion", "items/greenPotion.png")
     this.load.image("orangePotion", "items/orangePotion.png")
+    this.load.image("door", "items/door.png")
+    this.load.image("letter", "items/letter.png")
+    this.load.image("letterOpen", "items/letterOpen.png")
+    this.load.image("map", "items/map.png")
+    this.load.image("pouch", "items/pouch.png")
+    this.load.image("backpack", "items/backpack.png")
 
     this.load.image("berry", "food/blueberry.png")
     this.load.image("berry-empty", "food/blueberry-empty.png")
@@ -106,6 +115,7 @@ export default class Preloader extends Phaser.Scene {
     this.load.image("cursor", `ui/cursor.png`)
 
     this.load.audio(SoundEffects.THEME, ["assets/audio/theme.ogg", "assets/audio/theme.mp3"])
+    this.load.audio(SoundEffects.THEME_GRANDPA, ["assets/audio/theme-grandpa.ogg", "assets/audio/theme-grandpa.mp3"])
     this.load.audio(SoundEffects.THEME_PLATFORM, ["assets/audio/theme-platform.ogg", "assets/audio/theme-platform.mp3"])
     this.load.audio(SoundEffects.GAME_OVER, ["assets/audio/game-over.ogg", "assets/audio/game-over.mp3"])
     this.load.audio(SoundEffects.DAMAGE, ["assets/audio/ouch.ogg", "assets/audio/ouch.mp3"])
@@ -120,9 +130,11 @@ export default class Preloader extends Phaser.Scene {
     this.load.audio(SoundEffects.JUMP_BIG, ["assets/audio/jump-big.ogg", "assets/audio/jump-big.mp3"])
     this.load.audio(SoundEffects.POWER_UP, ["assets/audio/power-up.ogg", "assets/audio/power-up.mp3"])
     this.load.audio(SoundEffects.SUCCESS, ["assets/audio/success.ogg", "assets/audio/success.mp3"])
+    this.load.audio(SoundEffects.DOOR_OPEN, ["assets/audio/door-open.ogg", "assets/audio/door-open.mp3"])
+    this.load.audio(SoundEffects.PICKUP_PAPER, ["assets/audio/pickup-paper.ogg", "assets/audio/pickup-paper.mp3"])
   }
 
   create() {
-    this.scene.start("LilFox")
+    this.scene.start("GrandpaScene")
   }
 }

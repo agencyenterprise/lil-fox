@@ -77,7 +77,7 @@ export default class InventoryGridSlotDragManager implements DragManager {
         itemSlotSprite.getData("slotType")
       );
 
-    item.handleDrop();
+    // item.handleDrop();
 
     if (!isValidDropTarget) {
       item.resetPosition();

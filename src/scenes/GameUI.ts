@@ -123,15 +123,25 @@ export default class GameUI extends Phaser.Scene {
       quantity: 5,
     })
 
-    this.coinAmountText = this.add.text(30, 0, "x1").setScale(0.8, 0.8).setOrigin(1, 0.45).setVisible(false)
-    this.coinImage = this.add.image(0, 0, "coin").setVisible(false)
-    this.add.container(17, 30).setSize(50, 50).add(this.coinImage).add(this.coinAmountText)
+    this.coinImage = this.add.image(0, 7, "coin").setOrigin(1, 0.5)
+    this.coinAmountText = this.add.text(this.coinImage.width + 12, 7, "x100", { fontSize: "12px" }).setOrigin(1, 0.5)
+    this.add
+      .container(width - settingsButton.width - 20, 8)
+      .setSize(50, 50)
+      .add(this.coinImage)
+      .add(this.coinAmountText)
 
     this.timeDownText = this.add.text(30, 0, "00:00").setScale(0.8, 0.8).setOrigin(1, 0.45).setVisible(false)
     this.add.container(17, 15).setSize(50, 50).add(this.timeDownText)
 
     SoundSingleton.getInstance().setSoundManager(this)
-    SoundSingleton.getInstance().playTheme(SoundEffects.THEME)
+    SoundSingleton.getInstance().playTheme(SoundEffects.THEME_GRANDPA)
+
+    this.berries.setVisible(false)
+    this.hearts.setVisible(false)
+    this.timeDownText.setVisible(false)
+    this.coinAmountText.setVisible(false)
+    this.coinImage.setVisible(false)
 
     this.inventoryWindow = InventoryWindowFactory.create(this)
 
@@ -158,6 +168,8 @@ export default class GameUI extends Phaser.Scene {
     sceneEvents.on(Events.GAME_OVER, this.handleGameOver, this)
     sceneEvents.on(Events.WIN_MARIO_LIKE_LEVEL, this.handleWinMarioLikeLevel, this)
     sceneEvents.on(Events.UPDATE_COUNTDOWN_TIMER, this.updateTimer, this)
+    sceneEvents.on(Events.GRANDPA_POUCH_COLLECTED, this.handleGrandpaLevelPouchCollected, this)
+    sceneEvents.on(Events.FOX_GAME_LEVEL_STARTED, this.handleFoxGameLevelStarted, this)
     sceneEvents.on(Events.MARIO_LIKE_LEVEL_STARTED, this.handleMarioLikeLevelStarted, this)
     sceneEvents.on(Events.MARIO_LIKE_LEVEL_FINISHED, this.handleMarioLikeLevelFinished, this)
 
@@ -273,21 +285,38 @@ export default class GameUI extends Phaser.Scene {
   }
 
   updateTimer(nextTime: number) {
-    this.timeDownText.setText(`00:${nextTime}`)
+    this.timeDownText.setText(`00:${nextTime.toString().padStart(2, "0")}`)
   }
 
   handleCharacterDied() {
     this.gameOverModal.showModal({ message1: "Game Over!", message2: "You died!" })
   }
 
+  handleGrandpaLevelPouchCollected() {
+    this.coinImage.setVisible(true)
+    this.coinAmountText.setVisible(true)
+  }
+
+  handleFoxGameLevelStarted() {
+    SoundSingleton.getInstance().playTheme(SoundEffects.THEME)
+
+    this.berries.setVisible(true)
+    this.hearts.setVisible(true)
+    this.timeDownText.setVisible(false)
+    this.coinImage.setVisible(true)
+    this.coinAmountText.setVisible(true)
+  }
+
   handleMarioLikeLevelStarted() {
     SoundSingleton.getInstance().playTheme(SoundEffects.THEME_PLATFORM)
+
+    this.coinAmountText.setText("x100")
 
     this.berries.setVisible(false)
     this.hearts.setVisible(false)
     this.timeDownText.setVisible(true)
-    this.coinAmountText.setVisible(true)
     this.coinImage.setVisible(true)
+    this.coinAmountText.setVisible(true)
   }
 
   handleMarioLikeLevelFinished() {
