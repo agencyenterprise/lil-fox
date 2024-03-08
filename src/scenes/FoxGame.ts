@@ -41,6 +41,11 @@ export default class FoxGame extends Phaser.Scene {
           // debug: true
         },
       },
+      cameras: {
+        name: "main",
+        zoom: 3,
+        roundPixels: true,
+      },
     })
   }
 
