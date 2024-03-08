@@ -83,7 +83,6 @@ export class Dialog implements ReceivesInstructions {
   }
 
   showMessage(message: string) {
-    console.log('showMessage', message)
     if (this.textAnimationPlaying) return
 
     this.createPlayerInputCursor()

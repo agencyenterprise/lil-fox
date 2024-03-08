@@ -46,7 +46,7 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
         height: window.innerHeight,
         scene: [Preloader, GameUI, GrandpaScene, FoxGame, MarioScene, QuizScene],
         scale: {
-          zoom: 3,
+          zoom: 1,
         },
         pixelArt: true,
         plugins: {
