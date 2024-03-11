@@ -26,9 +26,6 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
     chains: [lineaTestnet],
   })
 
-  const width = window.innerWidth * window.devicePixelRatio;
-  const height = window.innerHeight * window.devicePixelRatio;
-
   const startGame = () => {
     async function initPhaser() {
       const Phaser = await import("phaser")
@@ -45,11 +42,11 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
 
       gameRef.current = new Phaser.Game({
         parent: "phaser-container",
-        width: 400,
-        height: 250,
-        scene: [Preloader, FoxGame, MarioScene, GrandpaScene, GameUI, QuizScene],
+        width: window.innerWidth,
+        height: window.innerHeight,
+        scene: [Preloader, GameUI, GrandpaScene, FoxGame, MarioScene, QuizScene],
         scale: {
-          zoom: 2,
+          zoom: 1,
         },
         pixelArt: true,
         plugins: {
@@ -71,8 +68,6 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
       });
 
       const items = getItems()
-      console.log({ items })
-      console.log({ playerEntity })
 
       setIsGameStarted(true);
     }
@@ -87,7 +82,7 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
           <>
             <button disabled={!switchNetwork} onClick={() => switchNetwork?.(59140)}>
               Switch to Linea network
-            </button>
+            </button> 
           </>
         ) : (
           <div>
@@ -103,7 +98,7 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
             disabled={!connector.ready}
             key={connector.id}
             onClick={() => connect({ connector })}
-            className="border-2 p-2 font-bold bg-blue-500 absolute bottom-1/2 left-1/2 -translate-x-1/2 translate-y-1/2"
+            className="border-2 p-2 font-bold bg-blue-500"
           >
             Connect With Metamask
           </button>

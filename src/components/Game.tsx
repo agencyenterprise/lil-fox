@@ -27,22 +27,23 @@ export function Game() {
     setUserSkins()
   }, [address])
 
+
   const setUserSkins = async () => {
     if (!address) return
     const erc1155Interface: ContractInterface = [
       'function balanceOf(address account, uint256 id) external view returns (uint256)',
       'function balanceOfBatch(address[] calldata accounts, uint256[] calldata ids) external view returns (uint256[] memory)'
     ]
-    
+
     const provider = new ethers.providers.JsonRpcProvider(config.lineaRpcUrl)
     const lilFoxSkinsContract = new ethers.Contract(config.foxSkinContractAddress, erc1155Interface, provider)
-    
+
     const tokenIdsArray = Array.from({ length: config.maxNftSkinId + 1 }, (_, i) => i);
     const addressesArray = Array(config.maxNftSkinId + 1).fill(address)
-    
+
     const balanceOfBatch = await lilFoxSkinsContract.balanceOfBatch(addressesArray, tokenIdsArray)
     const ownedSkins: string[] = ["default"]
-    
+
     const entries: [string, BigNumber][] = Object.entries(balanceOfBatch);
     entries.forEach(([key, value]) => {
       if (value.gt(0)) {
@@ -85,37 +86,13 @@ export function Game() {
   }
 
   return (
-    <div className="flex text-center w-[814px] pb-1 window-style absolute top-[50%] left-[50%] mt-[-334px] ml-[-407px] justify-center items-center flex-row ">
-      <div
-        id="pic"
-        className="h-64 w-64 absolute top-0 -left-72 text-center pb-1 window-style justify-center items-center flex-row opacity-0"
-      ></div>
-      <div className="flex flex-col w-full p-1">
-        <div className="flex flex-col w-full justify-center items-center">
-          <div className="flex m-1 mx-4 justify-between box-border w-[800px] h-12 p-1 bg-[#fed5fb] items-center border-2 border-[#9f1bf5] header">
-            <h1 id="title" className="text-2xl font-bold pl-2">
-              Fox.exe
-            </h1>
-            <div className="flex items-center">
-              <button id="autosave" className="button" onClick={autosave}>
-                autosave
-              </button>
-              <button id="close" className="button" onClick={closeGame}>
-                X
-              </button>
-            </div>
-          </div>
-          <div id="phaser-container" className="h-[500px] w-[800px]">
-            {!isGameStarted && (
-              <NotInitiatedGame gameRef={gameRef} setIsGameStarted={setIsGameStarted} />
-            )}
-            <GetNFT getCurrentLevel={getCurrentLevel} />
-          </div>
-        </div>
-      </div>
+    <div id="phaser-container" >
+      {!isGameStarted && (
+        <NotInitiatedGame gameRef={gameRef} setIsGameStarted={setIsGameStarted} />
+      )}
+      <GetNFT getCurrentLevel={getCurrentLevel} />
 
-
-      <div className="window-style w-fit h-[664px] absolute -right-[250px] top-0 p-2">
+      {/* <div className="window-style w-fit h-[664px] absolute -right-[250px] top-0 p-2">
         <div className="flex box-border w-full h-12 p-1 bg-[#fed5fb] items-center border-2 border-[#9f1bf5] header">
           <h1 id="title" className="text-2xl font-bold px-2">
             Choose Skin
@@ -136,7 +113,7 @@ export function Game() {
             />
           </button>
         ))}
-      </div>
+      </div> */}
     </div>
   )
 }

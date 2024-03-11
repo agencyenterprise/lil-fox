@@ -55,7 +55,7 @@ export default function Home() {
 
   return (
     <WagmiConfig config={wagmiConfig}>
-      <main className="flex items-center min-h-screen justify-center ">
+      <main className="flex items-center h-screen justify-center ">
         {hasFlask && (
           <Game />
         )}
@@ -64,7 +64,7 @@ export default function Home() {
           <>
             <a
               id="flask"
-              className="flex flex-col absolute mx-auto my-auto justify-center items-center text-center"
+              className="flex flex-col mx-auto my-auto justify-center items-center text-center"
               href="https://metamask.io"
               target="_blank"
             >

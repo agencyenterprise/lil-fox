@@ -37,16 +37,16 @@ export class Dialog implements ReceivesInstructions {
       this.height,
       0xede4f3,
       0.9
-    ).setOrigin(0)
+    ).setOrigin(0.5, 0)
       .setStrokeStyle(3, 0x905ac2, 1)
-    this.container = this.scene.add.container(0, 0, [panel])
 
-    this.uiText = this.scene.add.text(18, 6, "", {
+    this.uiText = this.scene.add.text(0, 5, "", {
       ...UI_TEXT_STYLE,
       ...{ wordWrap: { width: this.width - 18 } },
-    })
+    }).setOrigin(0.5, 0)
 
-    this.container.add(this.uiText)
+    this.container = this.scene.add.container(this.scene.cameras.main.centerX, this.scene.scale.height * 0.60, [panel, this.uiText])
+
     this.userInputCursor = this.scene.add.image(this.width - 8, this.height - 12, 'cursor')
     this.createPlayerInputCursor()
 
@@ -87,8 +87,6 @@ export class Dialog implements ReceivesInstructions {
 
     this.createPlayerInputCursor()
 
-    this.height - 10
-    this.container.setPosition(50, 185)
     this.userInputCursorTween.restart()
     this.container.setAlpha(1)
     this._isVisible = true
@@ -111,8 +109,6 @@ export class Dialog implements ReceivesInstructions {
   askQuestion(options: string[], onAnswer: (selectedOption: number) => void) {
     if (this.textAnimationPlaying) return
 
-    this.height - 10
-    this.container.setPosition(50, 185)
     this.userInputCursorTween.restart()
     this.container.setAlpha(1)
     this._isVisible = true
@@ -132,6 +128,23 @@ export class Dialog implements ReceivesInstructions {
     this.onAnswer = onAnswer
     this.isAskingQuestion = true
   }
+
+  getXCoordinatesForOption(index: number): number {
+    if (index === 0) {
+      return -45
+    } else {
+      return 35
+    }
+  }
+
+  getXCoordinatesForCursor(index: number): number {
+    if (index === 0) {
+      return -55
+    } else {
+      return 25
+    }
+  }
+
 
   createPlayerInputCursor() {
     const y = this.height - 12
@@ -178,22 +191,6 @@ export class Dialog implements ReceivesInstructions {
       },
       targets: this.userInputCursor,
     })
-  }
-
-  getXCoordinatesForOption(index: number): number {
-    if (index === 0) {
-      return this.width / 2 - 25
-    } else {
-      return this.width / 2 + 25
-    }
-  }
-
-  getXCoordinatesForCursor(index: number): number {
-    if (index === 0) {
-      return this.width / 2 - 37
-    } else {
-      return this.width / 2 + 14
-    }
   }
 
   get isVisible() {

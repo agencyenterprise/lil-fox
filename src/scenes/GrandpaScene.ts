@@ -66,6 +66,11 @@ export default class GrandpaScene extends Phaser.Scene {
           // debug: true
         },
       },
+      cameras: {
+        name: "main",
+        zoom: 3,
+        roundPixels: true,
+      },
     })
   }
 
