@@ -19,7 +19,6 @@ import { playerEntity } from "@/components/NotInitiatedGame"
 import Sizer from "phaser3-rex-plugins/templates/ui/sizer/Sizer"
 
 export default class GameUI extends Phaser.Scene {
-
   public rexUI: RexUI
 
   private settingsMenu!: SettingsMenu
@@ -29,15 +28,18 @@ export default class GameUI extends Phaser.Scene {
 
   private hearts: Phaser.GameObjects.Group
   private berries: Phaser.GameObjects.Group
-  private coinAmountText: Phaser.GameObjects.Text
   private timeDownText: Phaser.GameObjects.Text
   public dialogUi: Dialog
   private gameOverModal: GameOverModal
   private winMarioLikeLevelModal: WinMarioLikeLevelModal
   private tipUi: Tip
   private currentOpenModal?: Modal
-  private coinImage: Phaser.GameObjects.Image
   private inventoryWindow: Sizer
+
+  private coinAccumulatedAmount: number = 0
+  private coinCollectedAmount: number = 0
+  private coinAmountText: Phaser.GameObjects.Text
+  private coinImage: Phaser.GameObjects.Image
 
   private shouldHideTip: boolean = false
 
@@ -50,7 +52,7 @@ export default class GameUI extends Phaser.Scene {
     uiAtlasMeta.image = uiImg
 
     this.cursors = this.input.keyboard?.createCursorKeys()!
-    this.iKey = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.I)!;
+    this.iKey = this.input.keyboard?.addKey(Phaser.Input.Keyboard.KeyCodes.I)!
   }
 
   create() {
@@ -61,13 +63,10 @@ export default class GameUI extends Phaser.Scene {
     this.settingsMenu = new SettingsMenu(this)
 
     const { width } = this.scale
-    const settingsButton = this.add
-      .image(width - 5, 5, "small-button")
-      .setScale(0.5)
-      .setOrigin(1, 0)
+    const settingsButton = this.add.image(width - 15, 15, "small-button").setOrigin(1, 0)
     this.add
-      .image(width - 7, 4.5, "gear")
-      .setScale(0.35)
+      .image(settingsButton.x + 1, settingsButton.y - 5, "gear")
+      .setScale(0.85)
       .setOrigin(1, 0)
 
     settingsButton
@@ -121,7 +120,7 @@ export default class GameUI extends Phaser.Scene {
     })
 
     this.coinImage = this.add.image(0, 7, "coin").setOrigin(1, 0.5)
-    this.coinAmountText = this.add.text(this.coinImage.width + 12, 7, "x100", { fontSize: "12px" }).setOrigin(1, 0.5)
+    this.coinAmountText = this.add.text(this.coinImage.width + 12, 7, "x0", { fontSize: "12px" }).setOrigin(1, 0.5)
     this.add
       .container(width - settingsButton.width - 20, 8)
       .setSize(50, 50)
@@ -142,7 +141,7 @@ export default class GameUI extends Phaser.Scene {
 
     this.inventoryWindow = InventoryWindowFactory.create(this)
 
-    const playerItems = getPlayerItems();
+    const playerItems = getPlayerItems()
 
     // playerItems.forEach((item) => {
     //   const entity = initializeEntity(item as any);
@@ -151,13 +150,13 @@ export default class GameUI extends Phaser.Scene {
 
     this.hideInventory()
 
-
     sceneEvents.on(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
     sceneEvents.on(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
     sceneEvents.on(Events.PLAYER_HEALTH_CHANGED, this.handlePlayerHealthChanged, this)
     sceneEvents.on(Events.PLAYER_COLLECTED_BERRY, this.handlePlayerCollectedBerry, this)
     sceneEvents.on(Events.SHOW_TIP, this.showTip, this)
     sceneEvents.on(Events.CHARACTER_DIED, this.handleCharacterDied, this)
+    sceneEvents.on(Events.PLAYER_ACCUMULATED_COIN, this.handlePlayerAccumulatedCoin, this)
     sceneEvents.on(Events.PLAYER_COLLECTED_COIN, this.handlePlayerCollectedCoin, this)
     sceneEvents.on(Events.GAME_OVER, this.handleGameOver, this)
     sceneEvents.on(Events.WIN_MARIO_LIKE_LEVEL, this.handleWinMarioLikeLevel, this)
@@ -234,10 +233,18 @@ export default class GameUI extends Phaser.Scene {
     })
   }
 
+  handlePlayerAccumulatedCoin(amount: number) {
+    SoundSingleton.getInstance().playSoundEffect(SoundEffects.PICKUP_COIN)
+
+    this.coinAccumulatedAmount += amount
+    this.coinAmountText.setText(`x${this.coinAccumulatedAmount}`)
+  }
+
   handlePlayerCollectedCoin(amount: number) {
     SoundSingleton.getInstance().playSoundEffect(SoundEffects.PICKUP_COIN)
 
-    this.coinAmountText.setText(`x${amount}`)
+    this.coinCollectedAmount = amount
+    this.coinAmountText.setText(`x${this.coinCollectedAmount}`)
   }
 
   public showDialog(message: string) {
@@ -253,9 +260,9 @@ export default class GameUI extends Phaser.Scene {
     this.shouldHideTip = false
   }
 
-  showTip() {
+  showTip(x?: number, y?: number) {
     if (this.shouldHideTip) return
-    this.tipUi.showTip()
+    this.tipUi.showTip(x, y)
   }
 
   handleGameOver(message1: string, message2: string) {
@@ -300,7 +307,7 @@ export default class GameUI extends Phaser.Scene {
   handleMarioLikeLevelStarted() {
     SoundSingleton.getInstance().playTheme(SoundEffects.THEME_PLATFORM)
 
-    this.coinAmountText.setText("x100")
+    this.handlePlayerCollectedCoin(0)
 
     this.berries.setVisible(false)
     this.hearts.setVisible(false)
@@ -312,11 +319,11 @@ export default class GameUI extends Phaser.Scene {
   handleMarioLikeLevelFinished() {
     SoundSingleton.getInstance().playTheme(SoundEffects.THEME)
 
+    this.handlePlayerAccumulatedCoin(this.coinCollectedAmount)
+
     this.berries.setVisible(true)
     this.hearts.setVisible(true)
     this.timeDownText.setVisible(false)
-    this.coinAmountText.setVisible(false)
-    this.coinImage.setVisible(false)
   }
 
   handleIKeyDown() {

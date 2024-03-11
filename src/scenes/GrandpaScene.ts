@@ -93,7 +93,9 @@ export default class GrandpaScene extends Phaser.Scene {
 
     createCharacterAnims(this.anims)
 
-    this.cameras.main.setBounds(-40, -50, 250, 400)
+    const cameraX = (this.scene.scene.scale.width / 3 - this.map.widthInPixels) / 2
+
+    this.cameras.main.setBounds(-cameraX, -50, 250, 400)
 
     this.createLayers()
     this.createAreas()
@@ -267,7 +269,7 @@ export default class GrandpaScene extends Phaser.Scene {
     sceneEvents.on(
       Events.GRANDPA_POUCH_COLLECTED,
       () => {
-        Singleton.getInstance().gameUi.handlePlayerCollectedCoin(pouchCoinsCount)
+        sceneEvents.emit(Events.PLAYER_ACCUMULATED_COIN, pouchCoinsCount)
         this.handleItemCollected(Collectibles.Pouch, this.pouchImage, SoundEffects.PICKUP_COIN)
       },
       this,
