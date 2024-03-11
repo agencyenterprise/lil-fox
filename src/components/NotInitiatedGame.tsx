@@ -1,12 +1,12 @@
 "use client"
 
-import { useNetwork, useAccount, useConnect, useSwitchNetwork } from 'wagmi'
-import Image from "next/image";
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
-import { lineaTestnet } from '@wagmi/core/chains'
-import initializeWorld from '@/InitializeWorld';
-import { getItems } from '@/prefabs/Item';
-import getPlayer from '@/prefabs/Player';
+import { useNetwork, useAccount, useConnect, useSwitchNetwork } from "wagmi"
+import Image from "next/image"
+import { MetaMaskConnector } from "wagmi/connectors/metaMask"
+import { lineaTestnet } from "@wagmi/core/chains"
+import initializeWorld from "@/InitializeWorld"
+import { getItems } from "@/prefabs/Item"
+import getPlayer from "@/prefabs/Player"
 
 type NotInitiatedGameProps = {
   setIsGameStarted: (started: boolean) => void
@@ -14,7 +14,7 @@ type NotInitiatedGameProps = {
 }
 
 export const world = initializeWorld()
-export const playerEntity = getPlayer();
+export const playerEntity = getPlayer()
 
 export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGameProps) {
   const { connect } = useConnect()
@@ -37,14 +37,14 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
       const { default: QuizScene } = await import("../scenes/QuizScene")
       const { default: GrandpaScene } = await import("../scenes/GrandpaScene")
 
-      const { default: RexUIPlugin } = await import("phaser3-rex-plugins/templates/ui/ui-plugin.js");
-      const { default: DragPlugin } = await import("phaser3-rex-plugins/plugins/drag-plugin");
+      const { default: RexUIPlugin } = await import("phaser3-rex-plugins/templates/ui/ui-plugin.js")
+      const { default: DragPlugin } = await import("phaser3-rex-plugins/plugins/drag-plugin")
 
       gameRef.current = new Phaser.Game({
         parent: "phaser-container",
         width: window.innerWidth,
         height: window.innerHeight,
-        scene: [Preloader, GameUI, GrandpaScene, FoxGame, MarioScene, QuizScene],
+        scene: [Preloader, GrandpaScene, FoxGame, MarioScene, QuizScene, GameUI],
         scale: {
           zoom: 1,
         },
@@ -65,11 +65,11 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
             },
           ],
         },
-      });
+      })
 
       const items = getItems()
 
-      setIsGameStarted(true);
+      setIsGameStarted(true)
     }
 
     initPhaser()
@@ -82,7 +82,7 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
           <>
             <button disabled={!switchNetwork} onClick={() => switchNetwork?.(59140)}>
               Switch to Linea network
-            </button> 
+            </button>
           </>
         ) : (
           <div>

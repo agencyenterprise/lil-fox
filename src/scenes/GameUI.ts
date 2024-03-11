@@ -63,13 +63,10 @@ export default class GameUI extends Phaser.Scene {
     this.settingsMenu = new SettingsMenu(this)
 
     const { width } = this.scale
-    const settingsButton = this.add
-      .image(width - 5, 5, "small-button")
-      .setScale(0.5)
-      .setOrigin(1, 0)
+    const settingsButton = this.add.image(width - 15, 15, "small-button").setOrigin(1, 0)
     this.add
-      .image(width - 7, 4.5, "gear")
-      .setScale(0.35)
+      .image(settingsButton.x + 1, settingsButton.y - 5, "gear")
+      .setScale(0.85)
       .setOrigin(1, 0)
 
     settingsButton
@@ -263,9 +260,9 @@ export default class GameUI extends Phaser.Scene {
     this.shouldHideTip = false
   }
 
-  showTip() {
+  showTip(x?: number, y?: number) {
     if (this.shouldHideTip) return
-    this.tipUi.showTip()
+    this.tipUi.showTip(x, y)
   }
 
   handleGameOver(message1: string, message2: string) {

@@ -93,7 +93,9 @@ export default class GrandpaScene extends Phaser.Scene {
 
     createCharacterAnims(this.anims)
 
-    this.cameras.main.setBounds(-40, -50, 250, 400)
+    const cameraX = (this.scene.scene.scale.width / 3 - this.map.widthInPixels) / 2
+
+    this.cameras.main.setBounds(-cameraX, -50, 250, 400)
 
     this.createLayers()
     this.createAreas()
