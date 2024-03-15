@@ -93,6 +93,11 @@ export default class FoxGame extends Phaser.Scene {
   }
 
   create(data: CreateData) {
+    this.scene.run("game-ui")
+    this.scene.launch("settings-ui")
+
+    Singleton.getInstance().gameUi = this.scene.get("game-ui") as GameUI
+
     createArcherAnims(this.anims)
     createEnemyAnims(this.anims)
     createChestAnims(this.anims)
