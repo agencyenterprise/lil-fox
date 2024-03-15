@@ -35,7 +35,6 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
       const { default: MarioScene } = await import("../scenes/MarioScene")
       const { default: GameUI } = await import("../scenes/GameUI")
       const { default: QuizScene } = await import("../scenes/QuizScene")
-      const { default: GrandpaScene } = await import("../scenes/GrandpaScene")
 
       const { default: RexUIPlugin } = await import("phaser3-rex-plugins/templates/ui/ui-plugin.js");
       const { default: DragPlugin } = await import("phaser3-rex-plugins/plugins/drag-plugin");
@@ -44,7 +43,7 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
         parent: "phaser-container",
         width: window.innerWidth,
         height: window.innerHeight,
-        scene: [Preloader, GameUI, GrandpaScene, FoxGame, MarioScene, QuizScene],
+        scene: [Preloader, GameUI, FoxGame, MarioScene, QuizScene],
         scale: {
           zoom: 1,
         },

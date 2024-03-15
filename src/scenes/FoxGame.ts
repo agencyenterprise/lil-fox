@@ -84,6 +84,11 @@ export default class FoxGame extends Phaser.Scene {
   private collectedBlueBerries: number = 0
 
   preload() {
+    this.loadSkinSpriteSheet(Skin.DEFAULT)
+    this.loadSkinSpriteSheet(Skin.BLUE)
+    this.loadSkinSpriteSheet(Skin.KUMAMON)
+    this.loadSkinSpriteSheet(Skin.SUNGLASSES)
+
     this.cursors = this.input.keyboard?.createCursorKeys()!
   }
 
@@ -94,6 +99,8 @@ export default class FoxGame extends Phaser.Scene {
     createCatAnims(this.anims)
     createCatOwnerAnims(this.anims)
     createHumanInBlueAnims(this.anims)
+
+    createCharacterAnims(this.anims)
 
     const map = this.make.tilemap({ key: "map" })
     this.createLayers(map)
