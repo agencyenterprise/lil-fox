@@ -84,16 +84,28 @@ export default class FoxGame extends Phaser.Scene {
   private collectedBlueBerries: number = 0
 
   preload() {
+    this.loadSkinSpriteSheet(Skin.DEFAULT)
+    this.loadSkinSpriteSheet(Skin.BLUE)
+    this.loadSkinSpriteSheet(Skin.KUMAMON)
+    this.loadSkinSpriteSheet(Skin.SUNGLASSES)
+
     this.cursors = this.input.keyboard?.createCursorKeys()!
   }
 
   create(data: CreateData) {
+    this.scene.run("game-ui")
+    this.scene.launch("settings-ui")
+
+    Singleton.getInstance().gameUi = this.scene.get("game-ui") as GameUI
+
     createArcherAnims(this.anims)
     createEnemyAnims(this.anims)
     createChestAnims(this.anims)
     createCatAnims(this.anims)
     createCatOwnerAnims(this.anims)
     createHumanInBlueAnims(this.anims)
+
+    createCharacterAnims(this.anims)
 
     const map = this.make.tilemap({ key: "map" })
     this.createLayers(map)

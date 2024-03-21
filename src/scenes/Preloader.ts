@@ -76,15 +76,15 @@ export default class Preloader extends Phaser.Scene {
     )
 
     this.load.atlas(
-      "A_INVENTORY", 
-      "inventory/assets/ui.png", 
-      "inventory/assets/ui.json", 
+      "A_INVENTORY",
+      "inventory/assets/ui.png",
+      "inventory/assets/ui.json",
     )
 
     this.load.atlas(
-      "A_Items", 
-      "inventory/assets/items/items.png", 
-      "inventory/assets/items/items.json", 
+      "A_Items",
+      "inventory/assets/items/items.png",
+      "inventory/assets/items/items.json",
     )
 
     this.load.image("ui-heart-empty", "ui/ui_heart_empty.png")
@@ -134,6 +134,6 @@ export default class Preloader extends Phaser.Scene {
   }
 
   create() {
-    this.scene.start("GrandpaScene")
+    this.scene.start("LilFox")
   }
 }
