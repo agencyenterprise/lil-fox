@@ -29,6 +29,11 @@ export default class MarioScene extends Phaser.Scene {
           // debug: true
         },
       },
+      cameras: {
+        name: "main",
+        zoom: 3,
+        roundPixels: true,
+      },
     })
   }
 
@@ -81,7 +86,7 @@ export default class MarioScene extends Phaser.Scene {
       classType: Slug,
       createCallback: (go) => {
         this.physics.world.enable(go)
-        ;(go as any).body.allowGravity = false
+          ; (go as any).body.allowGravity = false
       },
     })
 
@@ -95,7 +100,7 @@ export default class MarioScene extends Phaser.Scene {
       classType: Phaser.GameObjects.Image,
       createCallback: (go) => {
         this.physics.world.enable(go)
-        ;(go as any).body.allowGravity = false
+          ; (go as any).body.allowGravity = false
       },
     })
 
@@ -118,7 +123,7 @@ export default class MarioScene extends Phaser.Scene {
       classType: Phaser.GameObjects.Image,
       createCallback: (go) => {
         this.physics.world.enable(go)
-        ;(go as any).body.allowGravity = false
+          ; (go as any).body.allowGravity = false
       },
     })
 
