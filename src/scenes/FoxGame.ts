@@ -20,11 +20,7 @@ import { CatArea } from "@/types/CatArea"
 import HumanInBlue from "@/npcs/HumanInBlue"
 import { SoundArea } from "@/types/SoundArea"
 import GameUI from "./GameUI"
-import Sign from "@/types/Sign"
-import EnterLevelSign from "@/types/EnterLevelSign"
 import { SignType, createSign } from "@/factory/SignFactory"
-import initializeWorld from "@/InitializeWorld"
-import { getItems } from "@/prefabs/Item"
 
 type CreateData = {
   levelNumber?: number

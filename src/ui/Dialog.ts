@@ -4,7 +4,7 @@ import Phaser from "phaser"
 
 const UI_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
   color: 'black',
-  fontSize: '10px',
+  fontSize: '24px',
   wordWrap: { width: 0 },
 })
 
@@ -24,11 +24,11 @@ export class Dialog implements ReceivesInstructions {
   private onAnswer: (selectedOption: number) => void
   private options: Phaser.GameObjects.Text[] = []
 
-  constructor(scene: Phaser.Scene, width: number) {
+  constructor(scene: Phaser.Scene) {
     this.scene = scene
     this.padding = 5
-    this.width = width - this.padding * 2
-    this.height = 50
+    this.width = 720 - this.padding * 2
+    this.height = 120
 
     const panel = this.scene.add.rectangle(
       0,
@@ -38,14 +38,14 @@ export class Dialog implements ReceivesInstructions {
       0xede4f3,
       0.9
     ).setOrigin(0.5, 0)
-      .setStrokeStyle(3, 0x905ac2, 1)
+      .setStrokeStyle(6, 0x905ac2, 1)
 
     this.uiText = this.scene.add.text(0, 5, "", {
       ...UI_TEXT_STYLE,
       ...{ wordWrap: { width: this.width - 18 } },
     }).setOrigin(0.5, 0)
 
-    this.container = this.scene.add.container(this.scene.cameras.main.centerX, this.scene.scale.height * 0.60, [panel, this.uiText])
+    this.container = this.scene.add.container(this.scene.cameras.main.centerX, this.scene.scale.height * 0.80, [panel, this.uiText])
 
     this.userInputCursor = this.scene.add.image(this.width - 8, this.height - 12, 'cursor')
     this.createPlayerInputCursor()

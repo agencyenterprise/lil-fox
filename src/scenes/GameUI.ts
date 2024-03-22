@@ -54,7 +54,7 @@ export default class GameUI extends Phaser.Scene {
   }
 
   create() {
-    this.dialogUi = new Dialog(this, 310)
+    this.dialogUi = new Dialog(this)
     this.gameOverModal = new GameOverModal(this)
     this.winMarioLikeLevelModal = new WinMarioLikeLevelModal(this)
     this.tipUi = new Tip(this)

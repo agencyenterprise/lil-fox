@@ -43,7 +43,7 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
         parent: "phaser-container",
         width: window.innerWidth,
         height: window.innerHeight,
-        scene: [Preloader, GameUI, FoxGame, MarioScene, QuizScene],
+        scene: [Preloader, FoxGame, GameUI, MarioScene, QuizScene],
         scale: {
           zoom: 1,
         },
@@ -81,7 +81,7 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
           <>
             <button disabled={!switchNetwork} onClick={() => switchNetwork?.(59140)}>
               Switch to Linea network
-            </button> 
+            </button>
           </>
         ) : (
           <div>
