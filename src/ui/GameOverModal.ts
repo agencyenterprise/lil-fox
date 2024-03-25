@@ -89,7 +89,7 @@ export class GameOverModal implements Modal {
     const y = 180
     const x = this.width / 2 - 175
     this.userInputCursor = this.scene.add.image(x, y, "cursor")
-    this.userInputCursor.setScale(3, 1)
+    this.userInputCursor.setScale(3.5, 1.5)
 
     this.userInputCursorTween = this.scene.add.tween({
       delay: 0,
