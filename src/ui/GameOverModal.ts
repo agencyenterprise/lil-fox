@@ -4,7 +4,7 @@ import Phaser from "phaser"
 
 const UI_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
   color: "black",
-  fontSize: "10px",
+  fontSize: "24px",
   wordWrap: { width: 0 },
 })
 
@@ -26,24 +26,24 @@ export class GameOverModal implements Modal {
   constructor(scene: Phaser.Scene) {
     this.scene = scene
     this.padding = 5
-    this.width = 310 - this.padding * 2
-    this.height = 130
+    this.width = 620 - this.padding * 2
+    this.height = 260
 
     const panel = this.scene.add
       .rectangle(0, 0, this.width, this.height, 0xede4f3, 0.9)
       .setOrigin(0)
       .setStrokeStyle(3, 0x905ac2, 1)
-    this.container = this.scene.add.container(50, 60, [panel])
-
-    this.uiText1 = this.scene.add.text(this.width / 2 - 30, 30, "", {
+      
+    this.container = this.scene.add.container(this.scene.cameras.main.centerX - (this.width / 2), this.scene.cameras.main.centerY - (this.height / 2), [panel])
+    this.uiText1 = this.scene.add.text(this.width / 2, 60, "", {
       ...UI_TEXT_STYLE,
       ...{ wordWrap: { width: this.width - 18 } },
-    })
+    }).setOrigin(0.5)
 
-    this.uiText2 = this.scene.add.text(this.width / 2 - 62, 90, "", {
+    this.uiText2 = this.scene.add.text(this.width / 2, 180, "", {
       ...UI_TEXT_STYLE,
       ...{ wordWrap: { width: this.width - 18 } },
-    })
+    }).setOrigin(0.5)
 
     this.container.add(this.uiText1)
     this.container.add(this.uiText2)
@@ -86,8 +86,8 @@ export class GameOverModal implements Modal {
   }
 
   createPlayerInputCursor() {
-    const y = 95
-    const x = this.width / 2 - 75
+    const y = 180
+    const x = this.width / 2 - 175
     this.userInputCursor = this.scene.add.image(x, y, "cursor")
     this.userInputCursor.setScale(3, 1)
 
