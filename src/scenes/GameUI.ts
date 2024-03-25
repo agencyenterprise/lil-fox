@@ -120,16 +120,17 @@ export default class GameUI extends Phaser.Scene {
       quantity: 5,
     })
 
-    this.coinImage = this.add.image(0, 7, "coin").setOrigin(1, 0.5)
-    this.coinAmountText = this.add.text(this.coinImage.width + 12, 7, "x100", { fontSize: "12px" }).setOrigin(1, 0.5)
+    this.timeDownText = this.add.text(0, 0, "00:00", { fontSize: "32px" }).setOrigin(0, 0.5).setVisible(false)
+    this.coinImage = this.add.image(0, 35, "coin").setOrigin(0, 0.5).setScale(2)
+    this.coinAmountText = this.add.text(35, 35, "x0", { fontSize: "32px" }).setOrigin(0, 0.5)
+    
     this.add
-      .container(width - settingsButton.width - 20, 8)
-      .setSize(50, 50)
+      .container(30, 30)
+      .setSize(50, 60)
+      .add(this.timeDownText)
       .add(this.coinImage)
       .add(this.coinAmountText)
 
-    this.timeDownText = this.add.text(30, 0, "00:00").setScale(0.8, 0.8).setOrigin(1, 0.45).setVisible(false)
-    this.add.container(17, 15).setSize(50, 50).add(this.timeDownText)
 
     SoundSingleton.getInstance().setSoundManager(this)
     SoundSingleton.getInstance().playTheme(SoundEffects.THEME_GRANDPA)

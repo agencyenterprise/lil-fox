@@ -41,7 +41,7 @@ export default function Home() {
         method: "web3_clientVersion",
       });
 
-      return provider;
+      return provider
     } catch {
       return false;
     }

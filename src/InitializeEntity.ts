@@ -20,9 +20,9 @@ export function initializeEntity(rawEntity: RawEntity): GameEntity {
         rawEntity.components[componentKey as keyof ComponentTypes]
       );
     } else {
-      console.log(
-        `${componentKey} was not registered because it did not exist`
-      );
+      // console.log(
+      //   `${componentKey} was not registered because it did not exist`
+      // );
     }
   });
 

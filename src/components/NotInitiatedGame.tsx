@@ -43,7 +43,7 @@ export function NotInitiatedGame({ setIsGameStarted, gameRef }: NotInitiatedGame
         parent: "phaser-container",
         width: window.innerWidth,
         height: window.innerHeight,
-        scene: [Preloader, FoxGame, GameUI, MarioScene, QuizScene],
+        scene: [Preloader, FoxGame, MarioScene, GameUI],
         scale: {
           zoom: 1,
         },
