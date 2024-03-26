@@ -4,7 +4,7 @@ import Phaser from "phaser"
 
 const UI_TEXT_STYLE: Phaser.Types.GameObjects.Text.TextStyle = Object.freeze({
   color: "black",
-  fontSize: "10px",
+  fontSize: "24px",
   wordWrap: { width: 0 },
 })
 
@@ -31,38 +31,39 @@ export class WinMarioLikeLevelModal implements Modal {
   constructor(scene: Phaser.Scene) {
     this.scene = scene
     this.padding = 5
-    this.width = 310 - this.padding * 2
-    this.height = 130
+    this.width = 620 - this.padding * 2
+    this.height = 260
 
     const panel = this.scene.add
       .rectangle(0, 0, this.width, this.height, 0xede4f3, 0.9)
       .setOrigin(0)
       .setStrokeStyle(3, 0x905ac2, 1)
-    this.container = this.scene.add.container(50, 60, [panel])
+
+    this.container = this.scene.add.container(this.scene.cameras.main.centerX - (this.width / 2), this.scene.cameras.main.centerY - (this.height / 2), [panel])
 
     this.uiText1 = this.scene.add
-      .text(this.width / 2, 30, "", {
+      .text(this.width / 2, 35, "", {
         ...UI_TEXT_STYLE,
         ...{ wordWrap: { width: this.width - 18 } },
       })
       .setOrigin(0.5)
 
     this.uiText2 = this.scene.add
-      .text(this.width / 2, 45, "", {
+      .text(this.width / 2, 65, "", {
         ...UI_TEXT_STYLE,
         ...{ wordWrap: { width: this.width - 18 } },
       })
       .setOrigin(0.5)
 
     this.uiOption1 = this.scene.add
-      .text(this.width / 2, 90, "", {
+      .text(this.width / 2, 190, "", {
         ...UI_TEXT_STYLE,
         ...{ wordWrap: { width: this.width - 18 } },
       })
       .setOrigin(0.5)
 
     this.uiOption2 = this.scene.add
-      .text(this.width / 2, 105, "", {
+      .text(this.width / 2, 220, "", {
         ...UI_TEXT_STYLE,
         ...{ wordWrap: { width: this.width - 18 } },
       })
@@ -99,7 +100,7 @@ export class WinMarioLikeLevelModal implements Modal {
 
   downDown() {
     this.selectedOption = 2
-    const [x, y] = [this.width / 2 - 30, 105]
+    const [x, y] = [this.width / 2 - 52, 220]
     this.userInputCursor.setPosition(x, y)
     this.userInputCursorTween.destroy()
     this.userInputCursorTween = this.scene.add.tween({
@@ -117,7 +118,7 @@ export class WinMarioLikeLevelModal implements Modal {
 
   upDown() {
     this.selectedOption = 1
-    const [x, y] = [this.width / 2 - 93, 90]
+    const [x, y] = [this.width / 2 - 205, 190]
     this.userInputCursor.setPosition(x, y)
     this.userInputCursorTween.destroy()
     this.userInputCursorTween = this.scene.add.tween({
@@ -150,9 +151,9 @@ export class WinMarioLikeLevelModal implements Modal {
   }
 
   createPlayerInputCursor() {
-    const [x, y] = [this.width / 2 - 93, 90]
+    const [x, y] = [this.width / 2 - 205, 190]
     this.userInputCursor = this.scene.add.image(x, y, "cursor")
-    this.userInputCursor.setScale(3, 1)
+    this.userInputCursor.setScale(3.5 , 1.5)
 
     this.userInputCursorTween = this.scene.add.tween({
       delay: 0,
